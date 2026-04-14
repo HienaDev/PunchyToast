@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using TMPro;
+using static UnityEngine.GraphicsBuffer;
+using Unity.Burst.Intrinsics;
+using Unity.VisualScripting;
 
 public class ToastBehavior : MonoBehaviour
 {
@@ -130,8 +133,12 @@ public class ToastBehavior : MonoBehaviour
         arm.transform.DOMove(transform.position, armPunchDuration)
             .SetEase(Ease.Linear)
             .OnComplete(() => {
+
                 if (bobTween != null) bobTween.Kill();
                 if (hoverRoutine != null) StopCoroutine(hoverRoutine);
+
+                ApplyJamSplat();
+
                 LaunchAtTarget(target);
 
                 arm.transform.DOScale(Vector3.zero, armShrinkDuration)
@@ -140,14 +147,51 @@ public class ToastBehavior : MonoBehaviour
             });
     }
 
+    void ApplyJamSplat()
+    {
+        if (JamDecider.Instance == null) return;
+
+        TAG_Splat splat = GetComponentInChildren<TAG_Splat>();
+
+        // Get the renderer to access the material
+        Renderer splatRenderer = splat.GetComponent<Renderer>();
+        if (splatRenderer != null)
+        {
+            splatRenderer.enabled = true;
+
+            // Use JamDecider's current color
+            Color jamColor = JamDecider.Instance.GetCurrentJamColor();
+
+            // Update the "BaseColor" property (Standard for Unity 6 / URP)
+            // Note: If you use the older Standard Shader, use "_Color" instead of "_BaseColor"
+            splatRenderer.material.SetColor("_BaseColor", jamColor);
+
+        }
+    }
+
     void LaunchAtTarget(Transform target)
     {
         isHovering = false;
         rb.isKinematic = true;
 
-        transform.DOMove(target.position, flightDuration).SetEase(Ease.Linear);
+        //transform.DOMove(target.position, flightDuration).SetEase(Ease.Linear);
 
-        transform.DORotate(new Vector3(Random.Range(360, 720), Random.Range(360, 720), Random.Range(360, 720)), flightDuration, RotateMode.FastBeyond360)
+        TAG_JamDroplets[] jamDroplets = GetComponentsInChildren<TAG_JamDroplets>(true);
+
+        foreach(TAG_JamDroplets droplet in jamDroplets)
+        {
+            droplet.gameObject.SetActive(true);
+            ParticleSystem ps = droplet.GetComponent<ParticleSystem>();
+            var main = ps.main;
+            main.startColor = JamDecider.Instance.GetCurrentJamColor();
+        }
+
+        // Rotate this object on the Y axis towards the target
+        transform.DOLookAt(target.position, flightDuration/4)
+             .SetEase(Ease.Linear);
+
+        //transform.DORotate(new Vector3(Random.Range(360, 720), Random.Range(360, 720), Random.Range(360, 720)), flightDuration, RotateMode.FastBeyond360)
+        transform.DOMove(target.position, flightDuration).SetEase(Ease.Linear)
             .SetEase(Ease.OutQuad)
             .OnComplete(() => {
                 Debug.Log("Target Hit!");
