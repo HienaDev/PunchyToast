@@ -42,6 +42,34 @@ public class Toaster : MonoBehaviour
         Rigidbody rb = toast.GetComponent<Rigidbody>();
         ToastBehavior behavior = toast.AddComponent<ToastBehavior>();
 
+        // Randomsize the saturation of the base color of the toast to be more burnt
+        TAG_ToastMesh toastMesh = toast.GetComponentInChildren<TAG_ToastMesh>();
+        if (toastMesh != null)
+        {
+            Renderer rend = toastMesh.GetComponent<Renderer>();
+            if (rend != null)
+            {
+                // 1. Get the current color
+                Color baseColor = rend.material.GetColor("baseColorFactor");
+
+                // 2. Convert RGB to HSV
+                float h, s, v;
+                Color.RGBToHSV(baseColor, out h, out s, out v);
+
+                // 3. Set Saturation based on your 0-100 logic
+                // If you want a random saturation between 0 and 100:
+                float inspectorSaturation = Random.Range(0f, 100f);
+                s = inspectorSaturation / 100f; // Convert 100 to 1.0
+
+                // 4. Convert back to RGB
+                Color finalColor = Color.HSVToRGB(h, s, v);
+
+                // 5. Apply it
+                rend.material.SetColor("baseColorFactor", finalColor);
+            }
+        }
+
+
         // 1. Pass Punch/Target References
         behavior.potentialTargets = targets;
         behavior.armPrefab = armPrefab;

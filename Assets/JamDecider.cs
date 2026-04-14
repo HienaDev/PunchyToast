@@ -95,4 +95,24 @@ public class JamDecider : MonoBehaviour
     {
         return jams[currentJamIndex].jamColor;
     }
+
+    public Color GetColorFromJam(string jamName)
+    {
+        foreach(JamType jam in jams)
+        {
+            if(jam.name == jamName)
+            {
+                return jam.jamColor;
+            }
+        }
+
+        return Color.black;
+    }
+
+    public string GetCurrentJamName()
+    {
+        // If you haven't "dipped" yet or want to support plain toast:
+        // This assumes the currentJamIndex tracks what the player is holding
+        return jams[currentJamIndex].name;
+    }
 }
