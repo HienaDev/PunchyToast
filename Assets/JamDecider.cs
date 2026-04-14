@@ -78,7 +78,7 @@ public class JamDecider : MonoBehaviour
     }
 
     // --- Helper Methods using activeJams ---
-    public string GetCurrentJamName() => activeJams[currentJamIndex].name;
+    public string GetCurrentJamName() => activeJams[currentJamIndex].flavor.ToString();
     public Color GetCurrentJamColor() => activeJams[currentJamIndex].jamColor;
 
     public Color GetColorFromFlavor(JamFlavor flavor)

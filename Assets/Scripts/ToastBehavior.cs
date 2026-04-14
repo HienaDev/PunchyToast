@@ -249,7 +249,7 @@ public class ToastBehavior : MonoBehaviour
 
                 if (currentFlightTargetClient != null)
                 {
-                    string myJam = JamDecider.Instance.allAvailableJams[JamDecider.Instance.currentJamIndex].name;
+                    string myJam = JamDecider.Instance.allAvailableJams[JamDecider.Instance.currentJamIndex].flavor.ToString();
                     currentFlightTargetClient.TryEatToast(myJam, gameObject);
                 }
             });

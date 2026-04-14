@@ -153,6 +153,11 @@ public class ClientManager : MonoBehaviour
 
     public Transform GetBestTarget(string currentJamInHand)
     {
+        foreach (var kvp in activeClients)
+        {
+            Debug.Log($"Checking client at {kvp.Key.name} with {currentJamInHand} in Hand: Desired={kvp.Value.desiredCondiment}, Satisfied={kvp.Value.isSatisfied}");
+        }
+
         var matchingKvp = activeClients.FirstOrDefault(kvp =>
             kvp.Value.desiredCondiment == currentJamInHand && !kvp.Value.isSatisfied);
 
