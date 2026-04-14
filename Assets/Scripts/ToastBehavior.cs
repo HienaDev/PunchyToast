@@ -2,29 +2,29 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using TMPro;
 
 public class ToastBehavior : MonoBehaviour
 {
-    [HideInInspector] public float hoverDuration, bobAmount, bobSpeed, preHoverDelay;
+    // Settings Passed from Toaster
+    [HideInInspector] public float hoverDuration, bobAmount, bobSpeed, preHoverDelay, driftFactor;
     [HideInInspector] public List<Transform> potentialTargets;
     [HideInInspector] public GameObject armPrefab;
+    [HideInInspector] public bool debugAlwaysL;
+    [HideInInspector] public float armSpawnOffset, armPunchDuration, targetFlightForce;
 
     [Header("Momentum Settings")]
-    [Range(0, 1)] public float driftFactor = 0.2f;
     [Range(0, 1)] public float exitMomentumScale = 0.8f;
 
-    [Header("Punch Settings")]
-    public bool debugAlwaysL = true;
-    public float armSpawnOffset = 4f;
-    public float armPunchDuration = 0.15f;
-    public float targetFlightForce = 25f;
+    [Header("Visual Juice")]
+    public float armShrinkDuration = 0.1f;
+    public float flightDuration = 0.5f;
+    public float fallGracePeriod = 0.2f; // Time allowed to punch after falling starts
 
+    // Internal State
     private Rigidbody rb;
-    private bool isRising = false;
-    private bool hasLeftToaster = false;
-    private bool isHovering = false;
-    private bool hasBeenHit = false;
-
+    private bool isRising = false, hasLeftToaster = false, isHovering = false, hasBeenHit = false;
+    private bool isPunchable = true; // Starts true so you can punch it immediately
     private char assignedLetter;
     private KeyCode assignedKey;
     private float capturedXVel, capturedZVel;
@@ -38,9 +38,19 @@ public class ToastBehavior : MonoBehaviour
         assignedKey = (KeyCode)System.Enum.Parse(typeof(KeyCode), assignedLetter.ToString());
     }
 
+    private void Start()
+    {
+        TextMeshProUGUI letterText = GetComponentInChildren<TextMeshProUGUI>();
+        if (letterText != null)
+        {
+            letterText.text = assignedLetter.ToString();
+        }
+    }
+
     void Update()
     {
-        if (!isHovering || hasBeenHit) return;
+        // Now checks the state variable instead of just isHovering
+        if (!isPunchable || hasBeenHit) return;
 
         if (Input.GetKeyDown(assignedKey) || (debugAlwaysL && Input.GetKeyDown(KeyCode.L)))
         {
@@ -98,52 +108,74 @@ public class ToastBehavior : MonoBehaviour
     void StartPunchSequence()
     {
         hasBeenHit = true;
+        isPunchable = false; // Stop further inputs
 
-        if (bobTween != null) bobTween.Kill();
-        if (hoverRoutine != null) StopCoroutine(hoverRoutine);
+        
 
         Transform target = potentialTargets[Random.Range(0, potentialTargets.Count)];
         Vector3 dirToTarget = (target.position - transform.position).normalized;
 
-        // --- ARM ROTATION LOGIC ---
-        // 1. Find the base rotation to look at the target
         Quaternion baseLook = Quaternion.LookRotation(dirToTarget);
 
-        // 2. Add the 90 degree X offset so the Capsule tip points at the toast
-        Quaternion capsuleOffset = Quaternion.Euler(90, 0, 0);
-        Quaternion finalRotation = baseLook * capsuleOffset;
-
         Vector3 armSpawnPos = transform.position - (dirToTarget * armSpawnOffset);
-        GameObject arm = Instantiate(armPrefab, armSpawnPos, finalRotation);
+        GameObject arm = Instantiate(armPrefab, armSpawnPos, baseLook);
+
+        // FLIP LOGIC: Check screen position to flip the arm if it's on the right
+        float screenX = Camera.main.WorldToViewportPoint(arm.transform.position).x;
+        if (screenX < 0f)
+        {
+            arm.transform.localScale = Vector3.Scale(arm.transform.localScale, new Vector3(-1, 1, 1));
+        }
 
         arm.transform.DOMove(transform.position, armPunchDuration)
-            .SetEase(Ease.InExpo)
+            .SetEase(Ease.Linear)
             .OnComplete(() => {
-                Destroy(arm);
-                LaunchAtTarget(dirToTarget);
+                if (bobTween != null) bobTween.Kill();
+                if (hoverRoutine != null) StopCoroutine(hoverRoutine);
+                LaunchAtTarget(target);
+
+                arm.transform.DOScale(Vector3.zero, armShrinkDuration)
+                    .SetEase(Ease.InQuad)
+                    .OnComplete(() => Destroy(arm));
             });
     }
 
-    void LaunchAtTarget(Vector3 direction)
+    void LaunchAtTarget(Transform target)
     {
         isHovering = false;
-        rb.useGravity = true;
-        rb.linearVelocity = Vector3.zero;
+        rb.isKinematic = true;
 
-        rb.AddForce(direction * targetFlightForce, ForceMode.Impulse);
-        rb.AddTorque(Random.insideUnitSphere * 15f, ForceMode.Impulse);
+        transform.DOMove(target.position, flightDuration).SetEase(Ease.Linear);
+
+        transform.DORotate(new Vector3(Random.Range(360, 720), Random.Range(360, 720), Random.Range(360, 720)), flightDuration, RotateMode.FastBeyond360)
+            .SetEase(Ease.OutQuad)
+            .OnComplete(() => {
+                Debug.Log("Target Hit!");
+                rb.isKinematic = false;
+                rb.useGravity = true;
+            });
     }
 
     void ReleaseToast()
     {
         isHovering = false;
         if (bobTween != null) bobTween.Kill();
+
         rb.useGravity = true;
         rb.linearVelocity = new Vector3(capturedXVel * exitMomentumScale, -0.1f, capturedZVel * exitMomentumScale);
+
+        // Start the grace period timer before disabling input
+        StartCoroutine(GracePeriodTimer());
     }
 
-    private void OnDestroy()
+    IEnumerator GracePeriodTimer()
     {
-        transform.DOKill();
+        yield return new WaitForSeconds(fallGracePeriod);
+        if (!hasBeenHit)
+        {
+            isPunchable = false;
+        }
     }
+
+    private void OnDestroy() => transform.DOKill();
 }

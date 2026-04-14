@@ -1,0 +1,11 @@
+Model Information:
+* title:	left arm and fist
+* source:	https://sketchfab.com/3d-models/left-arm-and-fist-a3947445ea954a12b5112774f1022f02
+* author:	mariaOOO (https://sketchfab.com/mariaOOO)
+
+Model License:
+* license type:	CC-BY-SA-4.0 (http://creativecommons.org/licenses/by-sa/4.0/)
+* requirements:	Author must be credited. Modified versions must have the same license. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "left arm and fist" (https://sketchfab.com/3d-models/left-arm-and-fist-a3947445ea954a12b5112774f1022f02) by mariaOOO (https://sketchfab.com/mariaOOO) licensed under CC-BY-SA-4.0 (http://creativecommons.org/licenses/by-sa/4.0/)

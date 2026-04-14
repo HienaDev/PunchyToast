@@ -1,0 +1,11 @@
+Model Information:
+* title:	Bread
+* source:	https://sketchfab.com/3d-models/bread-816eadd5c57e48a7831b9e979e660ece
+* author:	JUST GAME (https://sketchfab.com/JUSTGAME)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Bread" (https://sketchfab.com/3d-models/bread-816eadd5c57e48a7831b9e979e660ece) by JUST GAME (https://sketchfab.com/JUSTGAME) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

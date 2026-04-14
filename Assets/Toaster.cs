@@ -46,6 +46,8 @@ public class Toaster : MonoBehaviour
         behavior.potentialTargets = targets;
         behavior.armPrefab = armPrefab;
 
+        behavior.flightDuration = 0.3f;
+
         // 2. Pass Hover/Bob Settings
         behavior.hoverDuration = hoverTime;
         behavior.bobAmount = bobAmount;
@@ -58,6 +60,7 @@ public class Toaster : MonoBehaviour
         behavior.armSpawnOffset = armSpawnOffset;
         behavior.armPunchDuration = armPunchDuration;
         behavior.targetFlightForce = targetFlightForce;
+        behavior.armShrinkDuration = 0.6f;
 
         // 4. Randomized Visuals/Physics
         toast.transform.eulerAngles += new Vector3(Random.Range(-15f, 15f), Random.Range(-15f, 15f), Random.Range(-15f, 15f));
