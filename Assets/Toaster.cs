@@ -1,5 +1,6 @@
-using UnityEngine;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
+using UnityEngine;
 
 public class Toaster : MonoBehaviour
 {
@@ -36,6 +37,9 @@ public class Toaster : MonoBehaviour
     public float armPunchDuration = 0.15f;
     public float targetFlightForce = 25f;
 
+    [SerializeField] private AudioSource ding;
+    [SerializeField] private AudioSource popUp;
+
     private void Awake()
     {
         if (Instance == null) Instance = this;
@@ -53,6 +57,8 @@ public class Toaster : MonoBehaviour
 
     public void LaunchToast(string customLetter = "")
     {
+        ding.Play();
+        popUp.Play();
 
         lastLaunchTime = Time.time;
 
