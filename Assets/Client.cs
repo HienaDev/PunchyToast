@@ -1,75 +1,45 @@
 using UnityEngine;
-using UnityEngine.UI; // For a patience bar if you have one
 using DG.Tweening;
 
 public class Client : MonoBehaviour
 {
     [Header("Settings")]
-    public float maxPatience = 20f;
     public Transform mouthBone;
     public Vector3 mouthOpenRotation = new Vector3(-45, 0, 0);
 
     [Header("Current Order")]
-    public string desiredCondiment; // e.g., "StrawberryJam", "None"
+    public string desiredCondiment;
     public Color condimentColor;
-    public float currentPatience;
     public bool isSatisfied = false;
 
     private Vector3 originalMouthRot;
-
-    [SerializeField] private Image patienceCover; // Will go from 1 to 0 as patience goes down
-    [SerializeField] private Image patience; // Will go from green to red as patience goes down
+    private Transform mySeat;
 
     void Start()
     {
-        currentPatience = maxPatience;
         originalMouthRot = mouthBone.localEulerAngles;
+        // Cache the seat immediately
+
+    }
+
+    public void Initialize(Transform seat)
+    {
+        mySeat = seat;
     }
 
     public void SetOrder(string jamName, Color jamColor)
     {
         desiredCondiment = jamName;
         condimentColor = jamColor;
-        GetComponentInChildren<TAG_Thought>().GetComponent<Renderer>().material.SetColor("_BaseColor", condimentColor);
+
+        // Preservation of your custom logic
+        TAG_Thought thought = GetComponentInChildren<TAG_Thought>();
+        if (thought != null)
+        {
+            thought.GetComponent<Renderer>().material.SetColor("_BaseColor", condimentColor);
+        }
+
         Debug.Log($"New Client spawned! I want: {desiredCondiment}");
-    }
-
-    [SerializeField] private Gradient patienceGradient; // Define this in the Inspector
-
-    void Update()
-    {
-        if (isSatisfied) return;
-
-        currentPatience -= Time.deltaTime;
-
-        if (patienceCover != null || patience != null)
-        {
-            float patienceRatio = Mathf.Clamp01(currentPatience / maxPatience);
-
-            if (patienceCover != null)
-            {
-                patienceCover.fillAmount = patienceRatio;
-            }
-
-            if (patience != null)
-            {
-                // Evaluates the gradient based on the current ratio (0 to 1)
-                patience.color = patienceGradient.Evaluate(patienceRatio);
-            }
-        }
-
-        if (currentPatience <= 0)
-        {
-            LeaveAngry();
-        }
-    }
-
-    void GenerateRandomOrder()
-    {
-        // Example: Logic to pick from your JamDecider list or None
-        string[] options = { "StrawberryJam", "BlueberryJam", "None" };
-        desiredCondiment = options[Random.Range(0, options.Length)];
-        Debug.Log($"Client at {name} wants {desiredCondiment}");
     }
 
     public void OpenMouth()
@@ -84,41 +54,42 @@ public class Client : MonoBehaviour
 
     public void TryEatToast(string incomingJam, GameObject toast)
     {
-        if (isSatisfied) return;
 
+        Debug.Log("Client received toast with: " + incomingJam);
         if (incomingJam == desiredCondiment)
         {
-            // SUCCESS: Open mouth and eat
             isSatisfied = true;
-            Debug.Log("Delicious! Client Satisfied.");
+            OpenMouth();
 
-            // Let the toast stay in the mouth for a second before "consuming"
             DOVirtual.DelayedCall(0.5f, () => {
                 ReceiveFood();
                 CloseMouth();
-                Destroy(toast);
+                if (toast != null) Destroy(toast);
             });
         }
         else
         {
-            // FAILURE: Stay closed, toast hits face
-            Debug.Log("Bleh! I didn't order this.");
-            // You could add a "shake head" animation here if you want!
+            Debug.Log("Wrong order!");
         }
-    }
-
-    void LeaveAngry()
-    {
-        Debug.Log("Client left angry!");
-        ClientManager.Instance.ClearSeat(transform.parent); // Parent is likely the "Target" spot
-        Destroy(gameObject);
     }
 
     public void ReceiveFood()
     {
         isSatisfied = true;
-        Debug.Log("YUM!");
-        // Add score logic here
-        Destroy(gameObject, 1f);
+        ClientManager.Instance.OnClientFinished();
+
+        // Safety check: only clear if we actually have a seat reference
+        if (mySeat != null)
+        {
+            ClientManager.Instance.ClearSeat(mySeat);
+        }
+        else
+        {
+            Debug.LogWarning($"Client {gameObject.name} tried to clear a null seat!");
+        }
+
+        transform.DOScale(Vector3.zero, 0.5f).SetEase(Ease.InBack).OnComplete(() => {
+            Destroy(gameObject);
+        });
     }
 }

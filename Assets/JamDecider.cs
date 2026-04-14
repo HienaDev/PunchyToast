@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using DG.Tweening;
 
+public enum JamFlavor { None, Butter, StrawberryJam, GrapeJam, PeanutButter, Random }
 public class JamDecider : MonoBehaviour
 {
     public static JamDecider Instance;
@@ -10,20 +11,21 @@ public class JamDecider : MonoBehaviour
     public struct JamType
     {
         public string name;
+        public JamFlavor flavor; // Match this to the enum
         public Color jamColor;
         public Transform dippingStation;
     }
 
     [Header("Settings")]
     public GameObject armPrefab;
-    public List<JamType> jams;
+    public List<JamType> allAvailableJams; // The full list of all 4 possible jams
+    public List<JamType> activeJams;      // The ones currently allowed in this level
 
     [Header("Animation")]
-    public float dipDepth = 0.8f;      // How far "into" the jar it punches
+    public float dipDepth = 0.8f;
     public float dipDuration = 0.15f;
-    public float zOffset = 2.0f;       // How far back on the Z axis it starts
+    public float zOffset = 2.0f;
 
-    [Header("Current Selection")]
     public int currentJamIndex = 0;
 
     void Awake()
@@ -32,9 +34,34 @@ public class JamDecider : MonoBehaviour
         else Destroy(gameObject);
     }
 
+    // Called by ClientManager at Level Start
+    public void SetupLevelJams(HashSet<JamFlavor> requiredFlavors)
+    {
+        activeJams = new List<JamType>();
+
+        // Loop through our "Master List" and pick the ones the level needs
+        foreach (var jam in allAvailableJams)
+        {
+            if (requiredFlavors.Contains(jam.flavor))
+            {
+                activeJams.Add(jam);
+                // Enable the jar visual in the scene
+                jam.dippingStation.gameObject.SetActive(true);
+            }
+            else
+            {
+                // Disable jars not in this level
+                jam.dippingStation.gameObject.SetActive(false);
+            }
+        }
+
+        currentJamIndex = 0;
+    }
+
     void Update()
     {
-        for (int i = 0; i < jams.Count; i++)
+        // Use activeJams.Count so player can't press 4 if only 2 jams exist
+        for (int i = 0; i < activeJams.Count; i++)
         {
             if (Input.GetKeyDown(KeyCode.Alpha1 + i))
             {
@@ -46,11 +73,19 @@ public class JamDecider : MonoBehaviour
     void SelectJam(int index)
     {
         if (index == currentJamIndex) return;
-
         currentJamIndex = index;
-        Debug.Log($"Selected: {jams[index].name}");
+        PerformDipAnimation(activeJams[index]);
+    }
 
-        PerformDipAnimation(jams[index]);
+    // --- Helper Methods using activeJams ---
+    public string GetCurrentJamName() => activeJams[currentJamIndex].name;
+    public Color GetCurrentJamColor() => activeJams[currentJamIndex].jamColor;
+
+    public Color GetColorFromFlavor(JamFlavor flavor)
+    {
+        foreach (var j in allAvailableJams)
+            if (j.flavor == flavor) return j.jamColor;
+        return Color.white;
     }
 
     void PerformDipAnimation(JamType jam)
@@ -91,28 +126,8 @@ public class JamDecider : MonoBehaviour
         dipSeq.OnComplete(() => Destroy(dippingArm));
     }
 
-    public Color GetCurrentJamColor()
-    {
-        return jams[currentJamIndex].jamColor;
-    }
 
-    public Color GetColorFromJam(string jamName)
-    {
-        foreach(JamType jam in jams)
-        {
-            if(jam.name == jamName)
-            {
-                return jam.jamColor;
-            }
-        }
 
-        return Color.black;
-    }
 
-    public string GetCurrentJamName()
-    {
-        // If you haven't "dipped" yet or want to support plain toast:
-        // This assumes the currentJamIndex tracks what the player is holding
-        return jams[currentJamIndex].name;
-    }
+
 }

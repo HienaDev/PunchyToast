@@ -1884,6 +1884,7 @@ MonoBehaviour:
   - {fileID: 37156030}
   - {fileID: 1330017407}
   armPrefab: {fileID: 5662322208263055636, guid: e9746a3154706664c81a732ec30c61d2, type: 3}
+  timeToLaunchToast: 3
   upForce: 3
   xSpread: 0.7
   zSpread: 0.1
@@ -4630,6 +4631,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d401d4dbcd1526140bf8b117df34ee78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelConfig: {fileID: 11400000, guid: 48583135abd7d0349b11d0a6be437fb8, type: 2}
   clientPrefab: {fileID: 8878267603986006268, guid: 713dda271961541408eab04007d3a72a, type: 3}
   seatingPositions:
   - {fileID: 182842326}
@@ -5336,19 +5338,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   armPrefab: {fileID: 5662322208263055636, guid: e9746a3154706664c81a732ec30c61d2, type: 3}
-  jams:
+  allAvailableJams:
   - name: Butter
-    jamColor: {r: 0.93207544, g: 0.83709884, b: 0.34996784, a: 1}
+    flavor: 1
+    jamColor: {r: 0.9622642, g: 0.8537994, b: 0.441189, a: 1}
     dippingStation: {fileID: 920920115}
-  - name: Strawberry
-    jamColor: {r: 0.93962264, g: 0.24272704, b: 0.16133142, a: 1}
+  - name: Strawberry Jam
+    flavor: 2
+    jamColor: {r: 0.90943396, g: 0.2505734, b: 0.23851186, a: 1}
     dippingStation: {fileID: 1750194027}
-  - name: Grape
-    jamColor: {r: 0.5924529, g: 0.052538246, b: 0.48903236, a: 1}
+  - name: Grape Jam
+    flavor: 3
+    jamColor: {r: 0.5999999, g: 0.048679188, b: 0.4750821, a: 1}
     dippingStation: {fileID: 310496508}
-  - name: Peanut
-    jamColor: {r: 0.8792453, g: 0.5979288, b: 0.10451402, a: 1}
+  - name: Peanut Butter
+    flavor: 4
+    jamColor: {r: 0.83396226, g: 0.59598976, b: 0, a: 1}
     dippingStation: {fileID: 295178436}
+  activeJams: []
   dipDepth: 0.1
   dipDuration: 0.15
   zOffset: 0.1

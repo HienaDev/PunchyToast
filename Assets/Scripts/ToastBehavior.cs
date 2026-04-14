@@ -109,6 +109,8 @@ public class ToastBehavior : MonoBehaviour
 
     void StartPunchSequence()
     {
+
+
         hasBeenHit = true;
         isPunchable = false;
 
@@ -118,6 +120,14 @@ public class ToastBehavior : MonoBehaviour
         Debug.Log(targetTransform != null ? $"Punching towards {targetTransform.name}" : "No target found, punching into the void!");
         // Store the client script specifically if the target has one
         currentFlightTargetClient = targetTransform.GetComponent<Client>();
+
+
+
+        if (currentFlightTargetClient != null)
+        {
+
+            currentFlightTargetClient.isSatisfied = true;
+        }
 
         Vector3 dirToTarget = (targetTransform.position - transform.position).normalized;
         Quaternion baseLook = Quaternion.LookRotation(dirToTarget);
@@ -135,6 +145,9 @@ public class ToastBehavior : MonoBehaviour
             .SetEase(Ease.Linear)
             .OnComplete(() => {
                 StartCoroutine(ImpactSequence(arm, targetTransform, dirToTarget));
+
+                if(!ClientManager.Instance.IsLastClientOfWave(currentFlightTargetClient))
+                    Toaster.Instance.LaunchToast();
             });
     }
 
@@ -236,7 +249,7 @@ public class ToastBehavior : MonoBehaviour
 
                 if (currentFlightTargetClient != null)
                 {
-                    string myJam = JamDecider.Instance.jams[JamDecider.Instance.currentJamIndex].name;
+                    string myJam = JamDecider.Instance.allAvailableJams[JamDecider.Instance.currentJamIndex].name;
                     currentFlightTargetClient.TryEatToast(myJam, gameObject);
                 }
             });

@@ -1,15 +1,20 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 
 public class ClientManager : MonoBehaviour
 {
     public static ClientManager Instance;
 
-    public GameObject clientPrefab;
-    public List<Transform> seatingPositions;
+    [Header("Level Configuration")]
+    public LevelConfiguration levelConfig;
+    private int currentWaveIndex = 0;
+    private int clientsFinishedInWave = 0;
 
-    // We store the active clients mapped to their seat
+    [Header("Setup")]
+    public GameObject clientPrefab;
+    public List<Transform> seatingPositions; // MAKE SURE THIS HAS AT LEAST 5 SLOTS!
     private Dictionary<Transform, Client> activeClients = new Dictionary<Transform, Client>();
 
     void Awake()
@@ -17,67 +22,171 @@ public class ClientManager : MonoBehaviour
         if (Instance == null) Instance = this;
     }
 
-    void Update()
+    void Start()
     {
-        // Simple timer logic to spawn a client every few seconds if a seat is free
-        if (Time.frameCount % 300 == 0 && activeClients.Count < seatingPositions.Count)
+        Debug.Log($"ClientManager started. Total seating positions assigned: {seatingPositions.Count}");
+        if (levelConfig != null)
         {
-            SpawnClient();
+            ConfigureJamsForLevel();
+            StartCoroutine(SpawnWave(currentWaveIndex));
         }
     }
 
-    void SpawnClient()
+    void ConfigureJamsForLevel()
     {
-        // Find empty seats
+        HashSet<JamFlavor> neededFlavors = new HashSet<JamFlavor>();
+
+        foreach (var wave in levelConfig.waves)
+        {
+            foreach (var client in wave.clientsInWave)
+            {
+                if (client.jamFlavor == JamFlavor.Random)
+                {
+                    neededFlavors.Add(JamFlavor.Butter);
+                    neededFlavors.Add(JamFlavor.StrawberryJam);
+                    neededFlavors.Add(JamFlavor.GrapeJam);
+                    neededFlavors.Add(JamFlavor.PeanutButter);
+                }
+                else if (client.jamFlavor != JamFlavor.None)
+                {
+                    neededFlavors.Add(client.jamFlavor);
+                }
+            }
+        }
+        JamDecider.Instance.SetupLevelJams(neededFlavors);
+    }
+
+    public bool IsLastClientOfWave(Client client)
+    {
+        if (levelConfig == null || currentWaveIndex >= levelConfig.waves.Count)
+            return false;
+
+        var currentWave = levelConfig.waves[currentWaveIndex];
+
+        // 1. Count how many clients are ALREADY satisfied in the scene
+        int satisfiedInScene = activeClients.Values.Count(c => c.isSatisfied);
+
+        // 2. Total finished so far (those who already left) + those currently eating
+        int totalProgress = clientsFinishedInWave + satisfiedInScene;
+
+        // 3. If this total matches the wave goal, this is the final sequence
+        bool isLast = totalProgress >= currentWave.clientsInWave.Count;
+
+        // Debug to track the logic in the console
+        if (isLast) Debug.Log("<color=gold>Final Client Detected!</color>");
+
+        return isLast;
+    }
+
+    IEnumerator SpawnWave(int index)
+    {
+        if (index >= levelConfig.waves.Count)
+        {
+            Debug.Log("ALL WAVES CLEAR! Level Won.");
+            yield break;
+        }
+
+        if (index > 0)
+        {
+            Debug.Log($"Waiting 2.5s for Wave {index + 1}...");
+            yield return new WaitForSeconds(1f);
+        }
+
+        Debug.Log($"--- Starting Wave {index + 1} --- Clients to spawn: {levelConfig.waves[index].clientsInWave.Count}");
+        clientsFinishedInWave = 0;
+        var wave = levelConfig.waves[index];
+
+        foreach (var clientData in wave.clientsInWave)
+        {
+            // If the restaurant is full, wait until a seat opens up
+            while (activeClients.Count >= seatingPositions.Count)
+            {
+                Debug.Log($"Waiting for seat: ActiveClients({activeClients.Count}) >= SeatingPositions({seatingPositions.Count})");
+                yield return null;
+            }
+
+            SpawnClient(clientData);
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+
+    void SpawnClient(LevelConfiguration.ClientData data)
+    {
         var emptySeats = seatingPositions.Where(s => !activeClients.ContainsKey(s)).ToList();
-        if (emptySeats.Count == 0) return;
+
+        if (emptySeats.Count == 0)
+        {
+            Debug.LogWarning("No seats available to spawn client! Dictionary thinks all seats are occupied.");
+            return;
+        }
 
         Transform chosenSeat = emptySeats[Random.Range(0, emptySeats.Count)];
         GameObject newClientObj = Instantiate(clientPrefab, chosenSeat.position, chosenSeat.rotation);
 
         Client clientScript = newClientObj.GetComponent<Client>();
-
-        // --- ASSIGN RANDOM JAM FROM JAMDECIDER ---
-        string randomJamName = GetRandomJamFromDecider();
-        clientScript.SetOrder(randomJamName, JamDecider.Instance.GetColorFromJam(randomJamName));
-
+        clientScript.Initialize(chosenSeat);
         activeClients.Add(chosenSeat, clientScript);
+
+        Debug.Log($"Spawned client at {chosenSeat.name}. Current Active Count: {activeClients.Count}");
+
+        JamFlavor finalFlavor = data.jamFlavor;
+        if (finalFlavor == JamFlavor.Random)
+        {
+            finalFlavor = JamDecider.Instance.activeJams[Random.Range(0, JamDecider.Instance.activeJams.Count)].flavor;
+        }
+
+        clientScript.SetOrder(finalFlavor.ToString(), JamDecider.Instance.GetColorFromFlavor(finalFlavor));
     }
 
-    string GetRandomJamFromDecider()
+    public void OnClientFinished()
     {
-        if (JamDecider.Instance == null || JamDecider.Instance.jams.Count == 0) return "None";
+        clientsFinishedInWave++;
+        Debug.Log($"Client Finished! Progress in Wave: {clientsFinishedInWave}/{levelConfig.waves[currentWaveIndex].clientsInWave.Count}");
 
-        // Create a pool of options: All jams + "None" (Plain Toast)
-        int randomIndex = Random.Range(0, JamDecider.Instance.jams.Count);
-
-
-        return JamDecider.Instance.jams[randomIndex].name;
+        if (clientsFinishedInWave >= levelConfig.waves[currentWaveIndex].clientsInWave.Count)
+        {
+            Debug.Log($"Wave {currentWaveIndex + 1} cleared. Moving to next index.");
+            currentWaveIndex++;
+            StartCoroutine(SpawnWave(currentWaveIndex));
+        }
     }
-
 
     public Transform GetBestTarget(string currentJamInHand)
     {
-        // 1. Prioritize clients who want exactly what we have, sorted by least patience
-        var matchingClients = activeClients.Values
-            .Where(c => c.desiredCondiment == currentJamInHand && !c.isSatisfied)
-            .OrderBy(c => c.currentPatience)
-            .ToList();
+        var matchingKvp = activeClients.FirstOrDefault(kvp =>
+            kvp.Value.desiredCondiment == currentJamInHand && !kvp.Value.isSatisfied);
 
-        if (matchingClients.Count > 0)
+        if (matchingKvp.Value != null)
         {
-            return matchingClients[0].transform; // The seat
+            matchingKvp.Value.OpenMouth();
+            return matchingKvp.Value.transform;
         }
 
-        // 2. Fallback: If no one wants it, pick a random active client (they won't open mouth)
         if (activeClients.Count > 0)
         {
-            return activeClients.Keys.ElementAt(Random.Range(0, activeClients.Count));
+            int randomIndex = Random.Range(0, activeClients.Count);
+            return activeClients.Keys.ElementAt(randomIndex);
         }
 
-        // 3. Absolute Fallback: Random target from the main list if no clients exist
         return seatingPositions[Random.Range(0, seatingPositions.Count)];
     }
 
-    public void ClearSeat(Transform seat) => activeClients.Remove(seat);
+    public void ClearSeat(Transform seat)
+    {
+        if (seat == null)
+        {
+            Debug.LogWarning("ClearSeat called with null transform.");
+            return;
+        }
+
+        if (activeClients.ContainsKey(seat))
+        {
+            activeClients.Remove(seat);
+            Debug.Log($"Seat {seat.name} removed from dictionary. Remaining active: {activeClients.Count}");
+        }
+        else
+        {
+            Debug.LogWarning($"Attempted to clear seat {seat.name}, but it wasn't in the activeClients dictionary!");
+        }
+    }
 }

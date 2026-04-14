@@ -6,9 +6,14 @@ public class Toaster : MonoBehaviour
     public GameObject toastPrefab;
     public Transform ejectPoint;
 
+    public static Toaster Instance;
+
     [Header("Punch Game References")]
     public List<Transform> targets;
     public GameObject armPrefab;
+
+    [SerializeField] private float timeToLaunchToast = 2f;
+    private float lastLaunchTime = 0f;
 
     [Header("Launch Physics")]
     public float upForce = 9f;
@@ -31,13 +36,26 @@ public class Toaster : MonoBehaviour
     public float armPunchDuration = 0.15f;
     public float targetFlightForce = 25f;
 
+    private void Awake()
+    {
+        if (Instance == null) Instance = this;
+    }
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space)) LaunchToast();
+
+        if(Time.time - lastLaunchTime >= timeToLaunchToast)
+        {
+            LaunchToast();
+        }
     }
 
-    void LaunchToast()
+    public void LaunchToast(string customLetter = "")
     {
+
+        lastLaunchTime = Time.time;
+
         GameObject toast = Instantiate(toastPrefab, ejectPoint.position, ejectPoint.rotation);
         Rigidbody rb = toast.GetComponent<Rigidbody>();
         ToastBehavior behavior = toast.AddComponent<ToastBehavior>();
@@ -100,5 +118,19 @@ public class Toaster : MonoBehaviour
         );
 
         rb.AddForce(force, ForceMode.Impulse);
+
+        char letterToAssign;
+
+        if (!string.IsNullOrEmpty(customLetter))
+        {
+            letterToAssign = customLetter[0]; // Take the first char
+        }
+        else
+        {
+            // Your existing random letter logic
+            letterToAssign = (char)Random.Range('A', 'Z' + 1);
+        }
+
+        // toast.SetLetter(letterToAssign);
     }
 }
