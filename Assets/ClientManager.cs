@@ -16,8 +16,10 @@ public class ClientManager : MonoBehaviour
     public GameObject clientPrefab;
     public List<Transform> seatingPositions; // MAKE SURE THIS HAS AT LEAST 5 SLOTS!
     private Dictionary<Transform, Client> activeClients = new Dictionary<Transform, Client>();
+    public bool areThereClients => activeClients.Count > 0;
 
     private string currentWord = "";
+    private int currentIndex = 0;
 
     void Awake()
     {
@@ -98,6 +100,9 @@ public class ClientManager : MonoBehaviour
         clientsFinishedInWave = 0;
         var wave = levelConfig.waves[index];
 
+        currentWord = "";
+        currentIndex = 0;
+
         foreach (var clientData in wave.clientsInWave)
         {
             // If the restaurant is full, wait until a seat opens up
@@ -112,6 +117,21 @@ public class ClientManager : MonoBehaviour
         }
     }
 
+    public char GetCurrentLetter() 
+    { 
+        if (currentIndex < currentWord.Length)
+            return char.ToUpper( currentWord[currentIndex]);
+
+        else // Return random letter
+            return (char)('A' + Random.Range(0, 26));
+    }
+
+    public void IncreaseLetterIndex()
+    {
+        currentIndex++;
+        Debug.Log($"Letter Index Increased: {currentIndex}/{currentWord.Length}");
+    }
+
     void SpawnClient(LevelConfiguration.ClientData data)
     {
         var emptySeats = seatingPositions.Where(s => !activeClients.ContainsKey(s)).ToList();
@@ -121,6 +141,8 @@ public class ClientManager : MonoBehaviour
             Debug.LogWarning("No seats available to spawn client! Dictionary thinks all seats are occupied.");
             return;
         }
+
+        currentWord += data.customLetter;
 
         Transform chosenSeat = emptySeats[Random.Range(0, emptySeats.Count)];
         GameObject newClientObj = Instantiate(clientPrefab, chosenSeat.position, chosenSeat.rotation);

@@ -61,13 +61,15 @@ MonoBehaviour:
       customLetter: o
   - clientsInWave:
     - jamFlavor: 1
-      customLetter: 
+      customLetter: t
     - jamFlavor: 1
-      customLetter: 
+      customLetter: o
     - jamFlavor: 1
-      customLetter: 
+      customLetter: s
     - jamFlavor: 1
-      customLetter: 
+      customLetter: t
+    - jamFlavor: 1
+      customLetter: a
   - clientsInWave:
     - jamFlavor: 1
       customLetter: 

@@ -45,7 +45,7 @@ public class ToastBehavior : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        assignedLetter = (char)Random.Range(65, 91);
+        assignedLetter = ClientManager.Instance.GetCurrentLetter();
         assignedKey = (KeyCode)System.Enum.Parse(typeof(KeyCode), assignedLetter.ToString());
     }
 
@@ -125,7 +125,7 @@ public class ToastBehavior : MonoBehaviour
 
         if (currentFlightTargetClient != null)
         {
-
+            ClientManager.Instance.IncreaseLetterIndex();
             currentFlightTargetClient.isSatisfied = true;
         }
 

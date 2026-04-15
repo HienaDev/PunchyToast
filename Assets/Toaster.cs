@@ -49,7 +49,7 @@ public class Toaster : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space)) LaunchToast();
 
-        if(Time.time - lastLaunchTime >= timeToLaunchToast)
+        if(Time.time - lastLaunchTime >= timeToLaunchToast && ClientManager.Instance.areThereClients)
         {
             LaunchToast();
         }
