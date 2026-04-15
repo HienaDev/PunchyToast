@@ -38,6 +38,8 @@ public class Toaster : MonoBehaviour
     public float armPunchDuration = 0.15f;
     public float targetFlightForce = 25f;
 
+    [SerializeField] private float toastFlightDuration = 0.2f;
+
     [Header("Shake Settings")]
     [SerializeField] private float shakeDuration = 0.2f;
     [SerializeField] private float shakeStrength = 0.3f;
@@ -107,7 +109,7 @@ public class Toaster : MonoBehaviour
         behavior.potentialTargets = targets;
         behavior.armPrefab = armPrefab;
 
-        behavior.flightDuration = 0.3f;
+        behavior.flightDuration = toastFlightDuration;
 
         // 2. Pass Hover/Bob Settings
         behavior.hoverDuration = hoverTime;

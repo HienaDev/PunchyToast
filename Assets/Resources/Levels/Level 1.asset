@@ -21,14 +21,6 @@ MonoBehaviour:
   - clientsInWave:
     - jamFlavor: 1
       customLetter: T
-    - jamFlavor: 1
-      customLetter: O
-    - jamFlavor: 1
-      customLetter: S
-    - jamFlavor: 1
-      customLetter: T
-    - jamFlavor: 1
-      customLetter: A
   - clientsInWave:
     - jamFlavor: 1
       customLetter: I

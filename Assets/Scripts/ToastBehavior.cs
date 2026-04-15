@@ -31,7 +31,7 @@ public class ToastBehavior : MonoBehaviour
     // Internal State
     private Rigidbody rb;
     private bool isRising = false, hasLeftToaster = false, isHovering = false, hasBeenHit = false;
-    private bool isPunchable = true;
+    public bool isPunchable = true;
     private char assignedLetter;
     private KeyCode assignedKey;
     private float capturedXVel, capturedZVel;
@@ -242,19 +242,34 @@ public class ToastBehavior : MonoBehaviour
         if(currentFlightTargetClient != null)
         currentFlightTargetClient.OpenMouth();
 
-        transform.DOMove(target.position, flightDuration)
-            .SetEase(Ease.OutQuad)
-            .OnComplete(() => {
-                Debug.Log("Target Hit!");
-                rb.isKinematic = false;
-                rb.useGravity = true;
+        // 1. Create a Sequence
+        Sequence flightSeq = DOTween.Sequence();
 
-                if (currentFlightTargetClient != null)
-                {
-                    string myJam = JamDecider.Instance.allAvailableJams[JamDecider.Instance.currentJamIndex].flavor.ToString();
-                    currentFlightTargetClient.TryEatToast(myJam, gameObject);
-                }
-            });
+        // 2. Add the Move to the sequence
+        flightSeq.Append(transform.DOMove(target.position, flightDuration).SetEase(Ease.Linear));
+
+        // 3. Insert the Recoil callback halfway through the duration
+        flightSeq.InsertCallback(flightDuration / 2f, () => {
+            if (currentFlightTargetClient != null)
+            {
+                currentFlightTargetClient.Recoil();
+                Debug.Log("Recoil Triggered Halfway!");
+            }
+        });
+
+        // 4. Use the OnComplete on the sequence for the final impact
+        flightSeq.OnComplete(() => {
+            Debug.Log("Target Hit!");
+            rb.isKinematic = false;
+            rb.useGravity = true;
+
+            if (currentFlightTargetClient != null)
+            {
+                // Note: I removed Recoil() from here since it's now happening halfway
+                string myJam = JamDecider.Instance.allAvailableJams[JamDecider.Instance.currentJamIndex].flavor.ToString();
+                currentFlightTargetClient.TryEatToast(myJam, gameObject);
+            }
+        });
     }
 
     void ReleaseToast()

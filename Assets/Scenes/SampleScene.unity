@@ -2184,6 +2184,7 @@ MonoBehaviour:
   armSpawnOffset: 1
   armPunchDuration: 0.1
   targetFlightForce: 6
+  toastFlightDuration: 0.05
   shakeDuration: 0.2
   shakeStrength: 0.02
   shakeVibrato: 50
