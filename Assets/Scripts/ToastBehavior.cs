@@ -126,7 +126,7 @@ public class ToastBehavior : MonoBehaviour
         if (currentFlightTargetClient != null)
         {
             ClientManager.Instance.IncreaseLetterIndex();
-            currentFlightTargetClient.isSatisfied = true;
+            currentFlightTargetClient.Satisfy();
         }
 
         Vector3 dirToTarget = (targetTransform.position - transform.position).normalized;
@@ -144,7 +144,7 @@ public class ToastBehavior : MonoBehaviour
         arm.transform.DOMove(transform.position, armPunchDuration)
             .SetEase(Ease.Linear)
             .OnComplete(() => {
-                StartCoroutine(ImpactSequence(arm, targetTransform, dirToTarget));
+                StartCoroutine(ImpactSequence(arm, currentFlightTargetClient.TargetForToast, dirToTarget));
 
                 if(!ClientManager.Instance.IsLastClientOfWave(currentFlightTargetClient))
                     Toaster.Instance.LaunchToast();

@@ -5,23 +5,41 @@ public class Client : MonoBehaviour
 {
     [Header("Settings")]
     public Transform mouthBone;
+    public Transform pivot;
+    public Transform TargetForToast;
     public Vector3 mouthOpenRotation = new Vector3(-45, 0, 0);
     public float entranceDuration = 0.6f;
     public float popUpDistance = 2.0f;
+
+    [Header("Randomized Hopping")]
+    [SerializeField] private float minHopHeight = 0.02f;
+    [SerializeField] private float maxHopHeight = 0.08f;
+    [SerializeField] private float minHopSpeed = 0.3f;
+    [SerializeField] private float maxHopSpeed = 0.6f;
 
     [Header("Current Order")]
     public string desiredCondiment;
     public Color condimentColor;
     public bool isSatisfied = false;
 
+    [SerializeField] private int numberOfBites = 2;
+
     private Vector3 originalMouthRot;
+    private Vector3 pivotInitialLocalPos;
     private Transform mySeat;
     private Vector3 targetPosition;
 
+    [SerializeField] private Transform eyeLidL;
+    [SerializeField] private Transform eyeRidL;
+
+    private Tween hopTween; // Changed from Sequence to Tween for individual control
+
     void Start()
     {
-        // Store initial rotation for the "Closed" state
         originalMouthRot = mouthBone.localEulerAngles;
+        if (pivot != null) pivotInitialLocalPos = pivot.localPosition;
+
+        StartBlinking();
     }
 
     public void Initialize(Transform seat)
@@ -33,9 +51,59 @@ public class Client : MonoBehaviour
 
     private void EnterScene()
     {
-        // Start below and pop up with a bounce
         transform.position = targetPosition + Vector3.down * popUpDistance;
-        transform.DOMove(targetPosition, entranceDuration).SetEase(Ease.OutBack);
+        transform.DOMove(targetPosition, entranceDuration).SetEase(Ease.Linear).OnComplete(() => {
+            StartRandomHop();
+        });
+    }
+
+    private void StartRandomHop()
+    {
+        if (pivot == null || isSatisfied) return;
+
+        // 1. Randomize the values for this specific hop
+        float randomHeight = Random.Range(minHopHeight, maxHopHeight);
+        float randomSpeed = Random.Range(minHopSpeed, maxHopSpeed);
+
+        // 2. Move up to the random height
+        hopTween = pivot.DOLocalMoveY(pivotInitialLocalPos.y + randomHeight, randomSpeed)
+            .SetEase(Ease.InOutQuad)
+            .OnComplete(() => {
+                // 3. Move back down to the original position
+                pivot.DOLocalMoveY(pivotInitialLocalPos.y, randomSpeed)
+                    .SetEase(Ease.InOutQuad)
+                    .OnComplete(StartRandomHop); // Loop back to pick new values
+            });
+    }
+
+    public void Satisfy()
+    {
+        isSatisfied = true;
+
+        // Stop the hopping immediately
+        if (hopTween != null) hopTween.Kill();
+
+        if (pivot != null)
+        {
+            pivot.DOLocalRotate(Vector3.zero, 0.2f);
+            pivot.DOLocalMove(pivotInitialLocalPos, 0.2f);
+        }
+    }
+
+    private void StartBlinking()
+    {
+        float delay = Random.Range(2f, 4f);
+
+        DOVirtual.DelayedCall(delay, () => {
+            if (this == null) return;
+
+            eyeLidL.DOLocalRotate(new Vector3(-90, 0, 0), 0.1f);
+            eyeRidL.DOLocalRotate(new Vector3(-90, 0, 0), 0.1f).OnComplete(() => {
+                eyeLidL.DOLocalRotate(Vector3.zero, 0.1f);
+                eyeRidL.DOLocalRotate(Vector3.zero, 0.1f);
+                StartBlinking();
+            });
+        });
     }
 
     public void SetOrder(string jamName, Color jamColor)
@@ -55,20 +123,17 @@ public class Client : MonoBehaviour
         mouthBone.DOLocalRotate(mouthOpenRotation, 0.15f).SetEase(Ease.OutQuad);
     }
 
-    // New Munching Animation: Chops the mouth 3 times
     public void PlayMunchAnimation(System.Action onComplete)
     {
-        // Sequence of quick open/close movements
         Sequence munchSeq = DOTween.Sequence();
 
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < numberOfBites; i++)
         {
-            munchSeq.Append(mouthBone.DOLocalRotate(originalMouthRot, 0.1f).SetEase(Ease.InQuad));
-            munchSeq.Append(mouthBone.DOLocalRotate(mouthOpenRotation/3f, 0.1f).SetEase(Ease.OutQuad));
+            munchSeq.Append(mouthBone.DOLocalRotate(originalMouthRot, 0.08f).SetEase(Ease.Linear));
+            munchSeq.Append(mouthBone.DOLocalRotate(mouthOpenRotation / 3f, 0.08f).SetEase(Ease.Linear));
         }
 
-        // Final snap shut and then trigger the callback
-        munchSeq.Append(mouthBone.DOLocalRotate(originalMouthRot, 0.1f).SetEase(Ease.InBounce));
+        munchSeq.Append(mouthBone.DOLocalRotate(originalMouthRot, 0.05f).SetEase(Ease.Linear));
         munchSeq.OnComplete(() => onComplete?.Invoke());
     }
 
@@ -76,14 +141,12 @@ public class Client : MonoBehaviour
     {
         if (incomingJam == desiredCondiment)
         {
-            isSatisfied = true;
+            Satisfy();
             OpenMouth();
 
-            // Wait a moment for the food to "enter" the mouth
             DOVirtual.DelayedCall(0.3f, () => {
                 if (toast != null) Destroy(toast);
 
-                // Munch first, then leave
                 PlayMunchAnimation(() => {
                     ReceiveFood();
                 });
@@ -91,7 +154,6 @@ public class Client : MonoBehaviour
         }
         else
         {
-            // Shakes head "No"
             transform.DOShakePosition(0.4f, new Vector3(0.2f, 0, 0), 10, 90);
         }
     }
@@ -99,26 +161,15 @@ public class Client : MonoBehaviour
     public void ReceiveFood()
     {
         ClientManager.Instance.OnClientFinished();
-
-        if (mySeat != null)
-        {
-            ClientManager.Instance.ClearSeat(mySeat);
-        }
-
+        if (mySeat != null) ClientManager.Instance.ClearSeat(mySeat);
         ExitScene();
     }
 
     private void ExitScene()
     {
         Sequence exitSeq = DOTween.Sequence();
-
-        // 1. Wind up (Small hop up)
         exitSeq.Append(transform.DOMoveY(targetPosition.y + 0.1f, 0.15f).SetEase(Ease.OutQuad));
-
-        // 2. Dive down fast
         exitSeq.Append(transform.DOMoveY(targetPosition.y - popUpDistance, 0.4f).SetEase(Ease.InBack));
-
-        // 3. Clean up
         exitSeq.OnComplete(() => Destroy(gameObject));
     }
 }

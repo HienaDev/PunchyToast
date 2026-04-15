@@ -1,5 +1,15 @@
 {
   "dependencies": {
+    "com.gator-dragon-games.jigglephysics": {
+      "version": "https://github.com/naelstrof/JigglePhysics.git#upm",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.mathematics": "1.0.0",
+        "com.unity.collections": "2.0.0"
+      },
+      "hash": "4e0b04873b29c7faae92a47b4d223d1e044064b4"
+    },
     "com.unity.ai.navigation": {
       "version": "2.0.9",
       "depth": 0,
