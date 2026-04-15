@@ -41,6 +41,9 @@ public class ClientManager : MonoBehaviour
     {
         levelStartTime = Time.time; // Track start time
         levelConfig = config;
+
+        currentWaveIndex = 0;
+
         ConfigureJamsForLevel();
         StartCoroutine(SpawnWave(currentWaveIndex));
     }
