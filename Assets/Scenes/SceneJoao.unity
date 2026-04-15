@@ -2149,31 +2149,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 120d1a399d543594fa0a4912432c07ff, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7687405
+      value: 0.77751625
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 120d1a399d543594fa0a4912432c07ff, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.028720887
+      value: 0.029201286
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 120d1a399d543594fa0a4912432c07ff, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.6379656
+      value: -0.62724036
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 120d1a399d543594fa0a4912432c07ff, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.034830242
+      value: -0.034428477
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 120d1a399d543594fa0a4912432c07ff, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: -0.016
+      value: 0.127
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 120d1a399d543594fa0a4912432c07ff, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -79.377
+      value: -77.794
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 120d1a399d543594fa0a4912432c07ff, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: -5.175
+      value: -5.173
       objectReference: {fileID: 0}
     - target: {fileID: -8315695510981640877, guid: 120d1a399d543594fa0a4912432c07ff, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -2514,6 +2514,9 @@ MonoBehaviour:
   armSpawnOffset: 1
   armPunchDuration: 0.1
   targetFlightForce: 6
+  shakeDuration: 0.2
+  shakeStrength: 0.3
+  shakeVibrato: 20
   ding: {fileID: 0}
   popUp: {fileID: 0}
 --- !u!1 &481349071
@@ -6659,6 +6662,7 @@ MonoBehaviour:
   - {fileID: 665972114}
   - {fileID: 37156030}
   - {fileID: 1330017407}
+  levelCompleteUI: {fileID: 0}
 --- !u!1 &1750194023
 GameObject:
   m_ObjectHideFlags: 0
