@@ -11,6 +11,11 @@ public class Client : MonoBehaviour
     public float entranceDuration = 0.6f;
     public float popUpDistance = 2.0f;
 
+    [Header("Waiting Animation Settings")]
+    [SerializeField] private Vector3 waitingMouthClosed = new Vector3(-10, 0, 0); // Always slightly open
+    [SerializeField] private Vector3 waitingMouthOpen = new Vector3(-20, 0, 0);   // Opens a bit more
+    [SerializeField] private float waitingCycleDuration = 0.4f;
+
     [Header("Randomized Hopping")]
     [SerializeField] private float minHopHeight = 0.02f;
     [SerializeField] private float maxHopHeight = 0.08f;
@@ -33,8 +38,8 @@ public class Client : MonoBehaviour
     [SerializeField] private Transform eyeLidL;
     [SerializeField] private Transform eyeRidL;
 
-    private Tween hopTween; // Changed from Sequence to Tween for individual control
-
+    private Tween hopTween;
+    private Tween mouthTween;
 
     void Start()
     {
@@ -57,6 +62,7 @@ public class Client : MonoBehaviour
         transform.DOMove(targetPosition, entranceDuration).SetEase(Ease.Linear).OnComplete(() => {
             isSat = true;
             StartRandomHop();
+            StartWaitingForFood();
         });
     }
 
@@ -64,27 +70,37 @@ public class Client : MonoBehaviour
     {
         if (pivot == null || isSatisfied) return;
 
-        // 1. Randomize the values for this specific hop
         float randomHeight = Random.Range(minHopHeight, maxHopHeight);
         float randomSpeed = Random.Range(minHopSpeed, maxHopSpeed);
 
-        // 2. Move up to the random height
         hopTween = pivot.DOLocalMoveY(pivotInitialLocalPos.y + randomHeight, randomSpeed)
             .SetEase(Ease.InOutQuad)
             .OnComplete(() => {
-                // 3. Move back down to the original position
                 pivot.DOLocalMoveY(pivotInitialLocalPos.y, randomSpeed)
                     .SetEase(Ease.InOutQuad)
-                    .OnComplete(StartRandomHop); // Loop back to pick new values
+                    .OnComplete(StartRandomHop);
             });
+    }
+
+    private void StartWaitingForFood()
+    {
+        if (mouthBone == null || isSatisfied) return;
+
+        // Start at the 'closed' waiting position
+        mouthBone.localEulerAngles = waitingMouthClosed;
+
+        // Loop between the two custom waiting rotations
+        mouthTween = mouthBone.DOLocalRotate(waitingMouthOpen, waitingCycleDuration)
+            .SetEase(Ease.InOutSine)
+            .SetLoops(-1, LoopType.Yoyo);
     }
 
     public void Satisfy()
     {
         isSatisfied = true;
 
-        // Stop the hopping immediately
         if (hopTween != null) hopTween.Kill();
+        if (mouthTween != null) mouthTween.Kill();
 
         if (pivot != null)
         {
@@ -132,6 +148,7 @@ public class Client : MonoBehaviour
 
         for (int i = 0; i < numberOfBites; i++)
         {
+            // Munching returns to the absolute original rotation for a "clamp" effect
             munchSeq.Append(mouthBone.DOLocalRotate(originalMouthRot, 0.08f).SetEase(Ease.Linear));
             munchSeq.Append(mouthBone.DOLocalRotate(mouthOpenRotation / 3f, 0.08f).SetEase(Ease.Linear));
         }
