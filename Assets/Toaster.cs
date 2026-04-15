@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using UnityEngine;
@@ -37,6 +38,11 @@ public class Toaster : MonoBehaviour
     public float armPunchDuration = 0.15f;
     public float targetFlightForce = 25f;
 
+    [Header("Shake Settings")]
+    [SerializeField] private float shakeDuration = 0.2f;
+    [SerializeField] private float shakeStrength = 0.3f;
+    [SerializeField] private int shakeVibrato = 20;
+
     [SerializeField] private AudioSource ding;
     [SerializeField] private AudioSource popUp;
 
@@ -59,6 +65,9 @@ public class Toaster : MonoBehaviour
     {
         ding.Play();
         popUp.Play();
+
+        transform.DOComplete(); // Prevents "drifting" if toasts launch rapidly
+        transform.DOShakePosition(shakeDuration, shakeStrength, shakeVibrato);
 
         lastLaunchTime = Time.time;
 
