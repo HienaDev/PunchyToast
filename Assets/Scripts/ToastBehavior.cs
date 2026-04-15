@@ -127,6 +127,7 @@ public class ToastBehavior : MonoBehaviour
         {
             ClientManager.Instance.IncreaseLetterIndex();
             currentFlightTargetClient.Satisfy();
+            targetTransform = currentFlightTargetClient.TargetForToast; // Aim for the mouth pivot, not the whole client
         }
 
         Vector3 dirToTarget = (targetTransform.position - transform.position).normalized;
@@ -143,26 +144,11 @@ public class ToastBehavior : MonoBehaviour
 
         arm.transform.DOMove(transform.position, armPunchDuration)
             .SetEase(Ease.Linear)
-            .OnComplete(() =>
-            {
-                Transform target = currentFlightTargetClient.TargetForToast;
+            .OnComplete(() => {
 
-                if (currentFlightTargetClient != null)
-                {
-                    target = currentFlightTargetClient.TargetForToast;
-                    if (target == null)
-                    {
-                        target = ClientManager.Instance.GetBestTarget(JamDecider.Instance.GetCurrentJamName()); // Fallback to current position if no target
-                    }
-                }
-                else
-                    target = ClientManager.Instance.GetBestTarget(JamDecider.Instance.GetCurrentJamName()); // Fallback to current position if no target
+                StartCoroutine(ImpactSequence(arm, targetTransform, dirToTarget));
 
-
-
-                StartCoroutine(ImpactSequence(arm, currentFlightTargetClient.TargetForToast, dirToTarget));
-
-                if (!ClientManager.Instance.IsLastClientOfWave(currentFlightTargetClient))
+                if(!ClientManager.Instance.IsLastClientOfWave(currentFlightTargetClient))
                     Toaster.Instance.LaunchToast();
             });
     }
@@ -253,13 +239,12 @@ public class ToastBehavior : MonoBehaviour
 
         transform.DOLookAt(target.position, flightDuration / 4).SetEase(Ease.Linear);
 
-        if (currentFlightTargetClient != null)
-            currentFlightTargetClient.OpenMouth();
+        if(currentFlightTargetClient != null)
+        currentFlightTargetClient.OpenMouth();
 
         transform.DOMove(target.position, flightDuration)
             .SetEase(Ease.OutQuad)
-            .OnComplete(() =>
-            {
+            .OnComplete(() => {
                 Debug.Log("Target Hit!");
                 rb.isKinematic = false;
                 rb.useGravity = true;
