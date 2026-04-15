@@ -17,6 +17,8 @@ public class ClientManager : MonoBehaviour
     public List<Transform> seatingPositions; // MAKE SURE THIS HAS AT LEAST 5 SLOTS!
     private Dictionary<Transform, Client> activeClients = new Dictionary<Transform, Client>();
 
+    private string currentWord = "";
+
     void Awake()
     {
         if (Instance == null) Instance = this;
