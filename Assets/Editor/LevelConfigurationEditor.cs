@@ -9,12 +9,10 @@ public class LevelConfigurationEditor : Editor
 
     private void OnEnable()
     {
-        // Link to the "waves" property in the ScriptableObject
         SerializedProperty wavesProp = serializedObject.FindProperty("waves");
 
         waveList = new ReorderableList(serializedObject, wavesProp, true, true, true, true);
 
-        // Header Label
         waveList.drawHeaderCallback = (Rect rect) => {
             EditorGUI.LabelField(rect, "Level Waves (Auto-Expanding)");
         };
@@ -24,36 +22,26 @@ public class LevelConfigurationEditor : Editor
             list.serializedProperty.arraySize++;
             list.index = index;
 
-            // Apply properties so the new element is "real" in Unity's memory
             list.serializedProperty.serializedObject.ApplyModifiedProperties();
 
             SerializedProperty newElement = list.serializedProperty.GetArrayElementAtIndex(index);
-
-            // Force the Wave foldout to be open
             newElement.isExpanded = true;
 
-            // Safely find the inner list
             SerializedProperty innerList = newElement.FindPropertyRelative("clientsInWave");
-
             if (innerList != null)
             {
-                innerList.arraySize = 1; // Start with one client
-                // Force the first client entry to be open too
+                innerList.arraySize = 1;
                 if (innerList.arraySize > 0)
                 {
                     innerList.GetArrayElementAtIndex(0).isExpanded = true;
                 }
             }
 
-            // Apply again to save the expansion and inner list changes
             list.serializedProperty.serializedObject.ApplyModifiedProperties();
         };
 
-        // Draw the elements
         waveList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) => {
             SerializedProperty element = waveList.serializedProperty.GetArrayElementAtIndex(index);
-
-            // Shift rect slightly for padding
             rect.y += 2;
             EditorGUI.PropertyField(
                 new Rect(rect.x, rect.y, rect.width, EditorGUIUtility.singleLineHeight),
@@ -63,7 +51,6 @@ public class LevelConfigurationEditor : Editor
             );
         };
 
-        // Adjust height based on whether the wave is expanded
         waveList.elementHeightCallback = (int index) => {
             SerializedProperty element = waveList.serializedProperty.GetArrayElementAtIndex(index);
             return EditorGUI.GetPropertyHeight(element, true) + 4;
@@ -72,11 +59,23 @@ public class LevelConfigurationEditor : Editor
 
     public override void OnInspectorGUI()
     {
+        // 1. Pull data from the script
         serializedObject.Update();
 
         EditorGUILayout.Space();
+        EditorGUILayout.LabelField("General Settings", EditorStyles.boldLabel);
+
+        // 2. Automatically draw everything EXCEPT the "waves" list
+        // This will show levelNumber, fiveStarTime, fourStarTime, etc.
+        DrawPropertiesExcluding(serializedObject, new string[] { "waves", "m_Script" });
+
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("Wave Settings", EditorStyles.boldLabel);
+
+        // 3. Draw your custom ReorderableList
         waveList.DoLayoutList();
 
+        // 4. Push changes back to the script
         serializedObject.ApplyModifiedProperties();
     }
 }

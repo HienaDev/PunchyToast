@@ -1,0 +1,87 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cebe2a894356d6742864d0168a2546e7, type: 3}
+  m_Name: Level 10
+  m_EditorClassIdentifier: 
+  levelNumber: 10
+  fiveStarTime: 30
+  fourStarTime: 45
+  threeStarTime: 60
+  twoStarTime: 90
+  waves:
+  - clientsInWave:
+    - jamFlavor: 1
+      customLetter: T
+    - jamFlavor: 1
+      customLetter: O
+    - jamFlavor: 1
+      customLetter: S
+    - jamFlavor: 1
+      customLetter: T
+    - jamFlavor: 1
+      customLetter: A
+  - clientsInWave:
+    - jamFlavor: 1
+      customLetter: I
+  - clientsInWave:
+    - jamFlavor: 1
+      customLetter: L
+    - jamFlavor: 1
+      customLetter: O
+    - jamFlavor: 1
+      customLetter: V
+    - jamFlavor: 1
+      customLetter: E
+  - clientsInWave:
+    - jamFlavor: 1
+      customLetter: t
+    - jamFlavor: 1
+      customLetter: o
+    - jamFlavor: 1
+      customLetter: s
+    - jamFlavor: 1
+      customLetter: t
+    - jamFlavor: 1
+      customLetter: a
+  - clientsInWave:
+    - jamFlavor: 1
+      customLetter: e
+    - jamFlavor: 1
+      customLetter: u
+  - clientsInWave:
+    - jamFlavor: 1
+      customLetter: a
+    - jamFlavor: 1
+      customLetter: m
+    - jamFlavor: 1
+      customLetter: o
+  - clientsInWave:
+    - jamFlavor: 1
+      customLetter: t
+    - jamFlavor: 1
+      customLetter: o
+    - jamFlavor: 1
+      customLetter: s
+    - jamFlavor: 1
+      customLetter: t
+    - jamFlavor: 1
+      customLetter: a
+  - clientsInWave:
+    - jamFlavor: 1
+      customLetter: 
+  - clientsInWave:
+    - jamFlavor: 1
+      customLetter: 
+    - jamFlavor: 1
+      customLetter: 
+    - jamFlavor: 1
+      customLetter: 

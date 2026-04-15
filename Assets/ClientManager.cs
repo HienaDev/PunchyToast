@@ -25,6 +25,8 @@ public class ClientManager : MonoBehaviour
     private float levelStartTime;
     private bool levelFinished = false;
 
+    [SerializeField] private LevelComplete levelCompleteUI;
+
     void Awake()
     {
         if (Instance == null) Instance = this;
@@ -32,14 +34,15 @@ public class ClientManager : MonoBehaviour
 
     void Start()
     {
-        levelStartTime = Time.time; // Track start time
+        
+    }
 
-        Debug.Log($"ClientManager started. Total seating positions assigned: {seatingPositions.Count}");
-        if (levelConfig != null)
-        {
-            ConfigureJamsForLevel();
-            StartCoroutine(SpawnWave(currentWaveIndex));
-        }
+    public void StartLevel(LevelConfiguration config)
+    {
+        levelStartTime = Time.time; // Track start time
+        levelConfig = config;
+        ConfigureJamsForLevel();
+        StartCoroutine(SpawnWave(currentWaveIndex));
     }
 
     void ConfigureJamsForLevel()
@@ -198,7 +201,9 @@ public class ClientManager : MonoBehaviour
         SaveProgression(levelConfig.levelNumber, stars, totalTime);
 
         Debug.Log($"<color=green>Level Complete!</color> Time: {totalTime}s, Stars: {stars}");
-        // Here you would typically trigger your Win Menu UI
+        // Trigger win menu ui
+        levelCompleteUI.gameObject.SetActive(true);
+        levelCompleteUI.Initialize(stars, totalTime);
     }
 
     private int CalculateStars(float time)
