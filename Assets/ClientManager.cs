@@ -16,10 +16,14 @@ public class ClientManager : MonoBehaviour
     public GameObject clientPrefab;
     public List<Transform> seatingPositions; // MAKE SURE THIS HAS AT LEAST 5 SLOTS!
     private Dictionary<Transform, Client> activeClients = new Dictionary<Transform, Client>();
-    public bool areThereClients => activeClients.Count > 0;
+    public bool areThereClients => activeClients.Values.Count(c => c.isSat) > 0;
 
     private string currentWord = "";
     private int currentIndex = 0;
+
+    // New variables for Level Completion
+    private float levelStartTime;
+    private bool levelFinished = false;
 
     void Awake()
     {
@@ -28,6 +32,8 @@ public class ClientManager : MonoBehaviour
 
     void Start()
     {
+        levelStartTime = Time.time; // Track start time
+
         Debug.Log($"ClientManager started. Total seating positions assigned: {seatingPositions.Count}");
         if (levelConfig != null)
         {
@@ -87,13 +93,17 @@ public class ClientManager : MonoBehaviour
         if (index >= levelConfig.waves.Count)
         {
             Debug.Log("ALL WAVES CLEAR! Level Won.");
+
+            StartCoroutine(FinishLevelRoutine());
+
             yield break;
         }
 
         if (index > 0)
         {
             Debug.Log($"Waiting 2.5s for Wave {index + 1}...");
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.2f);
+            
         }
 
         Debug.Log($"--- Starting Wave {index + 1} --- Clients to spawn: {levelConfig.waves[index].clientsInWave.Count}");
@@ -102,6 +112,7 @@ public class ClientManager : MonoBehaviour
 
         currentWord = "";
         currentIndex = 0;
+
 
         foreach (var clientData in wave.clientsInWave)
         {
@@ -112,15 +123,16 @@ public class ClientManager : MonoBehaviour
                 yield return null;
             }
 
+            
             SpawnClient(clientData);
             yield return new WaitForSeconds(0.1f);
         }
     }
 
-    public char GetCurrentLetter() 
-    { 
+    public char GetCurrentLetter()
+    {
         if (currentIndex < currentWord.Length)
-            return char.ToUpper( currentWord[currentIndex]);
+            return char.ToUpper(currentWord[currentIndex]);
 
         else // Return random letter
             return (char)('A' + Random.Range(0, 26));
@@ -175,6 +187,40 @@ public class ClientManager : MonoBehaviour
         }
     }
 
+    private IEnumerator FinishLevelRoutine()
+    {
+        levelFinished = true;
+        yield return new WaitForSeconds(2f);
+
+        float totalTime = Time.time - levelStartTime;
+        int stars = CalculateStars(totalTime);
+
+        SaveProgression(levelConfig.levelNumber, stars, totalTime);
+
+        Debug.Log($"<color=green>Level Complete!</color> Time: {totalTime}s, Stars: {stars}");
+        // Here you would typically trigger your Win Menu UI
+    }
+
+    private int CalculateStars(float time)
+    {
+        if (time <= levelConfig.fiveStarTime) return 5;
+        if (time <= levelConfig.fourStarTime) return 4;
+        if (time <= levelConfig.threeStarTime) return 3;
+        if (time <= levelConfig.twoStarTime) return 2;
+        return 1;
+    }
+
+    private void SaveProgression(int levelID, int stars, float time)
+    {
+        float oldTime = PlayerPrefs.GetFloat($"Level_{levelID}_Time", Mathf.Infinity);
+        if (time < oldTime)
+        {
+            PlayerPrefs.SetInt($"Level_{levelID}_Stars", stars);
+            PlayerPrefs.SetFloat($"Level_{levelID}_Time", time);
+            PlayerPrefs.Save();
+        }
+    }
+
     public Transform GetBestTarget(string currentJamInHand)
     {
         foreach (var kvp in activeClients)
@@ -212,6 +258,12 @@ public class ClientManager : MonoBehaviour
         {
             activeClients.Remove(seat);
             Debug.Log($"Seat {seat.name} removed from dictionary. Remaining active: {activeClients.Count}");
+
+            // Double check if this was the last client of the last wave
+            if (currentWaveIndex >= levelConfig.waves.Count && activeClients.Count == 0 && !levelFinished)
+            {
+                StartCoroutine(FinishLevelRoutine());
+            }
         }
         else
         {

@@ -21,6 +21,7 @@ public class Client : MonoBehaviour
     public string desiredCondiment;
     public Color condimentColor;
     public bool isSatisfied = false;
+    public bool isSat = false;
 
     [SerializeField] private int numberOfBites = 2;
 
@@ -33,6 +34,7 @@ public class Client : MonoBehaviour
     [SerializeField] private Transform eyeRidL;
 
     private Tween hopTween; // Changed from Sequence to Tween for individual control
+
 
     void Start()
     {
@@ -53,6 +55,7 @@ public class Client : MonoBehaviour
     {
         transform.position = targetPosition + Vector3.down * popUpDistance;
         transform.DOMove(targetPosition, entranceDuration).SetEase(Ease.Linear).OnComplete(() => {
+            isSat = true;
             StartRandomHop();
         });
     }
