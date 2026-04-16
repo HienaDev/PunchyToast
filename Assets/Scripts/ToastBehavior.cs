@@ -112,7 +112,7 @@ public class ToastBehavior : MonoBehaviour
 
 
         hasBeenHit = true;
-        isPunchable = false;
+
 
         string currentJam = JamDecider.Instance.GetCurrentJamName();
         Transform targetTransform = ClientManager.Instance.GetBestTarget(currentJam);
@@ -129,6 +129,10 @@ public class ToastBehavior : MonoBehaviour
             currentFlightTargetClient.Satisfy();
             targetTransform = currentFlightTargetClient.TargetForToast; // Aim for the mouth pivot, not the whole client
         }
+
+        isPunchable = false;
+        if (!ClientManager.Instance.IsLastClientOfWave(currentFlightTargetClient))
+            Toaster.Instance.LaunchToast(); // here
 
         Vector3 dirToTarget = (targetTransform.position - transform.position).normalized;
         Quaternion baseLook = Quaternion.LookRotation(dirToTarget);
@@ -148,8 +152,7 @@ public class ToastBehavior : MonoBehaviour
 
                 StartCoroutine(ImpactSequence(arm, targetTransform, dirToTarget));
 
-                if(!ClientManager.Instance.IsLastClientOfWave(currentFlightTargetClient))
-                    Toaster.Instance.LaunchToast();
+  
             });
     }
 
