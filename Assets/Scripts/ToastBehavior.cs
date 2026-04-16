@@ -188,6 +188,8 @@ public class ToastBehavior : MonoBehaviour
             transform.DOLookAt(target.position, flightDuration / 4).SetEase(Ease.Linear);
             currentFlightTargetClient.OpenMouth();
 
+            gameObject.GetComponent<Collider>().enabled = false; // Disable collider to prevent mid-flight collisions
+
             Sequence flightSeq = DOTween.Sequence();
             flightSeq.Append(transform.DOMove(target.position, flightDuration).SetEase(Ease.Linear));
             flightSeq.InsertCallback(flightDuration / 2f, () => { if (currentFlightTargetClient != null) currentFlightTargetClient.Recoil(); });
@@ -218,6 +220,9 @@ public class ToastBehavior : MonoBehaviour
 
             rb.AddForce(throwDir * targetFlightForce, ForceMode.Impulse);
             rb.AddTorque(new Vector3(Random.value, Random.value, Random.value) * 10f, ForceMode.Impulse);
+
+            // change layer to default layer so it can interact with the environment properly on its way down
+            gameObject.layer = LayerMask.NameToLayer("Default");
 
             if (letterText != null) letterText.enabled = false;
             isPunchable = false;
