@@ -4,6 +4,17 @@ using System.Collections;
 using System.Linq;
 using TMPro;
 
+[System.Serializable]
+public class WeightedClient
+{
+    public GameObject prefab;
+    [Range(0, 100)] public float spawnWeight; // Base chance
+
+    [Header("Flavor Preference")]
+    public List<JamFlavor> favoriteFlavors;
+    public float preferenceMultiplier = 2.0f; // How much to boost weight if match found
+}
+
 public class ClientManager : MonoBehaviour
 {
     public static ClientManager Instance;
@@ -20,7 +31,7 @@ public class ClientManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI satisfiedClientsText;
 
     [Header("Setup")]
-    public GameObject[] clientPrefab;
+    public List<WeightedClient> clientPrefabs;
     public List<Transform> seatingPositions;
     private Dictionary<Transform, Client> activeClients = new Dictionary<Transform, Client>();
     public bool areThereClients => activeClients.Values.Count(c => c.isSat) > 0;
@@ -193,9 +204,10 @@ public class ClientManager : MonoBehaviour
         availableIndexes.Add(currentWord.Length - 1);
         Transform chosenSeat = availableSeats[Random.Range(0, availableSeats.Count)];
 
-        GameObject randomClientPrefab = clientPrefab[Random.Range(0, clientPrefab.Length)];
+        GameObject chosenPrefab = GetWeightedRandomPrefab();
 
-        GameObject newClientObj = Instantiate(randomClientPrefab, chosenSeat.position, chosenSeat.rotation);
+        GameObject newClientObj = Instantiate(chosenPrefab, chosenSeat.position, chosenSeat.rotation);
+
         Client clientScript = newClientObj.GetComponent<Client>();
 
         Sprite chosenSprite;
@@ -215,6 +227,42 @@ public class ClientManager : MonoBehaviour
         JamFlavor finalFlavor = data.jamFlavor;
         if (finalFlavor == JamFlavor.Random) finalFlavor = JamDecider.Instance.activeJams[Random.Range(0, JamDecider.Instance.activeJams.Count)].flavor;
         clientScript.SetOrder(finalFlavor.ToString(), JamDecider.Instance.GetColorFromFlavor(finalFlavor));
+    }
+
+    private GameObject GetWeightedRandomPrefab()
+    {
+        // Get the current flavor from your JamDecider
+        JamFlavor currentActiveFlavor = JamDecider.Instance.allAvailableJams[JamDecider.Instance.currentJamIndex].flavor;
+
+        float totalWeight = 0;
+        List<float> adjustedWeights = new List<float>();
+
+        // Calculate adjusted weights based on preference
+        for (int i = 0; i < clientPrefabs.Count; i++)
+        {
+            float weight = clientPrefabs[i].spawnWeight;
+
+            // If the current jam is one of their favorites, boost their weight!
+            if (clientPrefabs[i].favoriteFlavors.Contains(currentActiveFlavor))
+            {
+                weight *= clientPrefabs[i].preferenceMultiplier;
+            }
+
+            adjustedWeights.Add(weight);
+            totalWeight += weight;
+        }
+
+        // Standard Weighted Random Selection
+        float pivot = Random.Range(0, totalWeight);
+        float currentWeightSum = 0;
+
+        for (int i = 0; i < clientPrefabs.Count; i++)
+        {
+            currentWeightSum += adjustedWeights[i];
+            if (pivot <= currentWeightSum) return clientPrefabs[i].prefab;
+        }
+
+        return clientPrefabs[0].prefab;
     }
 
     public void OnClientFinished()
