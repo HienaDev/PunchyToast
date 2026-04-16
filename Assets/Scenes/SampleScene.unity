@@ -2326,6 +2326,7 @@ MonoBehaviour:
   shakeVibrato: 50
   ding: {fileID: 274024437}
   popUp: {fileID: 1138770723}
+  easyMode: 1
 --- !u!1 &468315401 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2161788455907823095, guid: a8d93d6abe674d041a18fd35ff24c0fe, type: 3}
@@ -6756,7 +6757,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2161788455907823095, guid: a8d93d6abe674d041a18fd35ff24c0fe, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8851287058758352503, guid: a8d93d6abe674d041a18fd35ff24c0fe, type: 3}
       propertyPath: m_Pivot.x
