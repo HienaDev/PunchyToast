@@ -25,7 +25,7 @@ public class HoverAndScale : MonoBehaviour
     void Awake()
     {
         tweenID = "HoverScale_" + gameObject.GetInstanceID();
-        startPos = transform.localPosition; // Use localPosition for better stability
+        startPos = transform.localPosition;
         startScale = transform.localScale;
     }
 
@@ -33,64 +33,57 @@ public class HoverAndScale : MonoBehaviour
     {
         transform.DOKill();
 
-        // 1. Determine the randomized targets for this "life cycle" immediately
         float varHoverHeight = hoverHeight + Random.Range(-hoverVariance, hoverVariance);
         float varScaleMult = scaleMultiplier + Random.Range(-scaleVariance, scaleVariance);
         float varHoverSpeed = hoverSpeed + Random.Range(-hoverVariance, hoverVariance);
         float varScaleSpeed = scaleSpeed + Random.Range(-scaleVariance, scaleVariance);
-
-        // 2. Pick a random starting point in the "sine wave" (0 to 1)
         float randomPhase = Random.Range(0f, 1f);
 
-        // Calculate where the object SHOULD be based on that phase
-        // This prevents the "snap" because we scale into the offset position
         float initialYOffset = Mathf.Lerp(-varHoverHeight, varHoverHeight, randomPhase);
         float initialScaleOffset = Mathf.Lerp(1f, varScaleMult, randomPhase);
 
         Vector3 spawnPos = new Vector3(startPos.x, startPos.y + initialYOffset, startPos.z);
         Vector3 spawnScale = startScale * initialScaleOffset;
 
-        // 3. Reset and Intro
         transform.localScale = Vector3.zero;
         transform.localPosition = startPos;
 
-        // Animate from 0 to the ALREADY OFFSET position/scale
-        transform.DOLocalMove(spawnPos, transitionDuration).SetEase(introEase);
+        // Apply SetUpdate(true) to Intro
+        transform.DOLocalMove(spawnPos, transitionDuration).SetEase(introEase).SetUpdate(true);
         transform.DOScale(spawnScale, transitionDuration)
             .SetEase(introEase)
+            .SetUpdate(true)
             .OnComplete(() => StartLooping(spawnPos, spawnScale, varHoverHeight, varScaleMult, varHoverSpeed, varScaleSpeed));
     }
 
     private void StartLooping(Vector3 currentPos, Vector3 currentScale, float hHeight, float sMult, float hSpeed, float sSpeed)
     {
-        // 4. Start the Hover Loop from its current offset
-        // We use the opposite bound as the target so it continues the motion
         float targetY = (currentPos.y >= startPos.y) ? startPos.y - hHeight : startPos.y + hHeight;
 
+        // Apply SetUpdate(true) to continuous loops
         transform.DOLocalMoveY(targetY, hSpeed)
             .SetEase(Ease.InOutSine)
             .SetLoops(-1, LoopType.Yoyo)
-            .SetId(tweenID);
+            .SetId(tweenID)
+            .SetUpdate(true);
 
-        // 5. Start the Scale Loop from its current offset
         Vector3 targetScale = (currentScale.magnitude >= (startScale * sMult).magnitude) ? startScale : startScale * sMult;
 
         transform.DOScale(targetScale, sSpeed)
             .SetEase(Ease.InOutSine)
             .SetLoops(-1, LoopType.Yoyo)
-            .SetId(tweenID);
+            .SetId(tweenID)
+            .SetUpdate(true);
     }
 
     public void Descale()
     {
-        transform.DOKill(); // Kill loops immediately
+        transform.DOKill();
         transform.DOScale(Vector3.zero, transitionDuration)
             .SetEase(outroEase)
+            .SetUpdate(true)
             .OnComplete(() => gameObject.SetActive(false));
     }
 
-    private void OnDisable()
-    {
-        transform.DOKill();
-    }
+    private void OnDisable() => transform.DOKill();
 }

@@ -51,6 +51,11 @@ public class LevelButton : MonoBehaviour
     {
         ClientManager.Instance.StartLevel(levelConfig);
 
+        if (MusicManager.Instance != null)
+        {
+            MusicManager.Instance.FadeToLevel();
+        }
+
         if (menuPanel != null)
         {
             menuPanel.SetActive(false);
