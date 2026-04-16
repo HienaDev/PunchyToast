@@ -1,13 +1,13 @@
 using DG.Tweening;
 using System.Collections.Generic;
-using System.Net.NetworkInformation;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Toaster : MonoBehaviour
 {
     public GameObject toastPrefab;
     public Transform ejectPoint;
-
     public static Toaster Instance;
 
     [Header("Punch Game References")]
@@ -37,7 +37,6 @@ public class Toaster : MonoBehaviour
     public float armSpawnOffset = 4f;
     public float armPunchDuration = 0.15f;
     public float targetFlightForce = 25f;
-
     [SerializeField] private float toastFlightDuration = 0.2f;
 
     [Header("Shake Settings")]
@@ -47,6 +46,10 @@ public class Toaster : MonoBehaviour
 
     [SerializeField] private AudioSource ding;
     [SerializeField] private AudioSource popUp;
+    [SerializeField] private Toggle easyModeToggle;
+    public bool easyMode = false;
+
+    private List<ToastBehavior> activeToasts = new List<ToastBehavior>();
 
     private void Awake()
     {
@@ -55,20 +58,40 @@ public class Toaster : MonoBehaviour
 
     void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.Space)) LaunchToast();
-
-        if(Time.time - lastLaunchTime >= timeToLaunchToast && ClientManager.Instance.areThereClients)
+        if (Time.time - lastLaunchTime >= timeToLaunchToast && ClientManager.Instance.areThereClients)
         {
-            LaunchToast();
+            // Use the new method to check if the air is clear
+            if (!AreTherePunchableToasts())
+            {
+                LaunchToast();
+            }
         }
+    }
+
+    public bool AreTherePunchableToasts()
+    {
+        // Remove toasts that are null OR have already been hit/timed out (isPunchable == false)
+        activeToasts.RemoveAll(t => t == null || !t.isPunchable);
+
+        // If the list still has items, it means there are active targets in the air
+        return activeToasts.Count > 0;
+    }
+
+    public void SetupToasterSettings(LevelConfiguration config)
+    {
+        this.hoverTime = config.hoverTime;
+        this.minPreHoverDelay = config.minPreHoverDelay;
+        this.maxPreHoverDelay = config.maxPreHoverDelay;
+        this.driftFactor = config.driftFactor;
     }
 
     public void LaunchToast(string customLetter = "")
     {
+        if (!ClientManager.Instance.areThereClients) return;
+
         ding.Play();
         popUp.Play();
-
-        transform.DOComplete(); // Prevents "drifting" if toasts launch rapidly
+        transform.DOComplete();
         transform.DOShakePosition(shakeDuration, shakeStrength, shakeVibrato);
 
         lastLaunchTime = Time.time;
@@ -77,77 +100,48 @@ public class Toaster : MonoBehaviour
         Rigidbody rb = toast.GetComponent<Rigidbody>();
         ToastBehavior behavior = toast.AddComponent<ToastBehavior>();
 
-        // Randomsize the saturation of the base color of the toast to be more burnt
+        activeToasts.Add(behavior);
+
+        bool isSimul = ClientManager.Instance.GetSimultaneousStatusForNextToast();
+        behavior.isSimultaneous = isSimul;
+
         TAG_ToastMesh toastMesh = toast.GetComponentInChildren<TAG_ToastMesh>();
         if (toastMesh != null)
         {
             Renderer rend = toastMesh.GetComponent<Renderer>();
             if (rend != null)
             {
-                // 1. Get the current color
                 Color baseColor = rend.material.GetColor("baseColorFactor");
-
-                // 2. Convert RGB to HSV
                 float h, s, v;
                 Color.RGBToHSV(baseColor, out h, out s, out v);
-
-                // 3. Set Saturation based on your 0-100 logic
-                // If you want a random saturation between 0 and 100:
-                float inspectorSaturation = Random.Range(0f, 100f);
-                s = inspectorSaturation / 100f; // Convert 100 to 1.0
-
-                // 4. Convert back to RGB
-                Color finalColor = Color.HSVToRGB(h, s, v);
-
-                // 5. Apply it
-                rend.material.SetColor("baseColorFactor", finalColor);
+                s = Random.Range(0f, 100f) / 100f;
+                rend.material.SetColor("baseColorFactor", Color.HSVToRGB(h, s, v));
             }
         }
 
-
-        // 1. Pass Punch/Target References
         behavior.potentialTargets = targets;
         behavior.armPrefab = armPrefab;
-
         behavior.flightDuration = toastFlightDuration;
-
-        // 2. Pass Hover/Bob Settings
-        behavior.hoverDuration = hoverTime;
+        behavior.hoverDuration = easyModeToggle.isOn ? 600f : hoverTime;
+        behavior.driftFactor = easyModeToggle.isOn ? 0f : driftFactor;
         behavior.bobAmount = bobAmount;
         behavior.bobSpeed = bobSpeed;
         behavior.preHoverDelay = Random.Range(minPreHoverDelay, maxPreHoverDelay);
-        behavior.driftFactor = driftFactor;
-
-        // 3. Pass Punch Mechanics Settings
         behavior.debugAlwaysL = debugAlwaysL;
         behavior.armSpawnOffset = armSpawnOffset;
         behavior.armPunchDuration = armPunchDuration;
         behavior.targetFlightForce = targetFlightForce;
         behavior.armShrinkDuration = 0.6f;
 
-        // 4. Randomized Visuals/Physics
         toast.transform.eulerAngles += new Vector3(Random.Range(-15f, 15f), Random.Range(-15f, 15f), Random.Range(-15f, 15f));
+        rb.AddForce(new Vector3(Random.Range(-xSpread, xSpread), Random.Range(upForce - 0.5f, upForce), Random.Range(-zSpread, zSpread)), ForceMode.Impulse);
 
-        Vector3 force = new Vector3(
-            Random.Range(-xSpread, xSpread),
-            Random.Range(upForce - 0.5f, upForce),
-            Random.Range(-zSpread, zSpread)
-        );
-
-        rb.AddForce(force, ForceMode.Impulse);
-
-        char letterToAssign;
-
-        if (!string.IsNullOrEmpty(customLetter))
+        if (isSimul)
         {
-            letterToAssign = customLetter[0]; // Take the first char
+            ClientManager.Instance.PrepareNextLetterForSimultaneous();
+            LaunchToast();
         }
-        else
-        {
-            // Your existing random letter logic
-            letterToAssign = (char)Random.Range('A', 'Z' + 1);
-        }
-
-        // toast.SetLetter(letterToAssign);
     }
+
+    public void UnregisterToast(ToastBehavior toast) => activeToasts.Remove(toast);
 }

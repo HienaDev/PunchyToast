@@ -13,75 +13,42 @@ MonoBehaviour:
   m_Name: Level 2
   m_EditorClassIdentifier: 
   levelNumber: 2
+  hoverTime: 8
+  minPreHoverDelay: 0
+  maxPreHoverDelay: 0.1
+  driftFactor: 0.05
   fiveStarTime: 30
   fourStarTime: 45
   threeStarTime: 60
   twoStarTime: 90
   waves:
-  - clientsInWave:
+  - allowBottomRow: 1
+    allowTopRow: 0
+    clientsInWave:
     - jamFlavor: 1
-      customLetter: T
-    - jamFlavor: 1
-      customLetter: O
-    - jamFlavor: 1
-      customLetter: S
-    - jamFlavor: 1
-      customLetter: T
-    - jamFlavor: 1
-      customLetter: A
-  - clientsInWave:
-    - jamFlavor: 1
-      customLetter: I
-  - clientsInWave:
-    - jamFlavor: 1
-      customLetter: L
-    - jamFlavor: 1
-      customLetter: O
-    - jamFlavor: 1
-      customLetter: V
-    - jamFlavor: 1
-      customLetter: E
-  - clientsInWave:
-    - jamFlavor: 1
-      customLetter: t
+      customLetter: p
+      simultaneousToast: 0
     - jamFlavor: 1
       customLetter: o
+      simultaneousToast: 0
+  - allowBottomRow: 1
+    allowTopRow: 0
+    clientsInWave:
     - jamFlavor: 1
-      customLetter: s
+      customLetter: r
+      simultaneousToast: 0
     - jamFlavor: 1
-      customLetter: t
-    - jamFlavor: 1
-      customLetter: a
-  - clientsInWave:
-    - jamFlavor: 1
-      customLetter: e
-    - jamFlavor: 1
-      customLetter: u
-  - clientsInWave:
-    - jamFlavor: 1
-      customLetter: a
-    - jamFlavor: 1
-      customLetter: m
-    - jamFlavor: 1
-      customLetter: o
-  - clientsInWave:
-    - jamFlavor: 1
-      customLetter: t
-    - jamFlavor: 1
-      customLetter: o
-    - jamFlavor: 1
-      customLetter: s
-    - jamFlavor: 1
-      customLetter: t
+      customLetter: r
+      simultaneousToast: 0
+  - allowBottomRow: 1
+    allowTopRow: 0
+    clientsInWave:
     - jamFlavor: 1
       customLetter: a
-  - clientsInWave:
+      simultaneousToast: 0
     - jamFlavor: 1
-      customLetter: 
-  - clientsInWave:
+      customLetter: d
+      simultaneousToast: 0
     - jamFlavor: 1
-      customLetter: 
-    - jamFlavor: 1
-      customLetter: 
-    - jamFlavor: 1
-      customLetter: 
+      customLetter: a
+      simultaneousToast: 0
