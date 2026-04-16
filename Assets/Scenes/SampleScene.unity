@@ -6280,7 +6280,11 @@ MonoBehaviour:
   levelConfig: {fileID: 11400000, guid: 48583135abd7d0349b11d0a6be437fb8, type: 2}
   maxClientsText: {fileID: 870423}
   satisfiedClientsText: {fileID: 1865321937}
-  clientPrefab: {fileID: 8878267603986006268, guid: 713dda271961541408eab04007d3a72a, type: 3}
+  clientPrefabs:
+  - prefab: {fileID: 8878267603986006268, guid: 713dda271961541408eab04007d3a72a, type: 3}
+    spawnWeight: 100
+    favoriteFlavors: 00000000
+    preferenceMultiplier: 2
   seatingPositions:
   - {fileID: 182842326}
   - {fileID: 1766857180}
