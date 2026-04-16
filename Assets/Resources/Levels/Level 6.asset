@@ -13,75 +13,102 @@ MonoBehaviour:
   m_Name: Level 6
   m_EditorClassIdentifier: 
   levelNumber: 6
+  hoverTime: 1.5
+  minPreHoverDelay: 0
+  maxPreHoverDelay: 0.1
+  driftFactor: 0.2
   fiveStarTime: 30
   fourStarTime: 45
   threeStarTime: 60
   twoStarTime: 90
   waves:
-  - clientsInWave:
+  - allowBottomRow: 1
+    allowTopRow: 1
+    clientsInWave:
     - jamFlavor: 1
-      customLetter: T
-    - jamFlavor: 1
-      customLetter: O
-    - jamFlavor: 1
-      customLetter: S
-    - jamFlavor: 1
-      customLetter: T
-    - jamFlavor: 1
-      customLetter: A
-  - clientsInWave:
-    - jamFlavor: 1
-      customLetter: I
-  - clientsInWave:
-    - jamFlavor: 1
-      customLetter: L
+      customLetter: N
+      simultaneousToast: 0
     - jamFlavor: 1
       customLetter: O
+      simultaneousToast: 0
     - jamFlavor: 1
       customLetter: V
+      simultaneousToast: 0
     - jamFlavor: 1
-      customLetter: E
-  - clientsInWave:
+      customLetter: O
+      simultaneousToast: 0
+  - allowBottomRow: 1
+    allowTopRow: 1
+    clientsInWave:
     - jamFlavor: 1
-      customLetter: t
+      customLetter: S
+      simultaneousToast: 0
     - jamFlavor: 1
-      customLetter: o
+      customLetter: A
+      simultaneousToast: 0
     - jamFlavor: 1
-      customLetter: s
+      customLetter: B
+      simultaneousToast: 0
     - jamFlavor: 1
-      customLetter: t
+      customLetter: O
+      simultaneousToast: 0
     - jamFlavor: 1
-      customLetter: a
-  - clientsInWave:
+      customLetter: R
+      simultaneousToast: 0
+  - allowBottomRow: 1
+    allowTopRow: 0
+    clientsInWave:
+    - jamFlavor: 2
+      customLetter: M
+      simultaneousToast: 0
+    - jamFlavor: 2
+      customLetter: O
+      simultaneousToast: 0
+    - jamFlavor: 2
+      customLetter: R
+      simultaneousToast: 0
+  - allowBottomRow: 1
+    allowTopRow: 1
+    clientsInWave:
+    - jamFlavor: 2
+      customLetter: A
+      simultaneousToast: 0
+    - jamFlavor: 2
+      customLetter: N
+      simultaneousToast: 0
+    - jamFlavor: 2
+      customLetter: G
+      simultaneousToast: 0
+    - jamFlavor: 2
+      customLetter: O
+      simultaneousToast: 0
+  - allowBottomRow: 1
+    allowTopRow: 0
+    clientsInWave:
     - jamFlavor: 1
-      customLetter: e
+      customLetter: M
+      simultaneousToast: 0
+    - jamFlavor: 2
+      customLetter: M
+      simultaneousToast: 0
     - jamFlavor: 1
-      customLetter: u
-  - clientsInWave:
+      customLetter: M
+      simultaneousToast: 0
+  - allowBottomRow: 1
+    allowTopRow: 1
+    clientsInWave:
+    - jamFlavor: 2
+      customLetter: B
+      simultaneousToast: 0
     - jamFlavor: 1
-      customLetter: a
+      customLetter: O
+      simultaneousToast: 0
+    - jamFlavor: 2
+      customLetter: O
+      simultaneousToast: 0
     - jamFlavor: 1
-      customLetter: m
-    - jamFlavor: 1
-      customLetter: o
-  - clientsInWave:
-    - jamFlavor: 1
-      customLetter: t
-    - jamFlavor: 1
-      customLetter: o
-    - jamFlavor: 1
-      customLetter: s
-    - jamFlavor: 1
-      customLetter: t
-    - jamFlavor: 1
-      customLetter: a
-  - clientsInWave:
-    - jamFlavor: 1
-      customLetter: 
-  - clientsInWave:
-    - jamFlavor: 1
-      customLetter: 
-    - jamFlavor: 1
-      customLetter: 
-    - jamFlavor: 1
-      customLetter: 
+      customLetter: O
+      simultaneousToast: 0
+    - jamFlavor: 2
+      customLetter: M
+      simultaneousToast: 0

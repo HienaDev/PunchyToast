@@ -76,7 +76,7 @@ Material:
     - _ZWrite: 1
     - _ZWriteControl: 0
     m_Colors:
-    - _BlushColor: {r: 0.9712711, g: 0.9712711, b: 0.9712711, a: 1}
+    - _BlushColor: {r: 1, g: 1, b: 1, a: 1}
     - _HairColor: {r: 0.16907454, g: 0.4792453, b: 0.053349912, a: 1}
     - _HairTextureColor: {r: 0, g: 0, b: 1, a: 1}
     - _ShirtColor: {r: 0.3584906, g: 0.2509434, b: 0.2509434, a: 1}
