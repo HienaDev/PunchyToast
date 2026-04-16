@@ -86,7 +86,7 @@ MonoBehaviour:
       customLetter: a
       simultaneousToast: 0
   - allowBottomRow: 0
-    allowTopRow: 0
+    allowTopRow: 1
     clientsInWave:
     - jamFlavor: 1
       customLetter: e
@@ -94,7 +94,7 @@ MonoBehaviour:
     - jamFlavor: 1
       customLetter: u
       simultaneousToast: 0
-  - allowBottomRow: 0
+  - allowBottomRow: 1
     allowTopRow: 0
     clientsInWave:
     - jamFlavor: 1
@@ -106,8 +106,8 @@ MonoBehaviour:
     - jamFlavor: 1
       customLetter: o
       simultaneousToast: 0
-  - allowBottomRow: 0
-    allowTopRow: 0
+  - allowBottomRow: 1
+    allowTopRow: 1
     clientsInWave:
     - jamFlavor: 1
       customLetter: t
@@ -123,22 +123,4 @@ MonoBehaviour:
       simultaneousToast: 0
     - jamFlavor: 1
       customLetter: a
-      simultaneousToast: 0
-  - allowBottomRow: 0
-    allowTopRow: 0
-    clientsInWave:
-    - jamFlavor: 1
-      customLetter: 
-      simultaneousToast: 0
-  - allowBottomRow: 0
-    allowTopRow: 0
-    clientsInWave:
-    - jamFlavor: 1
-      customLetter: 
-      simultaneousToast: 0
-    - jamFlavor: 1
-      customLetter: 
-      simultaneousToast: 0
-    - jamFlavor: 1
-      customLetter: 
       simultaneousToast: 0

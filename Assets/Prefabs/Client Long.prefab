@@ -7761,6 +7761,7 @@ MonoBehaviour:
   entranceDuration: 1
   popUpDistance: 2
   useRandomVisual: 1
+  toastsToSatisfy: 1
   hair:
   - {fileID: 6757752810759646004}
   - {fileID: 8464094908486966730}

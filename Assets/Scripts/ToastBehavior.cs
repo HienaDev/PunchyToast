@@ -115,8 +115,10 @@ public class ToastBehavior : MonoBehaviour
         if (currentFlightTargetClient != null)
         {
             ClientManager.Instance.IncreaseLetterIndex();
-            ClientManager.Instance.RemoveIndex(myLetterIndex);
             currentFlightTargetClient.Satisfy();
+            if (currentFlightTargetClient.isSatisfied)
+                ClientManager.Instance.RemoveIndex(myLetterIndex);
+            
             targetTransform = currentFlightTargetClient.TargetForToast;
         }
 

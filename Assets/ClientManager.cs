@@ -267,6 +267,7 @@ public class ClientManager : MonoBehaviour
 
     public void OnClientFinished()
     {
+        Debug.Log("Client Finished! Updating counters.");
         clientsFinishedInWave++;
         totalClientsSatisfied++;
         UpdateUI();

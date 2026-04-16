@@ -16,6 +16,9 @@ public class Client : MonoBehaviour
 
     [SerializeField] private bool useRandomVisual = true;
 
+    public int toastsToSatisfy = 1;
+    private int currentToastsEaten = 0;
+
     [Header("Rendering")]
     [SerializeField] private Renderer[] hair;
     [SerializeField] private Renderer[] shirt;
@@ -47,6 +50,7 @@ public class Client : MonoBehaviour
     [Header("Current Order")]
     public string desiredCondiment;
     public Color condimentColor;
+    private bool hasEaten = false;
     public bool isSatisfied = false;
     public bool isSat = false;
 
@@ -260,19 +264,14 @@ public class Client : MonoBehaviour
 
     public void Satisfy()
     {
-        isSatisfied = true;
-        isSat = false;
 
-        thoughtBubble.GetComponent<HoverAndScale>().Descale();
 
-        if (hopTween != null) hopTween.Kill();
-        if (mouthTween != null) mouthTween.Kill();
+        currentToastsEaten++;
 
-        if (pivot != null)
+        if (currentToastsEaten >= toastsToSatisfy)
         {
-            pivot.DOKill();
-            pivot.DOLocalRotate(Vector3.zero, 0.2f);
-            pivot.DOLocalMove(pivotInitialLocalPos, 0.2f);
+            isSatisfied = true;
+            isSat = false;
         }
     }
 
@@ -357,14 +356,14 @@ public class Client : MonoBehaviour
     {
         if (incomingJam == desiredCondiment)
         {
-            Satisfy();
             OpenMouth();
 
-            DOVirtual.DelayedCall(0.8f, () => {
+            DOVirtual.DelayedCall(0.4f, () => {
                 if (toast != null) Destroy(toast);
 
                 PlayMunchAnimation(() => {
-                    ReceiveFood();
+                    if (isSatisfied && !hasEaten)
+                        ReceiveFood();
                 });
             });
         }
@@ -376,6 +375,19 @@ public class Client : MonoBehaviour
 
     public void ReceiveFood()
     {
+        hasEaten = true;
+        thoughtBubble.GetComponent<HoverAndScale>().Descale();
+
+        if (hopTween != null) hopTween.Kill();
+        if (mouthTween != null) mouthTween.Kill();
+
+        if (pivot != null)
+        {
+            pivot.DOKill();
+            pivot.DOLocalRotate(Vector3.zero, 0.2f);
+            pivot.DOLocalMove(pivotInitialLocalPos, 0.2f);
+        }
+
         ClientManager.Instance.OnClientFinished();
         if (mySeat != null) ClientManager.Instance.ClearSeat(mySeat);
         ExitScene();
@@ -392,7 +404,7 @@ public class Client : MonoBehaviour
     private void ApplyRandomVisuals()
     {
 
-        if(!useRandomVisual) return;
+        if (!useRandomVisual) return;
 
         // 1. Check for Special Material Trigger
         if (Random.value < specialChance && specialMaterial != null)
@@ -412,7 +424,7 @@ public class Client : MonoBehaviour
             ApplyToGroup(shirt, selectedShirtMat);
 
             // 3. Handle Hair (Check for Individual Randomization Trigger)
-            if(Random.value < randomBaldChance)
+            if (Random.value < randomBaldChance)
             {
                 // Bald client, disable all hair renderers
                 foreach (Renderer r in hair)
