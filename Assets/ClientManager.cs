@@ -50,6 +50,7 @@ public class ClientManager : MonoBehaviour
     [SerializeField] private Sprite grapeIcon;
     [SerializeField] private Sprite chocolateIcon;
 
+    [SerializeField] private AudioClip[] levelCompleteSound;
     void Awake() { if (Instance == null) Instance = this; }
 
     public void StartLevel(LevelConfiguration config)
@@ -294,6 +295,9 @@ public class ClientManager : MonoBehaviour
         yield return new WaitForSeconds(2f);
         float totalTime = Time.time - levelStartTime;
         int stars = CalculateStars(totalTime);
+
+        AudioManager.Instance.PlaySound(levelCompleteSound);
+
         levelCompleteUI.gameObject.SetActive(true);
         levelCompleteUI.Initialize(stars, totalTime);
 

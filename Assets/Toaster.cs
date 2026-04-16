@@ -56,6 +56,11 @@ public class Toaster : MonoBehaviour
     private int simultaneousCount = 0;
     private int simultaneousIndex = 0;
 
+    public AudioClip[] punchSounds;
+    public AudioClip[] toastGettingIntoMouth;
+    public AudioClip[] toastFlying;
+    public AudioClip[] toastLandingNaturally;
+
     private void Awake()
     {
         if (Instance == null) Instance = this;
@@ -159,6 +164,11 @@ public class Toaster : MonoBehaviour
         behavior.armPunchDuration = armPunchDuration;
         behavior.targetFlightForce = targetFlightForce;
         behavior.armShrinkDuration = 0.6f;
+
+        behavior.punchSounds = punchSounds;
+        behavior.toastGettingIntoMouth = toastGettingIntoMouth;
+        behavior.toastFlying = toastFlying;
+        behavior.toastLandingNaturally = toastLandingNaturally;
 
         toast.transform.eulerAngles += new Vector3(Random.Range(-15f, 15f), Random.Range(-15f, 15f), Random.Range(-15f, 15f));
 

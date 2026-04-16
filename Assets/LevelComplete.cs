@@ -19,6 +19,8 @@ public class LevelComplete : MonoBehaviour
     private Vector3 timeOriginalScale;
     private Dictionary<int, Vector3> starScales = new Dictionary<int, Vector3>();
 
+    [SerializeField] private AudioClip[] starPopSounds;
+
     public void Initialize(int starNumber, float totalTime)
     {
         // 1. Capture original scales and reset to zero
@@ -54,6 +56,7 @@ public class LevelComplete : MonoBehaviour
         for (int i = 0; i < stars.Length; i++)
         {
             int index = i;
+            AudioManager.Instance.PlaySound(starPopSounds);
             finishSeq.Append(stars[index].transform.DOScale(starScales[index], starPopDuration).SetEase(Ease.OutBack));
 
             if (index < starNumber)

@@ -38,6 +38,17 @@ public class ToastBehavior : MonoBehaviour
 
     public int myLetterIndex = 0;
 
+    public AudioClip[] punchSounds;
+    public AudioClip[] toastGettingIntoMouth;
+    public AudioClip[] toastFlying;
+    public AudioClip[] toastLandingNaturally;
+
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        AudioManager.Instance.PlaySound(toastLandingNaturally, transform.position);
+    }
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -130,6 +141,8 @@ public class ToastBehavior : MonoBehaviour
         arm.transform.DOMove(transform.position, armPunchDuration).SetEase(Ease.Linear).OnComplete(() => {
             StartCoroutine(ImpactSequence(arm, targetTransform, dirToTarget));
 
+            AudioManager.Instance.PlaySound(punchSounds, transform.position);
+
             // Normal launch only happens if we AREN'T currently in a simultaneous burst
             // or if the air is clear.
             if (!ClientManager.Instance.IsLastClientOfWave(currentFlightTargetClient) && !Toaster.Instance.AreTherePunchableToasts())
@@ -174,6 +187,9 @@ public class ToastBehavior : MonoBehaviour
     void LaunchAtTarget(Transform target)
     {
         isHovering = false;
+
+        AudioManager.Instance.PlaySound(toastFlying, transform.position);
+
         foreach (TrailRenderer lr in GetComponentsInChildren<TrailRenderer>()) lr.enabled = true;
         foreach (TAG_JamDroplets droplet in GetComponentsInChildren<TAG_JamDroplets>(true))
         {
@@ -198,6 +214,9 @@ public class ToastBehavior : MonoBehaviour
             flightSeq.OnComplete(() => {
                 rb.isKinematic = false;
                 rb.useGravity = true;
+
+                AudioManager.Instance.PlaySound(toastGettingIntoMouth, transform.position);
+
                 currentFlightTargetClient.TryEatToast(JamDecider.Instance.allAvailableJams[JamDecider.Instance.currentJamIndex].flavor.ToString(), gameObject);
             });
         }

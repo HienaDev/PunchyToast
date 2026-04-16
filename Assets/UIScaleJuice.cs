@@ -11,10 +11,13 @@ public class UIScaleJuice : MonoBehaviour
     private Vector3 originalScale;
     private Tween scaleTween;
 
+    [SerializeField] private AudioClip[] hoverSounds;
+
     void Awake() => originalScale = transform.localScale;
 
     public void ScaleUp()
     {
+        AudioManager.Instance.PlaySound(hoverSounds);
         scaleTween?.Kill();
         scaleTween = transform.DOScale(originalScale * scaleMultiplier, duration)
             .SetEase(scaleEase)
@@ -23,6 +26,7 @@ public class UIScaleJuice : MonoBehaviour
 
     public void ScaleDown()
     {
+        AudioManager.Instance.PlaySound(hoverSounds);
         scaleTween?.Kill();
         scaleTween = transform.DOScale(originalScale, duration)
             .SetEase(scaleEase)

@@ -12,20 +12,22 @@ public class JamDecider : MonoBehaviour
     public struct JamType
     {
         public string name;
-        public JamFlavor flavor; // Match this to the enum
+        public JamFlavor flavor;
         public Color jamColor;
         public Transform dippingStation;
     }
 
     [Header("Settings")]
     public GameObject armPrefab;
-    public List<JamType> allAvailableJams; // The full list of all 4 possible jams
-    public List<JamType> activeJams;      // The ones currently allowed in this level
+    public List<JamType> allAvailableJams;
+    public List<JamType> activeJams;
 
-    [Header("Animation")]
+    [Header("Animation & Cooldown")]
     public float dipDepth = 0.8f;
     public float dipDuration = 0.15f;
     public float zOffset = 2.0f;
+    [SerializeField] private float dipCooldown = 1.0f; // New Variable
+    private float lastDipTime;                        // New Variable
 
     public int currentJamIndex = -1;
 
@@ -34,29 +36,27 @@ public class JamDecider : MonoBehaviour
     [SerializeField] private GameObject grapeFist;
     [SerializeField] private GameObject peanutFist;
 
+    [SerializeField] private AudioClip[] dipSounds;
+
     void Awake()
     {
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
     }
 
-    // Called by ClientManager at Level Start
     public void SetupLevelJams(HashSet<JamFlavor> requiredFlavors)
     {
         activeJams = new List<JamType>();
 
-        // Loop through our "Master List" and pick the ones the level needs
         foreach (var jam in allAvailableJams)
         {
             if (requiredFlavors.Contains(jam.flavor))
             {
                 activeJams.Add(jam);
-                // Enable the jar visual in the scene
                 jam.dippingStation.gameObject.SetActive(true);
             }
             else
             {
-                // Disable jars not in this level
                 jam.dippingStation.gameObject.SetActive(false);
             }
         }
@@ -65,7 +65,6 @@ public class JamDecider : MonoBehaviour
 
     void Update()
     {
-        // Use activeJams.Count so player can't press 4 if only 2 jams exist
         for (int i = 0; i < activeJams.Count; i++)
         {
             if (Input.GetKeyDown(KeyCode.Alpha1 + i))
@@ -77,8 +76,16 @@ public class JamDecider : MonoBehaviour
 
     void SelectJam(int index)
     {
+        // 1. Check if we are trying to switch to the jam we already have
         if (index == currentJamIndex) return;
+
+        // 2. Cooldown Logic: Check if enough time has passed since the last DIP
+        if (Time.time < lastDipTime + dipCooldown) return;
+
+        // 3. Update timing and index
+        lastDipTime = Time.time;
         currentJamIndex = index;
+
         PerformDipAnimation(activeJams[index]);
 
         // Disable all fists first
@@ -103,27 +110,25 @@ public class JamDecider : MonoBehaviour
                 peanutFist.SetActive(true);
                 break;
         }
-
     }
 
-    // --- Helper Methods using activeJams ---
-    public string GetCurrentJamName() => activeJams[currentJamIndex].flavor.ToString();
-    public Color GetCurrentJamColor() => activeJams[currentJamIndex].jamColor;
-
-    public Color GetColorFromFlavor(JamFlavor flavor)
+    public void SelectByFlavor(JamFlavor flavor)
     {
-        foreach (var j in allAvailableJams)
-            if (j.flavor == flavor) return j.jamColor;
-        return Color.white;
+        for (int i = 0; i < activeJams.Count; i++)
+        {
+            if (activeJams[i].flavor == flavor)
+            {
+                SelectJam(i);
+                return;
+            }
+        }
     }
 
     void PerformDipAnimation(JamType jam)
     {
-        // 1. Calculate the spawn position behind the station (Negative Z)
-        // We use the station's position and subtract the offset on the Z axis
-        Vector3 spawnPos = jam.dippingStation.position + new Vector3(0, 0, -zOffset);
+        AudioManager.Instance.PlaySound(dipSounds, jam.dippingStation.position);
 
-        // 2. Spawn pointing toward the station (Rotation 0,0,0 points toward Positive Z)
+        Vector3 spawnPos = jam.dippingStation.position + new Vector3(0, 0, -zOffset);
         GameObject dippingArm = Instantiate(armPrefab, spawnPos, Quaternion.identity);
 
         float screenX = Camera.main.WorldToViewportPoint(dippingArm.transform.position).x;
@@ -137,39 +142,22 @@ public class JamDecider : MonoBehaviour
         dippingArm.transform.localScale = Vector3.zero;
 
         Sequence dipSeq = DOTween.Sequence();
-
-        // 3. Animation Steps (Moving on Z instead of Y)
-        // Move "Forward" to station position + dipDepth
         float targetZ = jam.dippingStation.position.z + dipDepth;
 
         dipSeq.Append(dippingArm.transform.DOScale(originalScale, 0.15f).SetEase(Ease.OutBack));
-
-        // Punch forward into the jam
         dipSeq.Append(dippingArm.transform.DOMoveZ(targetZ, dipDuration).SetEase(Ease.InQuad));
-
-        // Pull back to starting spawn Z
         dipSeq.Append(dippingArm.transform.DOMoveZ(spawnPos.z, dipDuration).SetEase(Ease.OutQuad));
-
         dipSeq.Append(dippingArm.transform.DOScale(Vector3.zero, 0.15f).SetEase(Ease.InBack));
-
         dipSeq.OnComplete(() => Destroy(dippingArm));
     }
 
-    public void SelectByFlavor(JamFlavor flavor)
+    public string GetCurrentJamName() => activeJams[currentJamIndex].flavor.ToString();
+    public Color GetCurrentJamColor() => activeJams[currentJamIndex].jamColor;
+
+    public Color GetColorFromFlavor(JamFlavor flavor)
     {
-        // Search through activeJams to find which index matches the clicked flavor
-        for (int i = 0; i < activeJams.Count; i++)
-        {
-            if (activeJams[i].flavor == flavor)
-            {
-                SelectJam(i);
-                return;
-            }
-        }
-
-        Debug.LogWarning("Clicked flavor " + flavor + " is not active in this level!");
+        foreach (var j in allAvailableJams)
+            if (j.flavor == flavor) return j.jamColor;
+        return Color.white;
     }
-
-
-
 }

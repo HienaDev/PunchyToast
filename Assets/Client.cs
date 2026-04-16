@@ -32,6 +32,10 @@ public class Client : MonoBehaviour
     [SerializeField] private float randomHairColor = 0.25f;
     [SerializeField] private float randomBaldChance = 0.1f;
 
+    [SerializeField] private Material redMaterial;
+    // Add this near your other private variables
+    private Dictionary<Renderer, Material> originalMaterialMap = new Dictionary<Renderer, Material>();
+
     [Header("Eye Tracking")]
     [SerializeField] private Transform leftEye;
     [SerializeField] private Transform rightEye;
@@ -73,14 +77,85 @@ public class Client : MonoBehaviour
     [SerializeField] private GameObject thoughtBubble;
     [SerializeField] private Image wantIcon;
 
+    
+    [SerializeField] private AudioClip[] gettingUpSound;
+    [SerializeField] private AudioClip[] goingDownSound;
+
+    [SerializeField] private AudioClip[] hurtRecoilSoundAnt;
+    [SerializeField] private AudioClip[] muchingFoodSoundAnt;
+    [SerializeField] private AudioClip[] mouthIsOpenSoundAnt;
+
+    [SerializeField] private AudioClip[] hurtRecoilSoundDan;
+    [SerializeField] private AudioClip[] muchingFoodSoundDan;
+    [SerializeField] private AudioClip[] mouthIsOpenSoundDan;
+
+    [SerializeField] private AudioClip[] hurtRecoilSoundFrei;
+    [SerializeField] private AudioClip[] muchingFoodSoundFrei;
+    [SerializeField] private AudioClip[] mouthIsOpenSoundFrei;
+
+     private AudioClip[] hurtRecoilSound;
+     private AudioClip[] muchingFoodSound;
+     private AudioClip[] mouthIsOpenSound;
+
+    [SerializeField] private AudioSource mouthAudioSource;
+    private float originalMouthVolume;
+
     void Start()
     {
+
+        // choose a random from 1 to 3, and assign the corresponding audio arrays to the generic ones
+        int characterVariant = Random.Range(1, 4);
+        switch (characterVariant)
+        {
+            case 1:
+                hurtRecoilSound = hurtRecoilSoundAnt;
+                muchingFoodSound = muchingFoodSoundAnt;
+                mouthIsOpenSound = mouthIsOpenSoundAnt;
+                break;
+            case 2:
+                hurtRecoilSound = hurtRecoilSoundDan;
+                muchingFoodSound = muchingFoodSoundDan;
+                mouthIsOpenSound = mouthIsOpenSoundDan;
+                break;
+            case 3:
+                hurtRecoilSound = hurtRecoilSoundFrei;
+                muchingFoodSound = muchingFoodSoundFrei;
+                mouthIsOpenSound = mouthIsOpenSoundFrei;
+                break;
+        }
+
+        // Store the designer-set volume and ensure we start silent
+        originalMouthVolume = mouthAudioSource.volume;
+        mouthAudioSource.volume = 0;
+        mouthAudioSource.loop = true; // Ensure it loops for the chatter
+        mouthAudioSource.Play();
+
+        if(mouthIsOpenSound != null && mouthIsOpenSound.Length > 0)
+            mouthAudioSource.clip = mouthIsOpenSound[Random.Range(0, mouthIsOpenSound.Length)];
+
         originalMouthRot = mouthBone.localEulerAngles;
         if (pivot != null) pivotInitialLocalPos = pivot.localPosition;
 
         ApplyRandomVisuals();
 
+        CaptureMaterials();
+
         StartBlinking();
+    }
+
+    private void CaptureMaterials()
+    {
+        originalMaterialMap.Clear();
+        Renderer[][] allGroups = { hair, shirt, skin };
+
+        foreach (var group in allGroups)
+        {
+            foreach (Renderer r in group)
+            {
+                if (r != null && !originalMaterialMap.ContainsKey(r))
+                    originalMaterialMap.Add(r, r.material);
+            }
+        }
     }
 
     void Update()
@@ -197,6 +272,9 @@ public class Client : MonoBehaviour
 
     private void EnterScene()
     {
+
+        AudioManager.Instance.PlaySound(gettingUpSound, transform.position);
+
         transform.position = targetPosition + Vector3.down * popUpDistance;
         transform.DOMove(targetPosition, entranceDuration).SetEase(Ease.Linear).OnComplete(() => {
             isSat = true;
@@ -247,13 +325,19 @@ public class Client : MonoBehaviour
 
         for (int i = 0; i < chatterCycles; i++)
         {
+            // MOUTH OPEN + FADE IN SOUND
             waitSeq.Append(mouthBone.DOLocalRotate(dynamicOpen, waitingCycleDuration).SetEase(Ease.InOutSine));
+            waitSeq.Join(mouthAudioSource.DOFade(originalMouthVolume, waitingCycleDuration));
+
+            // MOUTH CLOSE + FADE OUT SOUND
             waitSeq.Append(mouthBone.DOLocalRotate(dynamicClosed, waitingCycleDuration).SetEase(Ease.InOutSine));
+            waitSeq.Join(mouthAudioSource.DOFade(0, waitingCycleDuration));
         }
 
         if (Random.value > 0.5f)
         {
             waitSeq.Append(mouthBone.DOLocalRotate(originalMouthRot, 0.2f).SetEase(Ease.InOutQuad));
+            waitSeq.Join(mouthAudioSource.DOFade(0, 0.2f)); // Ensure sound is off when pausing
             waitSeq.AppendInterval(0.5f);
             waitSeq.Append(mouthBone.DOLocalRotate(dynamicClosed, 0.2f).SetEase(Ease.InOutQuad));
         }
@@ -319,6 +403,9 @@ public class Client : MonoBehaviour
 
     public void PlayMunchAnimation(System.Action onComplete)
     {
+
+        AudioManager.Instance.PlaySound(muchingFoodSound, transform.position);
+
         Sequence munchSeq = DOTween.Sequence();
 
         for (int i = 0; i < numberOfBites; i++)
@@ -335,6 +422,9 @@ public class Client : MonoBehaviour
     {
         if (recoilBone != null)
         {
+            mouthAudioSource.DOKill(); // Stop the active fade
+            mouthAudioSource.volume = 0; // Instant silence
+
             recoilBone.DOKill();
             Sequence recoilSeq = DOTween.Sequence();
             recoilSeq.Append(recoilBone.DOLocalRotate(new Vector3(40, 0, 0), 0.1f).SetEase(Ease.OutBack));
@@ -346,18 +436,43 @@ public class Client : MonoBehaviour
     {
         if (recoilBone != null)
         {
+            mouthAudioSource.DOKill(); // Stop the active fade
+            mouthAudioSource.volume = 0; // Instant silence
+
+            AudioManager.Instance.PlaySound(hurtRecoilSound, transform.position);
             recoilBone.DOKill();
             Sequence hardRecoilSeq = DOTween.Sequence();
 
-            // INCREASED ANGLE: 70 degrees instead of 40
-            // FASTER SPEED: 0.05s instead of 0.1s
             hardRecoilSeq.Append(recoilBone.DOLocalRotate(new Vector3(70, 0, 0), 0.05f).SetEase(Ease.OutBack));
-
-            // SNAPPY RETURN: 0.15s instead of 0.2s
             hardRecoilSeq.Append(recoilBone.DOLocalRotate(Vector3.zero, 0.15f).SetEase(Ease.InQuad));
 
-            // ADDED: A small shake to make the impact feel "harder"
             transform.DOShakePosition(0.2f, 0.1f, 20);
+
+            // --- HIT FLASH EFFECT ---
+            ApplyFlashMaterial(redMaterial);
+
+            // Change back after a short delay (e.g., 0.1 seconds)
+            DOVirtual.DelayedCall(0.3f, () => {
+                ResetMaterials();
+            });
+        }
+    }
+
+    private void ApplyFlashMaterial(Material flashMat)
+    {
+        if (flashMat == null) return;
+
+        foreach (var entry in originalMaterialMap)
+        {
+            if (entry.Key != null) entry.Key.material = flashMat;
+        }
+    }
+
+    private void ResetMaterials()
+    {
+        foreach (var entry in originalMaterialMap)
+        {
+            if (entry.Key != null) entry.Key.material = entry.Value;
         }
     }
 
@@ -404,6 +519,9 @@ public class Client : MonoBehaviour
 
     private void ExitScene()
     {
+
+        AudioManager.Instance.PlaySound(goingDownSound, transform.position);
+
         Sequence exitSeq = DOTween.Sequence();
         exitSeq.Append(transform.DOMoveY(targetPosition.y + 0.1f, 0.15f).SetEase(Ease.OutQuad));
         exitSeq.Append(transform.DOMoveY(targetPosition.y - popUpDistance, 0.4f).SetEase(Ease.InBack));
