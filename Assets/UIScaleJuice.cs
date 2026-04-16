@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.EventSystems; // Required if you want to use OnPointerEnter/Exit
 using DG.Tweening;
 
 public class UIScaleJuice : MonoBehaviour
@@ -12,32 +11,24 @@ public class UIScaleJuice : MonoBehaviour
     private Vector3 originalScale;
     private Tween scaleTween;
 
-    void Awake()
-    {
-        // Store the starting scale so we always know what "normal" is
-        originalScale = transform.localScale;
-    }
+    void Awake() => originalScale = transform.localScale;
 
     public void ScaleUp()
     {
-        // Kill any existing tween to prevent overlapping logic
         scaleTween?.Kill();
-
         scaleTween = transform.DOScale(originalScale * scaleMultiplier, duration)
             .SetEase(scaleEase)
-            .SetUpdate(true); // Works even if Time.timeScale is 0 (paused)
+            .SetUpdate(true); // <--- IGNORES TIMESCALE 0
     }
 
     public void ScaleDown()
     {
         scaleTween?.Kill();
-
         scaleTween = transform.DOScale(originalScale, duration)
             .SetEase(scaleEase)
-            .SetUpdate(true);
+            .SetUpdate(true); // <--- IGNORES TIMESCALE 0
     }
 
-    // Optional: Reset on disable so it doesn't get stuck scaled up
     private void OnDisable()
     {
         scaleTween?.Kill();
