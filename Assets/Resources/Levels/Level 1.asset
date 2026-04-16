@@ -22,18 +22,33 @@ MonoBehaviour:
   threeStarTime: 60
   twoStarTime: 90
   waves:
-  - clientsInWave:
+  - allowBottomRow: 1
+    allowTopRow: 0
+    clientsInWave:
     - jamFlavor: 1
       customLetter: T
-  - clientsInWave:
+      simultaneousToast: 0
+  - allowBottomRow: 1
+    allowTopRow: 0
+    clientsInWave:
     - jamFlavor: 1
       customLetter: o
-  - clientsInWave:
+      simultaneousToast: 0
+  - allowBottomRow: 1
+    allowTopRow: 0
+    clientsInWave:
     - jamFlavor: 1
       customLetter: s
-  - clientsInWave:
+      simultaneousToast: 0
+  - allowBottomRow: 1
+    allowTopRow: 0
+    clientsInWave:
     - jamFlavor: 1
       customLetter: T
-  - clientsInWave:
+      simultaneousToast: 0
+  - allowBottomRow: 1
+    allowTopRow: 0
+    clientsInWave:
     - jamFlavor: 1
       customLetter: a
+      simultaneousToast: 0

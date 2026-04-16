@@ -24,12 +24,23 @@ public class LevelConfiguration : ScriptableObject
     {
         public JamFlavor jamFlavor;
         public string customLetter;
+        public bool simultaneousToast;
     }
 
     [System.Serializable]
     public struct Wave
     {
+        public bool allowBottomRow;
+        public bool allowTopRow;
         public List<ClientData> clientsInWave;
+
+        // Defaulting to true for new waves
+        public Wave(bool dummy)
+        {
+            allowBottomRow = true;
+            allowTopRow = true;
+            clientsInWave = new List<ClientData>();
+        }
     }
 
     public List<Wave> waves = new List<Wave>();

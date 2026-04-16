@@ -13,25 +13,29 @@ public class LevelConfigurationEditor : Editor
         waveList = new ReorderableList(serializedObject, wavesProp, true, true, true, true);
 
         waveList.drawHeaderCallback = (Rect rect) => {
-            EditorGUI.LabelField(rect, "Level Waves (Auto-Expanding)");
+            EditorGUI.LabelField(rect, "Level Waves (Defaults to Rows: ON)");
         };
 
         waveList.onAddCallback = (ReorderableList list) => {
             int index = list.serializedProperty.arraySize;
             list.serializedProperty.arraySize++;
             list.index = index;
-            list.serializedProperty.serializedObject.ApplyModifiedProperties();
 
-            SerializedProperty newElement = list.serializedProperty.GetArrayElementAtIndex(index);
-            newElement.isExpanded = true;
+            // Get the newly created wave element
+            SerializedProperty newWave = list.serializedProperty.GetArrayElementAtIndex(index);
 
-            SerializedProperty innerList = newElement.FindPropertyRelative("clientsInWave");
+            // STICKY FIX: Explicitly set booleans to true for the new element
+            newWave.FindPropertyRelative("allowBottomRow").boolValue = true;
+            newWave.FindPropertyRelative("allowTopRow").boolValue = true;
+
+            // Optional: Initialize the inner client list so it's not empty/null
+            SerializedProperty innerList = newWave.FindPropertyRelative("clientsInWave");
             if (innerList != null)
             {
-                innerList.arraySize = 1;
-                innerList.GetArrayElementAtIndex(0).isExpanded = true;
+                innerList.arraySize = 0; // Start clean or set to 1 if preferred
             }
-            list.serializedProperty.serializedObject.ApplyModifiedProperties();
+
+            serializedObject.ApplyModifiedProperties();
         };
 
         waveList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) => {
@@ -54,16 +58,14 @@ public class LevelConfigurationEditor : Editor
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
-
         EditorGUILayout.Space();
-        EditorGUILayout.LabelField("General & Toaster Settings", EditorStyles.boldLabel);
+        EditorGUILayout.LabelField("General Level Settings", EditorStyles.boldLabel);
 
-        // This will now show levelNumber AND the 4 hover variables automatically
+        // Draw everything except the waves list and the script reference
         DrawPropertiesExcluding(serializedObject, new string[] { "waves", "m_Script" });
 
         EditorGUILayout.Space();
-        EditorGUILayout.LabelField("Wave Settings", EditorStyles.boldLabel);
-
+        EditorGUILayout.LabelField("Wave Sequence", EditorStyles.boldLabel);
         waveList.DoLayoutList();
 
         serializedObject.ApplyModifiedProperties();
