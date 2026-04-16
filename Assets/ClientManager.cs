@@ -34,6 +34,11 @@ public class ClientManager : MonoBehaviour
     [SerializeField] private LevelComplete levelCompleteUI;
     [SerializeField] private GameObject clientCounterUI;
 
+    [SerializeField] private Sprite butterIcon;
+    [SerializeField] private Sprite strawberryIcon;
+    [SerializeField] private Sprite grapeIcon;
+    [SerializeField] private Sprite chocolateIcon;
+
     void Awake() { if (Instance == null) Instance = this; }
 
     public void StartLevel(LevelConfiguration config)
@@ -189,7 +194,19 @@ public class ClientManager : MonoBehaviour
         Transform chosenSeat = availableSeats[Random.Range(0, availableSeats.Count)];
         GameObject newClientObj = Instantiate(clientPrefab, chosenSeat.position, chosenSeat.rotation);
         Client clientScript = newClientObj.GetComponent<Client>();
-        clientScript.Initialize(chosenSeat);
+
+        Sprite chosenSprite;
+
+        switch(data.jamFlavor)
+        {
+            case JamFlavor.Butter: chosenSprite = butterIcon; break;
+            case JamFlavor.StrawberryJam: chosenSprite = strawberryIcon; break;
+            case JamFlavor.GrapeJam: chosenSprite = grapeIcon; break;
+            case JamFlavor.PeanutButter: chosenSprite = chocolateIcon; break;
+            default: chosenSprite = null; break;
+        }
+
+        clientScript.Initialize(chosenSeat, chosenSprite);
         activeClients.Add(chosenSeat, clientScript);
 
         JamFlavor finalFlavor = data.jamFlavor;

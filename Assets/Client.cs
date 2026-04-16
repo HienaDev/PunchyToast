@@ -1,6 +1,7 @@
 using UnityEngine;
 using DG.Tweening;
-using System.Collections.Generic; // Added for List
+using System.Collections.Generic;
+using UnityEngine.UI; // Added for List
 
 public class Client : MonoBehaviour
 {
@@ -59,6 +60,9 @@ public class Client : MonoBehaviour
 
     private Tween hopTween;
     private Tween mouthTween;
+
+    [SerializeField] private GameObject thoughtBubble;
+    [SerializeField] private Image wantIcon;
 
     void Start()
     {
@@ -173,12 +177,12 @@ public class Client : MonoBehaviour
         currentEyeTarget = closestTrans;
     }
 
-    // --- REST OF THE SCRIPT (UNCHANGED AS REQUESTED) ---
 
-    public void Initialize(Transform seat)
+    public void Initialize(Transform seat, Sprite wantedJam)
     {
         mySeat = seat;
         targetPosition = transform.position;
+        wantIcon.sprite = wantedJam;
         EnterScene();
     }
 
@@ -187,6 +191,7 @@ public class Client : MonoBehaviour
         transform.position = targetPosition + Vector3.down * popUpDistance;
         transform.DOMove(targetPosition, entranceDuration).SetEase(Ease.Linear).OnComplete(() => {
             isSat = true;
+            thoughtBubble.SetActive(true);
             StartRandomHop();
             StartWaitingForFood();
         });
@@ -255,6 +260,8 @@ public class Client : MonoBehaviour
     {
         isSatisfied = true;
         isSat = false;
+
+        thoughtBubble.GetComponent<HoverAndScale>().Descale();
 
         if (hopTween != null) hopTween.Kill();
         if (mouthTween != null) mouthTween.Kill();
