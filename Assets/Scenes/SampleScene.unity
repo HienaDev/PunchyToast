@@ -8795,6 +8795,8 @@ MonoBehaviour:
   sourceMenu: {fileID: 801892851}
   sourceLevel: {fileID: 32640516}
   fadeDuration: 0.75
+  soundOnIcon: {fileID: 1337225917}
+  soundOffIcon: {fileID: 1954685653}
 --- !u!1001 &634848104
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21364,7 +21366,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1296319096
 RectTransform:
   m_ObjectHideFlags: 0
