@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using DG.Tweening;
+using UnityEngine.UI;
 
 public enum JamFlavor { None, Butter, StrawberryJam, GrapeJam, PeanutButter, Random }
 public class JamDecider : MonoBehaviour
@@ -26,7 +27,12 @@ public class JamDecider : MonoBehaviour
     public float dipDuration = 0.15f;
     public float zOffset = 2.0f;
 
-    public int currentJamIndex = 0;
+    public int currentJamIndex = -1;
+
+    [SerializeField] private GameObject butterFist;
+    [SerializeField] private GameObject stawberryFist;
+    [SerializeField] private GameObject grapeFist;
+    [SerializeField] private GameObject peanutFist;
 
     void Awake()
     {
@@ -54,8 +60,7 @@ public class JamDecider : MonoBehaviour
                 jam.dippingStation.gameObject.SetActive(false);
             }
         }
-
-        currentJamIndex = 0;
+        SelectJam(0);
     }
 
     void Update()
@@ -75,6 +80,30 @@ public class JamDecider : MonoBehaviour
         if (index == currentJamIndex) return;
         currentJamIndex = index;
         PerformDipAnimation(activeJams[index]);
+
+        // Disable all fists first
+        butterFist.SetActive(false);
+        stawberryFist.SetActive(false);
+        grapeFist.SetActive(false);
+        peanutFist.SetActive(false);
+
+        // Enable the correct fist based on flavor
+        switch (activeJams[index].flavor)
+        {
+            case JamFlavor.Butter:
+                butterFist.SetActive(true);
+                break;
+            case JamFlavor.StrawberryJam:
+                stawberryFist.SetActive(true);
+                break;
+            case JamFlavor.GrapeJam:
+                grapeFist.SetActive(true);
+                break;
+            case JamFlavor.PeanutButter:
+                peanutFist.SetActive(true);
+                break;
+        }
+
     }
 
     // --- Helper Methods using activeJams ---
