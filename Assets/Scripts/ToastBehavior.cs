@@ -229,6 +229,12 @@ public class ToastBehavior : MonoBehaviour
         }
     }
 
+    private void OnMouseDown()
+    {
+        if (!isPunchable || hasBeenHit) return;
+        StartPunchSequence();
+    }
+
     void ReleaseToast()
     {
         isHovering = false;
