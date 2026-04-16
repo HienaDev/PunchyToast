@@ -334,6 +334,25 @@ public class Client : MonoBehaviour
         }
     }
 
+    public void HardRecoil()
+    {
+        if (recoilBone != null)
+        {
+            recoilBone.DOKill();
+            Sequence hardRecoilSeq = DOTween.Sequence();
+
+            // INCREASED ANGLE: 70 degrees instead of 40
+            // FASTER SPEED: 0.05s instead of 0.1s
+            hardRecoilSeq.Append(recoilBone.DOLocalRotate(new Vector3(70, 0, 0), 0.05f).SetEase(Ease.OutBack));
+
+            // SNAPPY RETURN: 0.15s instead of 0.2s
+            hardRecoilSeq.Append(recoilBone.DOLocalRotate(Vector3.zero, 0.15f).SetEase(Ease.InQuad));
+
+            // ADDED: A small shake to make the impact feel "harder"
+            transform.DOShakePosition(0.2f, 0.1f, 20);
+        }
+    }
+
     public void TryEatToast(string incomingJam, GameObject toast)
     {
         if (incomingJam == desiredCondiment)

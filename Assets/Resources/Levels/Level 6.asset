@@ -25,10 +25,10 @@ MonoBehaviour:
   - allowBottomRow: 1
     allowTopRow: 1
     clientsInWave:
-    - jamFlavor: 3
+    - jamFlavor: 1
       customLetter: N
       simultaneousToast: 0
-    - jamFlavor: 4
+    - jamFlavor: 1
       customLetter: O
       simultaneousToast: 0
     - jamFlavor: 1
