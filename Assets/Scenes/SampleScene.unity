@@ -2321,6 +2321,7 @@ MonoBehaviour:
   upForce: 3
   xSpread: 0.7
   zSpread: 0.1
+  simultaneousStep: 0.25
   hoverTime: 1.5
   minPreHoverDelay: 0
   maxPreHoverDelay: 0.1
@@ -2339,6 +2340,7 @@ MonoBehaviour:
   popUp: {fileID: 1138770723}
   easyModeToggle: {fileID: 195950091}
   easyMode: 0
+  activeToasts: []
 --- !u!1 &468315401 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2161788455907823095, guid: a8d93d6abe674d041a18fd35ff24c0fe, type: 3}
@@ -5760,6 +5762,10 @@ MonoBehaviour:
   - {fileID: 37156030}
   levelCompleteUI: {fileID: 1373383082}
   clientCounterUI: {fileID: 788186755}
+  butterIcon: {fileID: 21300000, guid: 7eeaa42a6f1c1bb43a8e3482a5ae3ea5, type: 3}
+  strawberryIcon: {fileID: 21300000, guid: 995c4e6e12061544893f54782c47eac9, type: 3}
+  grapeIcon: {fileID: 21300000, guid: 4249e195c6483ba4b966184e6865f3ff, type: 3}
+  chocolateIcon: {fileID: 21300000, guid: d1a86773b3db9d54c8a22ff77cb651fc, type: 3}
 --- !u!1 &1750194023
 GameObject:
   m_ObjectHideFlags: 0

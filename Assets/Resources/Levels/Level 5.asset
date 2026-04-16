@@ -13,75 +13,90 @@ MonoBehaviour:
   m_Name: Level 5
   m_EditorClassIdentifier: 
   levelNumber: 5
+  hoverTime: 3
+  minPreHoverDelay: 0
+  maxPreHoverDelay: 0.1
+  driftFactor: 0.1
   fiveStarTime: 30
   fourStarTime: 45
   threeStarTime: 60
   twoStarTime: 90
   waves:
-  - clientsInWave:
-    - jamFlavor: 1
-      customLetter: T
-    - jamFlavor: 1
-      customLetter: O
-    - jamFlavor: 1
-      customLetter: S
-    - jamFlavor: 1
-      customLetter: T
-    - jamFlavor: 1
-      customLetter: A
-  - clientsInWave:
-    - jamFlavor: 1
-      customLetter: I
-  - clientsInWave:
-    - jamFlavor: 1
-      customLetter: L
-    - jamFlavor: 1
-      customLetter: O
-    - jamFlavor: 1
-      customLetter: V
+  - allowBottomRow: 0
+    allowTopRow: 1
+    clientsInWave:
     - jamFlavor: 1
       customLetter: E
-  - clientsInWave:
+      simultaneousToast: 0
     - jamFlavor: 1
-      customLetter: t
+      customLetter: U
+      simultaneousToast: 0
+  - allowBottomRow: 1
+    allowTopRow: 0
+    clientsInWave:
     - jamFlavor: 1
-      customLetter: o
-    - jamFlavor: 1
-      customLetter: s
-    - jamFlavor: 1
-      customLetter: t
-    - jamFlavor: 1
-      customLetter: a
-  - clientsInWave:
-    - jamFlavor: 1
-      customLetter: e
-    - jamFlavor: 1
-      customLetter: u
-  - clientsInWave:
-    - jamFlavor: 1
-      customLetter: a
+      customLetter: A
+      simultaneousToast: 0
     - jamFlavor: 1
       customLetter: m
+      simultaneousToast: 0
     - jamFlavor: 1
       customLetter: o
-  - clientsInWave:
+      simultaneousToast: 0
+  - allowBottomRow: 1
+    allowTopRow: 1
+    clientsInWave:
     - jamFlavor: 1
       customLetter: t
+      simultaneousToast: 0
     - jamFlavor: 1
-      customLetter: o
+      customLetter: O
+      simultaneousToast: 0
     - jamFlavor: 1
       customLetter: s
+      simultaneousToast: 0
     - jamFlavor: 1
       customLetter: t
+      simultaneousToast: 0
     - jamFlavor: 1
       customLetter: a
-  - clientsInWave:
+      simultaneousToast: 0
+  - allowBottomRow: 0
+    allowTopRow: 1
+    clientsInWave:
     - jamFlavor: 1
-      customLetter: 
-  - clientsInWave:
+      customLetter: e
+      simultaneousToast: 1
     - jamFlavor: 1
-      customLetter: 
+      customLetter: u
+      simultaneousToast: 0
+  - allowBottomRow: 1
+    allowTopRow: 0
+    clientsInWave:
     - jamFlavor: 1
-      customLetter: 
+      customLetter: a
+      simultaneousToast: 1
     - jamFlavor: 1
-      customLetter: 
+      customLetter: m
+      simultaneousToast: 1
+    - jamFlavor: 1
+      customLetter: o
+      simultaneousToast: 0
+  - allowBottomRow: 1
+    allowTopRow: 1
+    clientsInWave:
+    - jamFlavor: 1
+      customLetter: t
+      simultaneousToast: 1
+    - jamFlavor: 1
+      customLetter: o
+      simultaneousToast: 1
+    - jamFlavor: 1
+      customLetter: s
+      simultaneousToast: 1
+    - jamFlavor: 1
+      customLetter: t
+      simultaneousToast: 1
+    - jamFlavor: 1
+      customLetter: a
+      simultaneousToast: 0
