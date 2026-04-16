@@ -206,7 +206,12 @@ public class ToastBehavior : MonoBehaviour
     IEnumerator GracePeriodTimer()
     {
         yield return new WaitForSeconds(fallGracePeriod);
-        if (!hasBeenHit) isPunchable = false;
+        if (!hasBeenHit)
+        {
+            isPunchable = false;
+            rb.constraints = RigidbodyConstraints.None;
+            letterText.enabled = false;
+        }
     }
 
     private void OnDestroy() { if (Toaster.Instance != null) Toaster.Instance.UnregisterToast(this); transform.DOKill(); }

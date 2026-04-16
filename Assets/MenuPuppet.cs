@@ -25,9 +25,9 @@ public class MenuPuppet : MonoBehaviour
     [SerializeField] private float wanderHopHeight = 0.05f;
 
     [Header("Look Settings")]
-    [SerializeField] private float lookAngle = 30f;    // How far the puppet turns
-    [SerializeField] private float lookSpeed = 0.4f;    // How fast it turns head
-    [SerializeField] private float lookPause = 0.2f;    // Pause while looking
+    [SerializeField] private float lookAngle = 30f;
+    [SerializeField] private float lookSpeed = 0.4f;
+    [SerializeField] private float lookPause = 0.2f;
 
     [Header("Wander Settings")]
     [SerializeField] private float wanderDistance = 0.5f;
@@ -43,18 +43,31 @@ public class MenuPuppet : MonoBehaviour
     private Vector3 initialPos;
     private Quaternion originalRotation;
     private Vector3 initialPivotPos;
+    private Coroutine cycleCoroutine;
 
-    void Start()
+    void Awake()
     {
+        // Cache initial states in Awake to ensure they are captured before any movement
         originalMouthRot = mouthBone.localEulerAngles;
         initialPos = transform.position;
         originalRotation = transform.rotation;
         initialPivotPos = pivot.localPosition;
+    }
 
-        // Hide immediately on start
+    private void OnEnable()
+    {
+        // Reset position to hidden and start the loop
         transform.position = initialPos + Vector3.down * popUpDistance;
+        cycleCoroutine = StartCoroutine(CycleRoutine());
+    }
 
-        StartCoroutine(CycleRoutine());
+    private void OnDisable()
+    {
+        // Clean up to prevent logic conflicts when the object is toggled
+        if (cycleCoroutine != null) StopCoroutine(cycleCoroutine);
+        transform.DOKill();
+        pivot.DOKill();
+        mouthBone.DOKill();
     }
 
     private IEnumerator CycleRoutine()
@@ -66,6 +79,7 @@ public class MenuPuppet : MonoBehaviour
 
             ApplyRandomVisuals();
 
+            // Safety kill before starting new sequence
             transform.DOKill();
             pivot.DOKill();
 
@@ -94,7 +108,6 @@ public class MenuPuppet : MonoBehaviour
     {
         Sequence wanderSeq = DOTween.Sequence();
 
-        // 1. Wander Phase
         for (int i = 0; i < wanderCycles; i++)
         {
             float side = (i % 2 == 0) ? 1 : -1;
@@ -111,23 +124,17 @@ public class MenuPuppet : MonoBehaviour
             wanderSeq.Join(transform.DORotate(leanRotation, wanderSpeed).SetEase(Ease.InOutQuad));
         }
 
-        // 2. Return to center
         wanderSeq.Append(transform.DOMoveX(initialPos.x, wanderSpeed * 0.6f).SetEase(Ease.InOutQuad));
         wanderSeq.Join(transform.DORotate(originalRotation.eulerAngles, wanderSpeed * 0.6f).SetEase(Ease.InOutQuad));
 
-        // 3. Look Around Phase (Looking for someone)
-        // Look Right
         wanderSeq.Append(transform.DORotate(new Vector3(0, lookAngle, 0), lookSpeed).SetEase(Ease.OutBack));
         wanderSeq.AppendInterval(lookPause);
-        // Look Left
         wanderSeq.Append(transform.DORotate(new Vector3(0, -lookAngle, 0), lookSpeed * 1.5f).SetEase(Ease.OutBack));
         wanderSeq.AppendInterval(lookPause);
-        // Look Center
         wanderSeq.Append(transform.DORotate(originalRotation.eulerAngles, lookSpeed).SetEase(Ease.OutBack));
 
         wanderSeq.OnComplete(() =>
         {
-            // 4. Munch and then Finish
             PlayMunchAnimation(() =>
             {
                 onAllFinished?.Invoke();
