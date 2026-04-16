@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
+using TMPro;
 
 public class ClientManager : MonoBehaviour
 {
@@ -11,6 +12,13 @@ public class ClientManager : MonoBehaviour
     public LevelConfiguration levelConfig;
     private int currentWaveIndex = 0;
     private int clientsFinishedInWave = 0;
+
+    private int totalClientsInLevel = 0;
+    private int totalClientsSatisfied = 0;
+
+    [Header("UI References")]
+    [SerializeField] private TextMeshProUGUI maxClientsText;
+    [SerializeField] private TextMeshProUGUI satisfiedClientsText;
 
     [Header("Setup")]
     public GameObject clientPrefab;
@@ -26,6 +34,7 @@ public class ClientManager : MonoBehaviour
     private bool levelFinished = false;
 
     [SerializeField] private LevelComplete levelCompleteUI;
+    [SerializeField] private GameObject clientCounterUI;
 
     void Awake()
     {
@@ -43,9 +52,33 @@ public class ClientManager : MonoBehaviour
         levelConfig = config;
 
         currentWaveIndex = 0;
+        totalClientsSatisfied = 0;
+
+        clientCounterUI.SetActive(true);
+
+        CalculateTotalLevelClients();
+        UpdateUI();
 
         ConfigureJamsForLevel();
         StartCoroutine(SpawnWave(currentWaveIndex));
+    }
+
+    private void CalculateTotalLevelClients()
+    {
+        totalClientsInLevel = 0;
+        foreach (var wave in levelConfig.waves)
+        {
+            totalClientsInLevel += wave.clientsInWave.Count;
+        }
+    }
+
+    private void UpdateUI()
+    {
+        if (maxClientsText != null)
+            maxClientsText.text = totalClientsInLevel.ToString();
+
+        if (satisfiedClientsText != null)
+            satisfiedClientsText.text = totalClientsSatisfied.ToString();
     }
 
     void ConfigureJamsForLevel()
@@ -183,6 +216,10 @@ public class ClientManager : MonoBehaviour
     public void OnClientFinished()
     {
         clientsFinishedInWave++;
+        totalClientsSatisfied++; // Increment the overall total
+
+        UpdateUI();
+
         Debug.Log($"Client Finished! Progress in Wave: {clientsFinishedInWave}/{levelConfig.waves[currentWaveIndex].clientsInWave.Count}");
 
         if (clientsFinishedInWave >= levelConfig.waves[currentWaveIndex].clientsInWave.Count)
@@ -207,6 +244,8 @@ public class ClientManager : MonoBehaviour
         // Trigger win menu ui
         levelCompleteUI.gameObject.SetActive(true);
         levelCompleteUI.Initialize(stars, totalTime);
+
+        clientCounterUI.SetActive(false);
     }
 
     private int CalculateStars(float time)
