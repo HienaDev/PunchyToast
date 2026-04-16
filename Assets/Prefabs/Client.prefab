@@ -5083,7 +5083,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 355222496437d324faf8a1fc7c27d592, type: 2}
   - {fileID: 2100000, guid: a6022471f8ebf7a4ca7203ab448266e0, type: 2}
   specialMaterial: {fileID: 2100000, guid: 0cb3148262c1a074684a864752b06922, type: 2}
-  specialChance: 0.5
+  specialChance: 1
   randomHairColor: 0.25
   randomBaldChance: 0.2
   leftEye: {fileID: 1517254151668732587}

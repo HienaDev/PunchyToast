@@ -21,6 +21,7 @@ public class Toaster : MonoBehaviour
     public float upForce = 9f;
     public float xSpread = 1.5f;
     public float zSpread = 0.5f;
+    [SerializeField] private float simultaneousStep = 0.25f; // Gap between toasts
 
     [Header("Hover Logic")]
     public float hoverTime = 2.5f;
@@ -49,7 +50,11 @@ public class Toaster : MonoBehaviour
     [SerializeField] private Toggle easyModeToggle;
     public bool easyMode = false;
 
-    private List<ToastBehavior> activeToasts = new List<ToastBehavior>();
+    public List<ToastBehavior> activeToasts = new List<ToastBehavior>();
+
+    // Tracking for spread logic
+    private int simultaneousCount = 0;
+    private int simultaneousIndex = 0;
 
     private void Awake()
     {
@@ -60,7 +65,6 @@ public class Toaster : MonoBehaviour
     {
         if (Time.time - lastLaunchTime >= timeToLaunchToast && ClientManager.Instance.areThereClients)
         {
-            // Use the new method to check if the air is clear
             if (!AreTherePunchableToasts())
             {
                 LaunchToast();
@@ -70,10 +74,7 @@ public class Toaster : MonoBehaviour
 
     public bool AreTherePunchableToasts()
     {
-        // Remove toasts that are null OR have already been hit/timed out (isPunchable == false)
         activeToasts.RemoveAll(t => t == null || !t.isPunchable);
-
-        // If the list still has items, it means there are active targets in the air
         return activeToasts.Count > 0;
     }
 
@@ -89,6 +90,34 @@ public class Toaster : MonoBehaviour
     {
         if (!ClientManager.Instance.areThereClients) return;
 
+        // Spread Calculation Logic
+        float currentXSpread;
+        bool isSimul = ClientManager.Instance.GetSimultaneousStatusForNextToast();
+
+        if (isSimul || simultaneousCount > 0)
+        {
+            // If this is the start of a burst, find out how many are coming
+            if (simultaneousCount == 0)
+            {
+                simultaneousCount = ClientManager.Instance.GetSimultaneousBurstCount();
+                simultaneousIndex = 0;
+            }
+
+            // Calculate centered position
+            // Formula: (Index - (Total-1)/2) * Step
+            float offset = (simultaneousIndex - (simultaneousCount - 1) * 0.5f) * simultaneousStep;
+            currentXSpread = offset;
+
+            simultaneousIndex++;
+        }
+        else
+        {
+            // Normal random spread
+            currentXSpread = Random.Range(-xSpread, xSpread);
+            simultaneousCount = 0;
+            simultaneousIndex = 0;
+        }
+
         ding.Play();
         popUp.Play();
         transform.DOComplete();
@@ -101,8 +130,6 @@ public class Toaster : MonoBehaviour
         ToastBehavior behavior = toast.AddComponent<ToastBehavior>();
 
         activeToasts.Add(behavior);
-
-        bool isSimul = ClientManager.Instance.GetSimultaneousStatusForNextToast();
         behavior.isSimultaneous = isSimul;
 
         TAG_ToastMesh toastMesh = toast.GetComponentInChildren<TAG_ToastMesh>();
@@ -134,12 +161,20 @@ public class Toaster : MonoBehaviour
         behavior.armShrinkDuration = 0.6f;
 
         toast.transform.eulerAngles += new Vector3(Random.Range(-15f, 15f), Random.Range(-15f, 15f), Random.Range(-15f, 15f));
-        rb.AddForce(new Vector3(Random.Range(-xSpread, xSpread), Random.Range(upForce - 0.5f, upForce), Random.Range(-zSpread, zSpread)), ForceMode.Impulse);
+
+        // Apply the calculated spread here
+        rb.AddForce(new Vector3(currentXSpread, Random.Range(upForce - 0.5f, upForce), Random.Range(-zSpread, zSpread)), ForceMode.Impulse);
 
         if (isSimul)
         {
             ClientManager.Instance.PrepareNextLetterForSimultaneous();
             LaunchToast();
+        }
+        else
+        {
+            // Reset for next normal launch
+            simultaneousCount = 0;
+            simultaneousIndex = 0;
         }
     }
 

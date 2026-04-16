@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 156181333214315387}
   - component: {fileID: 5240676239647304978}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Smoke Trail (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -194,7 +194,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2653536439900883974}
   - component: {fileID: 5838492963202916805}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Smoke Trail (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -380,7 +380,7 @@ GameObject:
   - component: {fileID: 109033631524875511}
   - component: {fileID: 183170689820158062}
   - component: {fileID: 2913561806993148}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Smoke
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5226,7 +5226,7 @@ GameObject:
   - component: {fileID: 8219277361560217267}
   - component: {fileID: 4721331468687178796}
   - component: {fileID: 4987833371903079486}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Jam Dropping (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10130,7 +10130,7 @@ GameObject:
   - component: {fileID: 4832009196933445668}
   - component: {fileID: 5422338233377457342}
   - component: {fileID: 5347397097798432366}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10266,7 +10266,7 @@ GameObject:
   - component: {fileID: 1339709533624239370}
   - component: {fileID: 4746579258407325427}
   - component: {fileID: 5617961722179356170}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Burnt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10353,7 +10353,7 @@ GameObject:
   - component: {fileID: 9221087541361071764}
   - component: {fileID: 1254853752537299737}
   - component: {fileID: 518301906224988136}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Jam Dropping
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15201,7 +15201,7 @@ GameObject:
   - component: {fileID: 2374688893487028881}
   - component: {fileID: 9103459733490922182}
   - component: {fileID: 8326210385387148761}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Splat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15300,7 +15300,7 @@ GameObject:
   - component: {fileID: 1858736780430194415}
   - component: {fileID: 146600903269086992}
   - component: {fileID: 7993569092452402752}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15402,7 +15402,7 @@ GameObject:
   - component: {fileID: 6476567519796251963}
   - component: {fileID: 8501247178050214661}
   - component: {fileID: 3470801820374839882}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: scene
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15499,7 +15499,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1583234111497112829}
   - component: {fileID: 8289220767304660946}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Smoke Trail (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15683,7 +15683,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6748171329707190193}
   - component: {fileID: 7902005412033402434}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Smoke Trail (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15868,7 +15868,7 @@ GameObject:
   - component: {fileID: 6745687602557830965}
   - component: {fileID: 1079839384333292524}
   - component: {fileID: 2951672593221733715}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Toast
   m_TagString: Untagged
   m_Icon: {fileID: 0}

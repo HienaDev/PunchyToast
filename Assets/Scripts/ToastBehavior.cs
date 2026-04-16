@@ -36,10 +36,23 @@ public class ToastBehavior : MonoBehaviour
 
     public bool isSimultaneous = false;
 
+    public int myLetterIndex = 0;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
         assignedLetter = ClientManager.Instance.GetCurrentLetter();
+
+        int assignedIndex = ClientManager.Instance.GetAvailableIndex();
+
+        if(assignedIndex != -1)
+        {
+            myLetterIndex = assignedIndex;
+            assignedLetter = ClientManager.Instance.GetCurrentWord()[assignedIndex];
+        }
+        else assignedLetter = (char)('A' + Random.Range(0, 26));
+
+        assignedLetter = char.ToUpper(assignedLetter);
         assignedKey = (KeyCode)System.Enum.Parse(typeof(KeyCode), assignedLetter.ToString());
     }
 
@@ -75,17 +88,11 @@ public class ToastBehavior : MonoBehaviour
         TrailRenderer[] lineRenderers = GetComponentsInChildren<TrailRenderer>();
         foreach (TrailRenderer lr in lineRenderers) lr.enabled = false;
         yield return new WaitForSeconds(preHoverDelay);
-
         capturedXVel = rb.linearVelocity.x;
         capturedZVel = rb.linearVelocity.z;
         isHovering = true;
         rb.useGravity = false;
-
-        // ID individual tween to kill it later
-        bobTween = transform.DOMoveY(bobAmount, bobSpeed)
-            .SetRelative()
-            .SetEase(Ease.InOutSine)
-            .SetLoops(-1, LoopType.Yoyo);
+        bobTween = transform.DOMoveY(bobAmount, bobSpeed).SetRelative().SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo);
 
         float timer = 0;
         while (timer < hoverDuration)
@@ -101,10 +108,6 @@ public class ToastBehavior : MonoBehaviour
     {
         hasBeenHit = true;
         isPunchable = false;
-
-        // Safety: Kill the bobbing immediately
-        if (bobTween != null) bobTween.Kill();
-
         string currentJam = JamDecider.Instance.GetCurrentJamName();
         Transform targetTransform = ClientManager.Instance.GetBestTarget(currentJam);
         currentFlightTargetClient = targetTransform.GetComponent<Client>();
@@ -112,22 +115,24 @@ public class ToastBehavior : MonoBehaviour
         if (currentFlightTargetClient != null)
         {
             ClientManager.Instance.IncreaseLetterIndex();
+            ClientManager.Instance.RemoveIndex(myLetterIndex);
             currentFlightTargetClient.Satisfy();
             targetTransform = currentFlightTargetClient.TargetForToast;
         }
 
         Vector3 dirToTarget = (targetTransform.position - transform.position).normalized;
         GameObject arm = Instantiate(armPrefab, transform.position - (dirToTarget * armSpawnOffset), Quaternion.LookRotation(dirToTarget));
-
         if (Camera.main.WorldToViewportPoint(transform.position).x > 0.5f)
             arm.transform.localScale = Vector3.Scale(arm.transform.localScale, new Vector3(-1, 1, 1));
 
         arm.transform.DOMove(transform.position, armPunchDuration).SetEase(Ease.Linear).OnComplete(() => {
-            // Check if arm still exists (safety)
-            if (arm != null) StartCoroutine(ImpactSequence(arm, targetTransform, dirToTarget));
+            StartCoroutine(ImpactSequence(arm, targetTransform, dirToTarget));
 
-            if (!ClientManager.Instance.IsLastClientOfWave(currentFlightTargetClient))
+            // Normal launch only happens if we AREN'T currently in a simultaneous burst
+            // or if the air is clear.
+            if (!ClientManager.Instance.IsLastClientOfWave(currentFlightTargetClient) && !Toaster.Instance.AreTherePunchableToasts())
             {
+                // The Toaster's Update loop or this call will handle normal flow
                 Toaster.Instance.LaunchToast();
             }
         });
@@ -135,6 +140,7 @@ public class ToastBehavior : MonoBehaviour
 
     IEnumerator ImpactSequence(GameObject arm, Transform target, Vector3 dirToTarget)
     {
+        if (bobTween != null) bobTween.Kill();
         if (hoverRoutine != null) StopCoroutine(hoverRoutine);
         rb.linearVelocity = Vector3.zero;
         rb.isKinematic = true;
@@ -149,12 +155,11 @@ public class ToastBehavior : MonoBehaviour
         yield return new WaitForSeconds(impactFreezeTime);
 
         LaunchAtTarget(target);
-
         Vector3 recoilPos = arm.transform.position - (dirToTarget * armRecoilDistance);
         Sequence armSeq = DOTween.Sequence();
         armSeq.Append(arm.transform.DOMove(recoilPos, armShrinkDuration * 0.8f).SetEase(Ease.OutBack));
         armSeq.Append(arm.transform.DOScale(Vector3.zero, armShrinkDuration).SetEase(Ease.InQuad));
-        armSeq.OnComplete(() => { if (arm != null) Destroy(arm); });
+        armSeq.OnComplete(() => Destroy(arm));
     }
 
     void ApplyJamSplat()
@@ -176,15 +181,13 @@ public class ToastBehavior : MonoBehaviour
             main.startColor = JamDecider.Instance.GetCurrentJamColor();
         }
 
-        // Only look if target exists
-        if (target != null) transform.DOLookAt(target.position, flightDuration / 4).SetEase(Ease.Linear);
+        transform.DOLookAt(target.position, flightDuration / 4).SetEase(Ease.Linear);
         if (currentFlightTargetClient != null) currentFlightTargetClient.OpenMouth();
 
         Sequence flightSeq = DOTween.Sequence();
         flightSeq.Append(transform.DOMove(target.position, flightDuration).SetEase(Ease.Linear));
         flightSeq.InsertCallback(flightDuration / 2f, () => { if (currentFlightTargetClient != null) currentFlightTargetClient.Recoil(); });
         flightSeq.OnComplete(() => {
-            if (this == null) return;
             rb.isKinematic = false;
             rb.useGravity = true;
             if (currentFlightTargetClient != null) currentFlightTargetClient.TryEatToast(JamDecider.Instance.allAvailableJams[JamDecider.Instance.currentJamIndex].flavor.ToString(), gameObject);
@@ -206,10 +209,5 @@ public class ToastBehavior : MonoBehaviour
         if (!hasBeenHit) isPunchable = false;
     }
 
-    private void OnDestroy()
-    {
-        // CRITICAL: Stop all tweens on this object to prevent DOTween errors
-        transform.DOKill();
-        if (Toaster.Instance != null) Toaster.Instance.UnregisterToast(this);
-    }
+    private void OnDestroy() { if (Toaster.Instance != null) Toaster.Instance.UnregisterToast(this); transform.DOKill(); }
 }
