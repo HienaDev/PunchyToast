@@ -2316,7 +2316,7 @@ MonoBehaviour:
   driftFactor: 0.2
   bobAmount: 0.02
   bobSpeed: 0.4
-  debugAlwaysL: 1
+  debugAlwaysL: 0
   armSpawnOffset: 1
   armPunchDuration: 0.1
   targetFlightForce: 6
@@ -2326,7 +2326,7 @@ MonoBehaviour:
   shakeVibrato: 50
   ding: {fileID: 274024437}
   popUp: {fileID: 1138770723}
-  easyMode: 1
+  easyMode: 0
 --- !u!1 &468315401 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2161788455907823095, guid: a8d93d6abe674d041a18fd35ff24c0fe, type: 3}

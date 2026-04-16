@@ -2,6 +2,7 @@ using DG.Tweening;
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Toaster : MonoBehaviour
 {
@@ -48,6 +49,7 @@ public class Toaster : MonoBehaviour
     [SerializeField] private AudioSource ding;
     [SerializeField] private AudioSource popUp;
 
+    [SerializeField] private Toggle easyModeToggle;
     public bool easyMode = false;
 
     private ToastBehavior lastToast;
@@ -126,7 +128,7 @@ public class Toaster : MonoBehaviour
         behavior.flightDuration = toastFlightDuration;
 
         // 2. Pass Hover/Bob Settings
-        if(!easyMode)
+        if(!easyModeToggle)
         {
             behavior.hoverDuration = hoverTime;
             behavior.bobAmount = bobAmount;
