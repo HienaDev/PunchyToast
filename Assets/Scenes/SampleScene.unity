@@ -443,7 +443,7 @@ Transform:
   m_GameObject: {fileID: 37156026}
   serializedVersion: 2
   m_LocalRotation: {x: -0.012371134, y: -0.14455736, z: -0.0057487544, w: 0.9894024}
-  m_LocalPosition: {x: -0.388, y: 1.12, z: 1.199}
+  m_LocalPosition: {x: -0.387, y: 1.173, z: 1.198}
   m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -951,6 +951,17 @@ Transform:
   - {fileID: 1390322825}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &195950091 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5884270969305442595, guid: e86a80cdc8ba77142b6788e728fd1399, type: 3}
+  m_PrefabInstance: {fileID: 5771383034073259299}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &214896722
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2316,7 +2327,7 @@ MonoBehaviour:
   driftFactor: 0.2
   bobAmount: 0.02
   bobSpeed: 0.4
-  debugAlwaysL: 1
+  debugAlwaysL: 0
   armSpawnOffset: 1
   armPunchDuration: 0.1
   targetFlightForce: 6
@@ -2326,7 +2337,8 @@ MonoBehaviour:
   shakeVibrato: 50
   ding: {fileID: 274024437}
   popUp: {fileID: 1138770723}
-  easyMode: 1
+  easyModeToggle: {fileID: 195950091}
+  easyMode: 0
 --- !u!1 &468315401 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2161788455907823095, guid: a8d93d6abe674d041a18fd35ff24c0fe, type: 3}
@@ -2520,7 +2532,7 @@ Transform:
   m_GameObject: {fileID: 665972110}
   serializedVersion: 2
   m_LocalRotation: {x: -0.01350114, y: 0.14445367, z: -0.0019711494, w: 0.9894175}
-  m_LocalPosition: {x: 0.403, y: 1.12, z: 1.199}
+  m_LocalPosition: {x: 0.404, y: 1.173, z: 1.198}
   m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_ConstrainProportionsScale: 1
   m_Children:
