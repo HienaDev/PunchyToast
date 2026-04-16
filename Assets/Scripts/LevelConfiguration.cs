@@ -5,14 +5,19 @@ using System.Collections.Generic;
 public class LevelConfiguration : ScriptableObject
 {
     [Header("Level Info")]
-    public int levelNumber; // e.g., 1 for Level1
+    public int levelNumber;
+
+    [Header("Hover Logic (Toaster)")]
+    public float hoverTime = 1.5f;
+    public float minPreHoverDelay = 0f;
+    public float maxPreHoverDelay = 0.1f;
+    public float driftFactor = 0.2f;
 
     [Header("Star Thresholds (Time in seconds)")]
     public float fiveStarTime = 30f;
     public float fourStarTime = 45f;
     public float threeStarTime = 60f;
     public float twoStarTime = 90f;
-    // Anything higher is 1 star
 
     [System.Serializable]
     public struct ClientData
@@ -28,4 +33,4 @@ public class LevelConfiguration : ScriptableObject
     }
 
     public List<Wave> waves = new List<Wave>();
-}   
+}

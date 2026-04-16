@@ -77,6 +77,16 @@ public class Toaster : MonoBehaviour
         }
     }
 
+    public void SetupToasterSettings(LevelConfiguration config)
+    {
+        this.hoverTime = config.hoverTime;
+        this.minPreHoverDelay = config.minPreHoverDelay;
+        this.maxPreHoverDelay = config.maxPreHoverDelay;
+        this.driftFactor = config.driftFactor;
+
+        Debug.Log($"Toaster configured for Level {config.levelNumber}");
+    }
+
     public void LaunchToast(string customLetter = "")
     {
         ding.Play();
@@ -128,7 +138,7 @@ public class Toaster : MonoBehaviour
         behavior.flightDuration = toastFlightDuration;
 
         // 2. Pass Hover/Bob Settings
-        if(!easyModeToggle)
+        if(!easyModeToggle.isOn)
         {
             behavior.hoverDuration = hoverTime;
             behavior.bobAmount = bobAmount;

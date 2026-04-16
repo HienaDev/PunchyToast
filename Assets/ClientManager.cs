@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
 using TMPro;
+using UnityEngine.WSA;
 
 public class ClientManager : MonoBehaviour
 {
@@ -53,6 +54,8 @@ public class ClientManager : MonoBehaviour
 
         currentWaveIndex = 0;
         totalClientsSatisfied = 0;
+
+        Toaster.Instance.SetupToasterSettings(config);
 
         clientCounterUI.SetActive(true);
 

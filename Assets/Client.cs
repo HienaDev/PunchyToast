@@ -254,6 +254,7 @@ public class Client : MonoBehaviour
     public void Satisfy()
     {
         isSatisfied = true;
+        isSat = false;
 
         if (hopTween != null) hopTween.Kill();
         if (mouthTween != null) mouthTween.Kill();

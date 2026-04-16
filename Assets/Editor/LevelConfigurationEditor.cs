@@ -10,7 +10,6 @@ public class LevelConfigurationEditor : Editor
     private void OnEnable()
     {
         SerializedProperty wavesProp = serializedObject.FindProperty("waves");
-
         waveList = new ReorderableList(serializedObject, wavesProp, true, true, true, true);
 
         waveList.drawHeaderCallback = (Rect rect) => {
@@ -21,7 +20,6 @@ public class LevelConfigurationEditor : Editor
             int index = list.serializedProperty.arraySize;
             list.serializedProperty.arraySize++;
             list.index = index;
-
             list.serializedProperty.serializedObject.ApplyModifiedProperties();
 
             SerializedProperty newElement = list.serializedProperty.GetArrayElementAtIndex(index);
@@ -31,12 +29,8 @@ public class LevelConfigurationEditor : Editor
             if (innerList != null)
             {
                 innerList.arraySize = 1;
-                if (innerList.arraySize > 0)
-                {
-                    innerList.GetArrayElementAtIndex(0).isExpanded = true;
-                }
+                innerList.GetArrayElementAtIndex(0).isExpanded = true;
             }
-
             list.serializedProperty.serializedObject.ApplyModifiedProperties();
         };
 
@@ -59,23 +53,19 @@ public class LevelConfigurationEditor : Editor
 
     public override void OnInspectorGUI()
     {
-        // 1. Pull data from the script
         serializedObject.Update();
 
         EditorGUILayout.Space();
-        EditorGUILayout.LabelField("General Settings", EditorStyles.boldLabel);
+        EditorGUILayout.LabelField("General & Toaster Settings", EditorStyles.boldLabel);
 
-        // 2. Automatically draw everything EXCEPT the "waves" list
-        // This will show levelNumber, fiveStarTime, fourStarTime, etc.
+        // This will now show levelNumber AND the 4 hover variables automatically
         DrawPropertiesExcluding(serializedObject, new string[] { "waves", "m_Script" });
 
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Wave Settings", EditorStyles.boldLabel);
 
-        // 3. Draw your custom ReorderableList
         waveList.DoLayoutList();
 
-        // 4. Push changes back to the script
         serializedObject.ApplyModifiedProperties();
     }
 }

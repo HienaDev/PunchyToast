@@ -7,7 +7,7 @@ using TMPro;
 public class ToastBehavior : MonoBehaviour
 {
     // ... (Keep all your existing Hidden Settings) ...
-    [HideInInspector] public float hoverDuration, bobAmount, bobSpeed, preHoverDelay, driftFactor;
+    public float hoverDuration, bobAmount, bobSpeed, preHoverDelay, driftFactor;
     [HideInInspector] public List<Transform> potentialTargets;
     [HideInInspector] public GameObject armPrefab;
     [HideInInspector] public bool debugAlwaysL;
@@ -131,8 +131,7 @@ public class ToastBehavior : MonoBehaviour
         }
 
         isPunchable = false;
-        if (!ClientManager.Instance.IsLastClientOfWave(currentFlightTargetClient))
-            Toaster.Instance.LaunchToast(); // here
+        
 
         Vector3 dirToTarget = (targetTransform.position - transform.position).normalized;
         Quaternion baseLook = Quaternion.LookRotation(dirToTarget);
@@ -151,8 +150,9 @@ public class ToastBehavior : MonoBehaviour
             .OnComplete(() => {
 
                 StartCoroutine(ImpactSequence(arm, targetTransform, dirToTarget));
+                if (!ClientManager.Instance.IsLastClientOfWave(currentFlightTargetClient))
+                    Toaster.Instance.LaunchToast(); // here
 
-  
             });
     }
 
