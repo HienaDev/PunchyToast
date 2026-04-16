@@ -26,6 +26,7 @@ public class ClientManager : MonoBehaviour
     public bool areThereClients => activeClients.Values.Count(c => c.isSat) > 0;
 
     private string currentWord = "";
+    private List<int> availableIndexes = new List<int>();
     private int currentIndex = 0;
     private float levelStartTime;
     private bool levelFinished = false;
@@ -103,6 +104,7 @@ public class ClientManager : MonoBehaviour
         var wave = levelConfig.waves[index];
         currentWord = "";
         currentIndex = 0;
+        availableIndexes = new List<int>();
 
         foreach (var clientData in wave.clientsInWave)
         {
@@ -115,10 +117,57 @@ public class ClientManager : MonoBehaviour
     public char GetCurrentLetter()
     {
         if (currentIndex < currentWord.Length) return char.ToUpper(currentWord[currentIndex]);
+
         return (char)('A' + Random.Range(0, 26));
     }
 
+    public int GetAvailableIndex()
+    {
+        // Ensure the list of active toasts is clean (no nulls)
+        var activeToasts = Toaster.Instance.activeToasts.Where(t => t != null).ToList();
+
+        for (int i = 0; i < availableIndexes.Count; i++)
+        {
+            int targetIndex = availableIndexes[i];
+
+            // Check if ANY toast in the air is already "carrying" this index
+            bool isIndexBusy = activeToasts.Any(toast => toast.myLetterIndex == targetIndex);
+
+            // If NO toast is using this index, it's available!
+            if (!isIndexBusy)
+            {
+                return targetIndex;
+            }
+        }
+
+        // All currently available indexes are busy in the air
+        return -1;
+    }
+
+    public void RemoveIndex(int i) => availableIndexes.Remove(i);
+
+    public string GetCurrentWord()
+        => currentWord;
+
     public void IncreaseLetterIndex() => currentIndex++;
+
+
+    public int GetSimultaneousBurstCount()
+    {
+        if (levelConfig == null || currentWaveIndex >= levelConfig.waves.Count) return 1;
+
+        var wave = levelConfig.waves[currentWaveIndex];
+        int count = 1; // The current one
+        int checkIndex = currentIndex;
+
+        // Look ahead to see how many more are simultaneous
+        while (checkIndex < wave.clientsInWave.Count && wave.clientsInWave[checkIndex].simultaneousToast)
+        {
+            count++;
+            checkIndex++;
+        }
+        return count;
+    }
 
     void SpawnClient(LevelConfiguration.ClientData data, LevelConfiguration.Wave wave)
     {
@@ -136,6 +185,7 @@ public class ClientManager : MonoBehaviour
         if (availableSeats.Count == 0) return;
 
         currentWord += data.customLetter;
+        availableIndexes.Add(currentWord.Length - 1);
         Transform chosenSeat = availableSeats[Random.Range(0, availableSeats.Count)];
         GameObject newClientObj = Instantiate(clientPrefab, chosenSeat.position, chosenSeat.rotation);
         Client clientScript = newClientObj.GetComponent<Client>();
