@@ -285,7 +285,38 @@ public class ClientManager : MonoBehaviour
         int stars = CalculateStars(totalTime);
         levelCompleteUI.gameObject.SetActive(true);
         levelCompleteUI.Initialize(stars, totalTime);
+
+        SaveProgress(stars, totalTime);
+
         clientCounterUI.SetActive(false);
+    }
+
+    private void SaveProgress(int stars, float time)
+    {
+        // Matches the string format in your LevelButton Initialize method
+        string starKey = $"Level_{levelConfig.levelNumber}_Stars";
+        string timeKey = $"Level_{levelConfig.levelNumber}_Time";
+
+        // Use a high default value so any real time is "better" than nothing
+        float previousBestTime = PlayerPrefs.GetFloat(timeKey, 999999f);
+
+        // Only save if this run is faster than the previous record
+        if (time < previousBestTime)
+        {
+            PlayerPrefs.SetInt(starKey, stars);
+            PlayerPrefs.SetFloat(timeKey, time);
+            PlayerPrefs.Save();
+            Debug.Log($"<color=yellow>New Best! Level {levelConfig.levelNumber}: {stars} Stars in {time:F2}s</color>");
+        }
+    }
+
+    public void ResetLevelProgress(int levelNum)
+    {
+        // Cleans up the exact keys used by the LevelButtons
+        PlayerPrefs.DeleteKey($"Level_{levelNum}_Stars");
+        PlayerPrefs.DeleteKey($"Level_{levelNum}_Time");
+        PlayerPrefs.Save();
+        Debug.Log($"<color=red>Progress Reset for Level {levelNum}</color>");
     }
 
     private int CalculateStars(float time)
