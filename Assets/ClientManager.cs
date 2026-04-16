@@ -20,7 +20,7 @@ public class ClientManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI satisfiedClientsText;
 
     [Header("Setup")]
-    public GameObject clientPrefab;
+    public GameObject[] clientPrefab;
     public List<Transform> seatingPositions;
     private Dictionary<Transform, Client> activeClients = new Dictionary<Transform, Client>();
     public bool areThereClients => activeClients.Values.Count(c => c.isSat) > 0;
@@ -192,7 +192,10 @@ public class ClientManager : MonoBehaviour
         currentWord += data.customLetter;
         availableIndexes.Add(currentWord.Length - 1);
         Transform chosenSeat = availableSeats[Random.Range(0, availableSeats.Count)];
-        GameObject newClientObj = Instantiate(clientPrefab, chosenSeat.position, chosenSeat.rotation);
+
+        GameObject randomClientPrefab = clientPrefab[Random.Range(0, clientPrefab.Length)];
+
+        GameObject newClientObj = Instantiate(randomClientPrefab, chosenSeat.position, chosenSeat.rotation);
         Client clientScript = newClientObj.GetComponent<Client>();
 
         Sprite chosenSprite;

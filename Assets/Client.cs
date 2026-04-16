@@ -14,6 +14,8 @@ public class Client : MonoBehaviour
     public float entranceDuration = 0.6f;
     public float popUpDistance = 2.0f;
 
+    [SerializeField] private bool useRandomVisual = true;
+
     [Header("Rendering")]
     [SerializeField] private Renderer[] hair;
     [SerializeField] private Renderer[] shirt;
@@ -370,6 +372,9 @@ public class Client : MonoBehaviour
 
     private void ApplyRandomVisuals()
     {
+
+        if(!useRandomVisual) return;
+
         // 1. Check for Special Material Trigger
         if (Random.value < specialChance && specialMaterial != null)
         {
