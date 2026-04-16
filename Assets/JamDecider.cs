@@ -155,7 +155,20 @@ public class JamDecider : MonoBehaviour
         dipSeq.OnComplete(() => Destroy(dippingArm));
     }
 
+    public void SelectByFlavor(JamFlavor flavor)
+    {
+        // Search through activeJams to find which index matches the clicked flavor
+        for (int i = 0; i < activeJams.Count; i++)
+        {
+            if (activeJams[i].flavor == flavor)
+            {
+                SelectJam(i);
+                return;
+            }
+        }
 
+        Debug.LogWarning("Clicked flavor " + flavor + " is not active in this level!");
+    }
 
 
 

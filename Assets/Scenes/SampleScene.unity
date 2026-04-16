@@ -3382,6 +3382,7 @@ GameObject:
   - component: {fileID: 295178435}
   - component: {fileID: 295178434}
   - component: {fileID: 295178433}
+  - component: {fileID: 295178437}
   m_Layer: 0
   m_Name: Peanut Butter
   m_TagString: Untagged
@@ -3408,7 +3409,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.5, y: 1.5, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &295178434
 MeshRenderer:
@@ -3480,6 +3481,19 @@ Transform:
   - {fileID: 679783361}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &295178437
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 295178432}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df42387dbfbab3f4b925543ad4cab4f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myFlavor: 4
 --- !u!1001 &299701785
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3731,6 +3745,7 @@ GameObject:
   - component: {fileID: 310496507}
   - component: {fileID: 310496506}
   - component: {fileID: 310496505}
+  - component: {fileID: 310496509}
   m_Layer: 0
   m_Name: Jam Grape
   m_TagString: Untagged
@@ -3757,7 +3772,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.5, y: 1.5, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &310496506
 MeshRenderer:
@@ -3829,6 +3844,19 @@ Transform:
   - {fileID: 1119101159}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &310496509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 310496504}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df42387dbfbab3f4b925543ad4cab4f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myFlavor: 3
 --- !u!1001 &313360638
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12716,6 +12744,7 @@ GameObject:
   - component: {fileID: 920920114}
   - component: {fileID: 920920113}
   - component: {fileID: 920920112}
+  - component: {fileID: 920920116}
   m_Layer: 0
   m_Name: Butter
   m_TagString: Untagged
@@ -12742,7 +12771,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.5, y: 1.5, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &920920113
 MeshRenderer:
@@ -12814,6 +12843,19 @@ Transform:
   - {fileID: 1605299666}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &920920116
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 920920111}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df42387dbfbab3f4b925543ad4cab4f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myFlavor: 1
 --- !u!1001 &932494787
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -27820,6 +27862,7 @@ GameObject:
   - component: {fileID: 1750194026}
   - component: {fileID: 1750194025}
   - component: {fileID: 1750194024}
+  - component: {fileID: 1750194028}
   m_Layer: 0
   m_Name: Jam Strawberry
   m_TagString: Untagged
@@ -27846,7 +27889,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.5, y: 1.5, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1750194025
 MeshRenderer:
@@ -27918,6 +27961,19 @@ Transform:
   - {fileID: 1628759655}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1750194028
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1750194023}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df42387dbfbab3f4b925543ad4cab4f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myFlavor: 2
 --- !u!1001 &1755213626
 PrefabInstance:
   m_ObjectHideFlags: 0
