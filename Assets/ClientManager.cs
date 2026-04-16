@@ -297,6 +297,15 @@ public class ClientManager : MonoBehaviour
         return 1;
     }
 
+    public Client GetClientInSeat(Transform seat)
+    {
+        if (activeClients.TryGetValue(seat, out Client client))
+        {
+            return client;
+        }
+        return null;
+    }
+
     public Transform GetBestTarget(string currentJamInHand)
     {
         var matchingKvp = activeClients.FirstOrDefault(kvp => kvp.Value.desiredCondiment == currentJamInHand && !kvp.Value.isSatisfied);

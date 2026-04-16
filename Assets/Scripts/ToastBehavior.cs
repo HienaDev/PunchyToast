@@ -172,7 +172,6 @@ public class ToastBehavior : MonoBehaviour
     void LaunchAtTarget(Transform target)
     {
         isHovering = false;
-        rb.isKinematic = true;
         foreach (TrailRenderer lr in GetComponentsInChildren<TrailRenderer>()) lr.enabled = true;
         foreach (TAG_JamDroplets droplet in GetComponentsInChildren<TAG_JamDroplets>(true))
         {
@@ -181,17 +180,48 @@ public class ToastBehavior : MonoBehaviour
             main.startColor = JamDecider.Instance.GetCurrentJamColor();
         }
 
-        transform.DOLookAt(target.position, flightDuration / 4).SetEase(Ease.Linear);
-        if (currentFlightTargetClient != null) currentFlightTargetClient.OpenMouth();
+        // Check if we actually have a valid client target
+        // If currentFlightTargetClient is null, it means we are just aiming at a seating position
+        if (currentFlightTargetClient != null)
+        {
+            rb.isKinematic = true;
+            transform.DOLookAt(target.position, flightDuration / 4).SetEase(Ease.Linear);
+            currentFlightTargetClient.OpenMouth();
 
-        Sequence flightSeq = DOTween.Sequence();
-        flightSeq.Append(transform.DOMove(target.position, flightDuration).SetEase(Ease.Linear));
-        flightSeq.InsertCallback(flightDuration / 2f, () => { if (currentFlightTargetClient != null) currentFlightTargetClient.Recoil(); });
-        flightSeq.OnComplete(() => {
+            Sequence flightSeq = DOTween.Sequence();
+            flightSeq.Append(transform.DOMove(target.position, flightDuration).SetEase(Ease.Linear));
+            flightSeq.InsertCallback(flightDuration / 2f, () => { if (currentFlightTargetClient != null) currentFlightTargetClient.Recoil(); });
+            flightSeq.OnComplete(() => {
+                rb.isKinematic = false;
+                rb.useGravity = true;
+                currentFlightTargetClient.TryEatToast(JamDecider.Instance.allAvailableJams[JamDecider.Instance.currentJamIndex].flavor.ToString(), gameObject);
+            });
+        }
+        else
+        {
             rb.isKinematic = false;
             rb.useGravity = true;
-            if (currentFlightTargetClient != null) currentFlightTargetClient.TryEatToast(JamDecider.Instance.allAvailableJams[JamDecider.Instance.currentJamIndex].flavor.ToString(), gameObject);
-        });
+            rb.constraints = RigidbodyConstraints.None;
+
+            // Use the new Manager method to find the puppet at this seat
+            Client clientToBonk = ClientManager.Instance.GetClientInSeat(target);
+            if (clientToBonk != null)
+            {
+                // Delay the recoil so it happens when the toast actually arrives
+                DOVirtual.DelayedCall(flightDuration / 2f, () => {
+                    if (clientToBonk != null) clientToBonk.HardRecoil();
+                });
+            }
+
+            Vector3 throwDir = (target.position - transform.position).normalized;
+            throwDir.y += 0.2f; // Give it that nice "oops" arc
+
+            rb.AddForce(throwDir * targetFlightForce, ForceMode.Impulse);
+            rb.AddTorque(new Vector3(Random.value, Random.value, Random.value) * 10f, ForceMode.Impulse);
+
+            if (letterText != null) letterText.enabled = false;
+            isPunchable = false;
+        }
     }
 
     void ReleaseToast()
