@@ -5040,6 +5040,7 @@ MonoBehaviour:
   mouthOpenRotation: {x: 60, y: 0, z: 0}
   entranceDuration: 1
   popUpDistance: 2
+  useRandomVisual: 1
   hair:
   - {fileID: 6757752810759646004}
   - {fileID: 8464094908486966730}
