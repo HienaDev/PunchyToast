@@ -21,22 +21,19 @@ public class LevelConfigurationEditor : Editor
             list.serializedProperty.arraySize++;
             list.index = index;
 
-            // Get the newly created wave element
             SerializedProperty newWave = list.serializedProperty.GetArrayElementAtIndex(index);
 
-            // STICKY FIX: Explicitly set booleans to true for the new element
             newWave.FindPropertyRelative("allowBottomRow").boolValue = true;
             newWave.FindPropertyRelative("allowTopRow").boolValue = true;
 
-            // Optional: Initialize the inner client list so it's not empty/null
             SerializedProperty innerList = newWave.FindPropertyRelative("clientsInWave");
             if (innerList != null)
             {
-                innerList.arraySize = 0; // Start clean or set to 1 if preferred
+                innerList.arraySize = 0;
             }
 
             serializedObject.ApplyModifiedProperties();
-        };
+        };  
 
         waveList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) => {
             SerializedProperty element = waveList.serializedProperty.GetArrayElementAtIndex(index);

@@ -22,9 +22,10 @@ MonoBehaviour:
   threeStarTime: 60
   twoStarTime: 90
   waves:
-  - allowBottomRow: 1
-    allowTopRow: 0
+  - allowBottomRow: 0
+    allowTopRow: 1
     clientsInWave:
     - jamFlavor: 1
       customLetter: T
       simultaneousToast: 0
+      toastsNeeded: 50

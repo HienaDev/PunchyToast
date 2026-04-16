@@ -210,6 +210,16 @@ public class ClientManager : MonoBehaviour
 
         Client clientScript = newClientObj.GetComponent<Client>();
 
+        if(data.toastsNeeded > 1)
+        {
+            clientScript.toastsToSatisfy = data.toastsNeeded;
+            if(clientScript.bossBar != null)
+            {
+                clientScript.bossBar.gameObject.SetActive(true);
+            }
+        }
+            
+
         Sprite chosenSprite;
 
         switch(data.jamFlavor)

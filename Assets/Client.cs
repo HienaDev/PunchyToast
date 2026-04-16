@@ -19,6 +19,9 @@ public class Client : MonoBehaviour
     public int toastsToSatisfy = 1;
     private int currentToastsEaten = 0;
 
+    public GameObject bossBar;
+    [SerializeField] private Image bossFill;
+
     [Header("Rendering")]
     [SerializeField] private Renderer[] hair;
     [SerializeField] private Renderer[] shirt;
@@ -267,6 +270,12 @@ public class Client : MonoBehaviour
 
 
         currentToastsEaten++;
+
+        if(bossFill != null)
+        {
+            float fillAmount = (float)currentToastsEaten / toastsToSatisfy;
+            bossFill.DOFillAmount(fillAmount, 0.3f).SetEase(Ease.OutQuad);
+        }
 
         if (currentToastsEaten >= toastsToSatisfy)
         {

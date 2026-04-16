@@ -25,6 +25,16 @@ public class LevelConfiguration : ScriptableObject
         public JamFlavor jamFlavor;
         public string customLetter;
         public bool simultaneousToast;
+        public int toastsNeeded; // New Variable
+
+        // Ensures new clients in the list start with 1 toast needed
+        public ClientData(bool dummy)
+        {
+            jamFlavor = JamFlavor.Butter;
+            customLetter = "A";
+            simultaneousToast = false;
+            toastsNeeded = 1;
+        }
     }
 
     [System.Serializable]
@@ -34,7 +44,6 @@ public class LevelConfiguration : ScriptableObject
         public bool allowTopRow;
         public List<ClientData> clientsInWave;
 
-        // Defaulting to true for new waves
         public Wave(bool dummy)
         {
             allowBottomRow = true;
