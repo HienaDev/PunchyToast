@@ -280,7 +280,7 @@ public class ToastBehavior : MonoBehaviour
         rb.linearVelocity = new Vector3(capturedXVel * exitMomentumScale, -0.1f, capturedZVel * exitMomentumScale);
         rb.constraints = RigidbodyConstraints.None;
         StartCoroutine(GracePeriodTimer());
-        if (timeToDisappear > 0) Destroy(gameObject, timeToDisappear);
+        //if (timeToDisappear > 0) Destroy(gameObject, timeToDisappear);
     }
 
     IEnumerator GracePeriodTimer()

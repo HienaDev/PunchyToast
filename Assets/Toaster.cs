@@ -48,6 +48,10 @@ public class Toaster : MonoBehaviour
     [SerializeField] private AudioSource ding;
     [SerializeField] private AudioSource popUp;
 
+    public bool easyMode = false;
+
+    private ToastBehavior lastToast;
+
     private void Awake()
     {
         if (Instance == null) Instance = this;
@@ -57,9 +61,17 @@ public class Toaster : MonoBehaviour
     {
         //if (Input.GetKeyDown(KeyCode.Space)) LaunchToast();
 
-        if(Time.time - lastLaunchTime >= timeToLaunchToast && ClientManager.Instance.areThereClients)
+        if(Time.time - lastLaunchTime >= timeToLaunchToast && ClientManager.Instance.areThereClients )
         {
-            LaunchToast();
+            if(lastToast != null)
+            {
+                if(!lastToast.isPunchable)
+                {
+                    LaunchToast();
+                }
+            }
+            else
+                LaunchToast();
         }
     }
 
@@ -76,6 +88,8 @@ public class Toaster : MonoBehaviour
         GameObject toast = Instantiate(toastPrefab, ejectPoint.position, ejectPoint.rotation);
         Rigidbody rb = toast.GetComponent<Rigidbody>();
         ToastBehavior behavior = toast.AddComponent<ToastBehavior>();
+
+        lastToast = behavior;
 
         // Randomsize the saturation of the base color of the toast to be more burnt
         TAG_ToastMesh toastMesh = toast.GetComponentInChildren<TAG_ToastMesh>();
@@ -112,14 +126,26 @@ public class Toaster : MonoBehaviour
         behavior.flightDuration = toastFlightDuration;
 
         // 2. Pass Hover/Bob Settings
-        behavior.hoverDuration = hoverTime;
-        behavior.bobAmount = bobAmount;
-        behavior.bobSpeed = bobSpeed;
-        behavior.preHoverDelay = Random.Range(minPreHoverDelay, maxPreHoverDelay);
-        behavior.driftFactor = driftFactor;
+        if(!easyMode)
+        {
+            behavior.hoverDuration = hoverTime;
+            behavior.bobAmount = bobAmount;
+            behavior.bobSpeed = bobSpeed;
+            behavior.preHoverDelay = Random.Range(minPreHoverDelay, maxPreHoverDelay);
+            behavior.driftFactor = driftFactor;
+        }
+        else
+        {
+            behavior.hoverDuration = 600f;
+            behavior.bobAmount = bobAmount;
+            behavior.bobSpeed = bobSpeed;
+            behavior.preHoverDelay = Random.Range(minPreHoverDelay, maxPreHoverDelay);
+            behavior.driftFactor = 0f;
+        }
 
-        // 3. Pass Punch Mechanics Settings
-        behavior.debugAlwaysL = debugAlwaysL;
+
+            // 3. Pass Punch Mechanics Settings
+            behavior.debugAlwaysL = debugAlwaysL;
         behavior.armSpawnOffset = armSpawnOffset;
         behavior.armPunchDuration = armPunchDuration;
         behavior.targetFlightForce = targetFlightForce;
