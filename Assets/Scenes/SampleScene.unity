@@ -6935,6 +6935,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 468315401}
+    - target: {fileID: 3735106965111513185, guid: e86a80cdc8ba77142b6788e728fd1399, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 468315401}
     - target: {fileID: 3850259946218699378, guid: e86a80cdc8ba77142b6788e728fd1399, type: 3}
       propertyPath: m_Name
       value: Level Selection Canvas
