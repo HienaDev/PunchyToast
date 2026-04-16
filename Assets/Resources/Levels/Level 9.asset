@@ -135,7 +135,7 @@ MonoBehaviour:
       simultaneousToast: 1
     - jamFlavor: 3
       customLetter: a
-      simultaneousToast: 1
+      simultaneousToast: 0
   - allowBottomRow: 1
     allowTopRow: 1
     clientsInWave:

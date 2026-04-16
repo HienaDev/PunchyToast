@@ -30,7 +30,7 @@ MonoBehaviour:
       simultaneousToast: 1
     - jamFlavor: 2
       customLetter: l
-      simultaneousToast: 0
+      simultaneousToast: 1
     - jamFlavor: 1
       customLetter: a
       simultaneousToast: 0

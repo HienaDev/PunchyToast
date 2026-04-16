@@ -1,5 +1,6 @@
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.UIElements;
 
 public class MusicManager : MonoBehaviour
 {
@@ -10,6 +11,29 @@ public class MusicManager : MonoBehaviour
     [SerializeField] private AudioSource sourceLevel;
 
     [SerializeField] private float fadeDuration = 1.2f;
+
+    private bool soundOn = true;
+
+    [SerializeField] private GameObject soundOnIcon;
+    [SerializeField] private GameObject soundOffIcon;
+
+    public void ToggleSound()
+    {
+        soundOn = !soundOn;
+        
+        if(soundOn)
+        {
+            Camera.main.GetComponent<AudioListener>().enabled = true;
+            soundOnIcon.SetActive(true);
+            soundOffIcon.SetActive(false);
+        }
+        else
+        {
+            Camera.main.GetComponent<AudioListener>().enabled = false;
+            soundOnIcon.SetActive(false);
+            soundOffIcon.SetActive(true);
+        }
+    }
 
     void Awake()
     {
