@@ -7478,6 +7478,9 @@ MonoBehaviour:
   entranceDuration: 1
   popUpDistance: 2
   useRandomVisual: 1
+  toastsToSatisfy: 1
+  bossBar: {fileID: 0}
+  bossFill: {fileID: 0}
   hair:
   - {fileID: 6757752810759646004}
   - {fileID: 8464094908486966730}
@@ -7546,6 +7549,7 @@ MonoBehaviour:
   specialChance: 0.25
   randomHairColor: 0.25
   randomBaldChance: 0.2
+  redMaterial: {fileID: 0}
   leftEye: {fileID: 1517254151668732587}
   rightEye: {fileID: 4345793867552736307}
   waitingMouthClosed: {x: 20, y: 0, z: 0}
@@ -7564,6 +7568,18 @@ MonoBehaviour:
   eyeRidL: {fileID: 8394726479015219607}
   thoughtBubble: {fileID: 1792011874159153842}
   wantIcon: {fileID: 3427600503985974363}
+  gettingUpSound: []
+  goingDownSound: []
+  hurtRecoilSoundAnt: []
+  muchingFoodSoundAnt: []
+  mouthIsOpenSoundAnt: []
+  hurtRecoilSoundDan: []
+  muchingFoodSoundDan: []
+  mouthIsOpenSoundDan: []
+  hurtRecoilSoundFrei: []
+  muchingFoodSoundFrei: []
+  mouthIsOpenSoundFrei: []
+  mouthAudioSource: {fileID: 0}
   eyeClampAngle: 45
 --- !u!1 &8930406518394524774
 GameObject:
