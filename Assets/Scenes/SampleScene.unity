@@ -40400,7 +40400,7 @@ MonoBehaviour:
   wanderSpeed: 0
   minSpawnDelay: 1
   maxSpawnDelay: 5
-  soundDelay: 0.3
+  soundDelay: 0.5
   menuGuySound: {fileID: 8000513501581082208}
 --- !u!33 &4854314138366687881
 MeshFilter:
@@ -43803,7 +43803,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 1
+      value: 0
       inSlope: 0
       outSlope: 0
       tangentMode: 0
