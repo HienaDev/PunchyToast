@@ -148,11 +148,11 @@ public class ToastBehavior : MonoBehaviour
             {
                 if(Toaster.Instance.currentCombo < 7)
                 {
-                    AudioManager.Instance.PlaySoundFixedPitch(Toaster.Instance.toastComboSound, pitch);
+                    AudioManager.Instance.PlaySoundFixedPitch(Toaster.Instance.toastComboSound, pitch, volume: 1f);
                 }
                 else
                 {
-                    AudioManager.Instance.PlaySound(Toaster.Instance.toastFinalComboSound);
+                    AudioManager.Instance.PlaySound(Toaster.Instance.toastFinalComboSound, volume: 1f);
                 }
             }
 

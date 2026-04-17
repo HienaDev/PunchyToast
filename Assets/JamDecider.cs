@@ -26,10 +26,10 @@ public class JamDecider : MonoBehaviour
     public float dipDepth = 0.8f;
     public float dipDuration = 0.15f;
     public float zOffset = 2.0f;
-    [SerializeField] private float dipCooldown = 1.0f; // New Variable
-    private float lastDipTime;                        // New Variable
+    [SerializeField] private float dipCooldown = 1.0f;
+    private float lastDipTime = -10f; // Initialized so first dip always works
 
-    public int currentJamIndex = -1;
+    public int currentJamIndex = 0;
 
     [SerializeField] private GameObject butterFist;
     [SerializeField] private GameObject stawberryFist;
@@ -60,7 +60,11 @@ public class JamDecider : MonoBehaviour
                 jam.dippingStation.gameObject.SetActive(false);
             }
         }
-        SelectJam(0);
+
+        // Force initialize the first jam without triggering cooldown
+        currentJamIndex = -1;
+        lastDipTime = -10f;
+        SelectJam(0, true);
     }
 
     void Update()
@@ -74,41 +78,32 @@ public class JamDecider : MonoBehaviour
         }
     }
 
-    void SelectJam(int index)
+    // Added 'bypassCooldown' parameter for level startup
+    void SelectJam(int index, bool bypassCooldown = false)
     {
-        // 1. Check if we are trying to switch to the jam we already have
+        if (activeJams == null || index < 0 || index >= activeJams.Count) return;
         if (index == currentJamIndex) return;
 
-        // 2. Cooldown Logic: Check if enough time has passed since the last DIP
-        if (Time.time < lastDipTime + dipCooldown) return;
+        // Only check cooldown if we aren't bypassing it (startup)
+        if (!bypassCooldown && Time.time < lastDipTime + dipCooldown) return;
 
-        // 3. Update timing and index
         lastDipTime = Time.time;
         currentJamIndex = index;
 
         PerformDipAnimation(activeJams[index]);
 
-        // Disable all fists first
+        // Visual Updates
         butterFist.SetActive(false);
         stawberryFist.SetActive(false);
         grapeFist.SetActive(false);
         peanutFist.SetActive(false);
 
-        // Enable the correct fist based on flavor
         switch (activeJams[index].flavor)
         {
-            case JamFlavor.Butter:
-                butterFist.SetActive(true);
-                break;
-            case JamFlavor.StrawberryJam:
-                stawberryFist.SetActive(true);
-                break;
-            case JamFlavor.GrapeJam:
-                grapeFist.SetActive(true);
-                break;
-            case JamFlavor.PeanutButter:
-                peanutFist.SetActive(true);
-                break;
+            case JamFlavor.Butter: butterFist.SetActive(true); break;
+            case JamFlavor.StrawberryJam: stawberryFist.SetActive(true); break;
+            case JamFlavor.GrapeJam: grapeFist.SetActive(true); break;
+            case JamFlavor.PeanutButter: peanutFist.SetActive(true); break;
         }
     }
 
@@ -126,13 +121,13 @@ public class JamDecider : MonoBehaviour
 
     void PerformDipAnimation(JamType jam)
     {
-        AudioManager.Instance.PlaySound(dipSounds, jam.dippingStation.position);
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.PlaySound(dipSounds, jam.dippingStation.position);
 
         Vector3 spawnPos = jam.dippingStation.position + new Vector3(0, 0, -zOffset);
         GameObject dippingArm = Instantiate(armPrefab, spawnPos, Quaternion.identity);
 
         float screenX = Camera.main.WorldToViewportPoint(dippingArm.transform.position).x;
-
         if (screenX > 0.5f)
         {
             dippingArm.transform.localScale = Vector3.Scale(dippingArm.transform.localScale, new Vector3(-1, 1, 1));
@@ -151,8 +146,18 @@ public class JamDecider : MonoBehaviour
         dipSeq.OnComplete(() => Destroy(dippingArm));
     }
 
-    public string GetCurrentJamName() => activeJams[currentJamIndex].flavor.ToString();
-    public Color GetCurrentJamColor() => activeJams[currentJamIndex].jamColor;
+    // Safety checks added to these methods to prevent IndexOutOfRange
+    public string GetCurrentJamName()
+    {
+        if (activeJams.Count == 0 || currentJamIndex < 0) return "None";
+        return activeJams[currentJamIndex].flavor.ToString();
+    }
+
+    public Color GetCurrentJamColor()
+    {
+        if (activeJams.Count == 0 || currentJamIndex < 0) return Color.white;
+        return activeJams[currentJamIndex].jamColor;
+    }
 
     public Color GetColorFromFlavor(JamFlavor flavor)
     {
