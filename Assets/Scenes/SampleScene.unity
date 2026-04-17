@@ -5531,6 +5531,9 @@ MonoBehaviour:
   toastGettingIntoMouth: []
   toastFlying: []
   toastLandingNaturally: []
+  toastComboSound: {fileID: 8300000, guid: 9d361b8651c808f4d9940a89e5714d9e, type: 3}
+  toastFinalComboSound: {fileID: 8300000, guid: d9e8568c787ff194b904d25e74290c51, type: 3}
+  currentCombo: 0
 --- !u!1001 &449085326
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -27261,6 +27264,7 @@ MonoBehaviour:
   strawberryIcon: {fileID: 21300000, guid: 995c4e6e12061544893f54782c47eac9, type: 3}
   grapeIcon: {fileID: 21300000, guid: 4249e195c6483ba4b966184e6865f3ff, type: 3}
   chocolateIcon: {fileID: 21300000, guid: d1a86773b3db9d54c8a22ff77cb651fc, type: 3}
+  levelCompleteSound: []
 --- !u!1001 &1690399932
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -34645,7 +34649,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1874931178
 RectTransform:
   m_ObjectHideFlags: 0
