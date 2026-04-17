@@ -164,6 +164,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2312580687253450047, guid: 713dda271961541408eab04007d3a72a, type: 3}
+      propertyPath: useRandomVisual
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2836773282287351877, guid: 713dda271961541408eab04007d3a72a, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -498,7 +502,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8878267603986006268, guid: 713dda271961541408eab04007d3a72a, type: 3}
       propertyPath: m_Name
-      value: Client Variant
+      value: Shrek
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
