@@ -5528,9 +5528,11 @@ MonoBehaviour:
   easyMode: 0
   activeToasts: []
   punchSounds: []
-  toastGettingIntoMouth: []
+  toastGettingIntoMouth:
+  - {fileID: 8300000, guid: df6fd1fb34e1b074a846fd1da7ac5837, type: 3}
   toastFlying: []
-  toastLandingNaturally: []
+  toastLandingNaturally:
+  - {fileID: 8300000, guid: 67fad213496f7734f9a9c40dced6259e, type: 3}
   toastComboSound: {fileID: 8300000, guid: 9d361b8651c808f4d9940a89e5714d9e, type: 3}
   toastFinalComboSound: {fileID: 8300000, guid: d9e8568c787ff194b904d25e74290c51, type: 3}
   currentCombo: 0
@@ -27249,6 +27251,10 @@ MonoBehaviour:
     favoriteFlavors: 00000000
     preferenceMultiplier: 2
   - prefab: {fileID: 159908719154251471, guid: ec3747702ed52694eb8049045a530bd9, type: 3}
+    spawnWeight: 10
+    favoriteFlavors: 04000000
+    preferenceMultiplier: 2
+  - prefab: {fileID: 7825874988029591868, guid: e940d0e3baa2a3c4a92fdb42b92a3e1e, type: 3}
     spawnWeight: 10
     favoriteFlavors: 04000000
     preferenceMultiplier: 2

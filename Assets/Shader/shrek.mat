@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: ReplaceColor
+  m_Name: shrek
   m_Shader: {fileID: -6465566751694194690, guid: 1100453a5048f5d42bee78407ac234b7, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -79,9 +79,9 @@ Material:
     - _BlushColor: {r: 1, g: 1, b: 1, a: 1}
     - _HairColor: {r: 1, g: 1, b: 1, a: 1}
     - _HairTextureColor: {r: 0, g: 0, b: 1, a: 1}
-    - _ShirtColor: {r: 0.0754717, g: 0.065859735, b: 0.065859735, a: 1}
+    - _ShirtColor: {r: 0.21698111, g: 0.11974901, b: 0.11974901, a: 1}
     - _ShirtTextureColor: {r: 0, g: 0, b: 0, a: 0}
-    - _SkinColor: {r: 0.45521206, g: 0.49056602, b: 0.4466002, a: 1}
+    - _SkinColor: {r: 0.21662274, g: 0.6226415, b: 0.16740832, a: 1}
     - _SkinColorr: {r: 0.79622644, g: 0.7123517, b: 0.3169882, a: 1}
     - _SkinTextureColor: {r: 1, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []

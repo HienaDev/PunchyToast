@@ -5600,7 +5600,16 @@ MonoBehaviour:
   wantIcon: {fileID: 3427600503985974363}
   gettingUpSound: []
   goingDownSound: []
-  hurtRecoilSoundAnt: []
+  hurtRecoilSoundAnt:
+  - {fileID: 8300000, guid: 1eff99c375805b748a2d892f291e4ef6, type: 3}
+  - {fileID: 8300000, guid: 3ad3c27f8df75924d9265671c229882d, type: 3}
+  - {fileID: 8300000, guid: 2a4d323ce3856c3458fee46b157b5259, type: 3}
+  - {fileID: 8300000, guid: 2b2016d0074b4e240923c61968406b46, type: 3}
+  - {fileID: 8300000, guid: 155141ef242dcdd4a99c129f4747440d, type: 3}
+  - {fileID: 8300000, guid: f995f57a1eeb17143b22468d62d8088b, type: 3}
+  - {fileID: 8300000, guid: 0326434ef7dc15a4bbae4ad60b0ae98f, type: 3}
+  - {fileID: 8300000, guid: a40429c3f9bfde148b4ff4991702874a, type: 3}
+  - {fileID: 8300000, guid: 04f975aaf471e3744a5e73e96e913e7c, type: 3}
   muchingFoodSoundAnt:
   - {fileID: 8300000, guid: f9514a3ae0a89534885ed03f270aea0b, type: 3}
   - {fileID: 8300000, guid: 4004a283b53a831499ed4b3a7d683fe5, type: 3}
@@ -5609,8 +5618,18 @@ MonoBehaviour:
   - {fileID: 8300000, guid: f6514f67d04f42e4c9ebc545ec222c37, type: 3}
   - {fileID: 8300000, guid: 24fc0679028ee1d41af325e24e73e66e, type: 3}
   - {fileID: 8300000, guid: 3c4459a2741244a40bc96dc2da5afb65, type: 3}
-  mouthIsOpenSoundAnt: []
-  hurtRecoilSoundDan: []
+  mouthIsOpenSoundAnt:
+  - {fileID: 8300000, guid: a8d3f8ad41048924fa3f8e0b8e1e7283, type: 3}
+  - {fileID: 8300000, guid: 073c30110d6d61c45aa298bd76306d00, type: 3}
+  - {fileID: 8300000, guid: 43b7b5cf5ce37984d87639e6c98289b9, type: 3}
+  hurtRecoilSoundDan:
+  - {fileID: 8300000, guid: 940ecd878926e784692070e52211d94b, type: 3}
+  - {fileID: 8300000, guid: 3f815a66c6be4f64aaa6cf41cc570c31, type: 3}
+  - {fileID: 8300000, guid: b8cd9ac5f21ddff4f83bd57abd8c0544, type: 3}
+  - {fileID: 8300000, guid: bb9b28aad9d8bfe4998cf77f0fe481b6, type: 3}
+  - {fileID: 8300000, guid: d8dd98d2a653da74085f10c64370e517, type: 3}
+  - {fileID: 8300000, guid: f43fd756b0a6b624d8354a9386bdadfc, type: 3}
+  - {fileID: 8300000, guid: 7bd96498d63dbe942a86946414f4f65c, type: 3}
   muchingFoodSoundDan:
   - {fileID: 8300000, guid: 68e85ecd6ce415e4d8041a521fa229ac, type: 3}
   - {fileID: 8300000, guid: 23cbbf040776e324a922c45a561cf36d, type: 3}
@@ -5619,8 +5638,15 @@ MonoBehaviour:
   - {fileID: 8300000, guid: ce17f9b9ac30d4343944eba1b74f4450, type: 3}
   - {fileID: 8300000, guid: 383bc3c3ec84df945a0487e80b712718, type: 3}
   - {fileID: 8300000, guid: 29dbf420cb09e4f4c9cd42416bf47083, type: 3}
-  mouthIsOpenSoundDan: []
-  hurtRecoilSoundFrei: []
+  mouthIsOpenSoundDan:
+  - {fileID: 8300000, guid: a8d3f8ad41048924fa3f8e0b8e1e7283, type: 3}
+  hurtRecoilSoundFrei:
+  - {fileID: 8300000, guid: 4874524999b77a54e97416fa20b1c614, type: 3}
+  - {fileID: 8300000, guid: e435a66e6096a9f42be6e671237ad2b7, type: 3}
+  - {fileID: 8300000, guid: b380db0348064a84890c0a396f7bffdb, type: 3}
+  - {fileID: 8300000, guid: 6e3ecf91cbc1ced40b339740d67d2f82, type: 3}
+  - {fileID: 8300000, guid: 4a1008c1cc0e88c44adff48f53dd063b, type: 3}
+  - {fileID: 8300000, guid: ed16ac17f199b9143b7129855d94cec7, type: 3}
   muchingFoodSoundFrei:
   - {fileID: 8300000, guid: 0fa5d43edae7177499a47fac09a6f304, type: 3}
   - {fileID: 8300000, guid: f5a815f91f1222d45b0aae42a98db0af, type: 3}
@@ -5629,7 +5655,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 9da5568390a5e6c499e0ccf1837a0116, type: 3}
   - {fileID: 8300000, guid: d2f1249801075504c9bc71e15d689e5c, type: 3}
   - {fileID: 8300000, guid: 56104c774806eff4f927c60502d169da, type: 3}
-  mouthIsOpenSoundFrei: []
+  mouthIsOpenSoundFrei:
+  - {fileID: 8300000, guid: a8d3f8ad41048924fa3f8e0b8e1e7283, type: 3}
   mouthAudioSource: {fileID: 8459887380780023882}
   eyeClampAngle: 45
 --- !u!1 &8930406518394524774
