@@ -38,6 +38,8 @@ public class MenuPuppet : MonoBehaviour
     [Header("Spawn Delay Settings")]
     [SerializeField] private float minSpawnDelay = 1.0f;
     [SerializeField] private float maxSpawnDelay = 5.0f;
+    [Tooltip("Positive plays after pop-up starts, Negative plays before it pops up")]
+    [SerializeField] private float soundDelay = 0.0f;
 
     private Vector3 originalMouthRot;
     private Vector3 initialPos;
@@ -72,14 +74,29 @@ public class MenuPuppet : MonoBehaviour
         mouthBone.DOKill();
     }
 
+    private IEnumerator PlaySoundWithDelay()
+    {
+        yield return new WaitForSeconds(soundDelay);
+        if (menuGuySound != null) menuGuySound.Play();
+    }
+
     private IEnumerator CycleRoutine()
     {
         while (true)
         {
-            
-            float delay = Random.Range(minSpawnDelay, maxSpawnDelay);
-            yield return new WaitForSeconds(delay);
-            menuGuySound.Play();
+
+            float randomWait = Random.Range(minSpawnDelay, maxSpawnDelay);
+
+            // If delay is negative (e.g., -0.5), we wait slightly less time before playing sound
+            float waitBeforeSound = (soundDelay < 0) ? randomWait + soundDelay : randomWait;
+            yield return new WaitForSeconds(Mathf.Max(0, waitBeforeSound));
+
+            // Play sound (This will trigger early if soundDelay is negative)
+            if (menuGuySound != null) menuGuySound.Play();
+
+            // If delay was positive, we still need to finish the original random wait
+            if (soundDelay > 0) yield return new WaitForSeconds(soundDelay);
+
             ApplyRandomVisuals();
 
             // Safety kill before starting new sequence

@@ -171,7 +171,7 @@ public class Toaster : MonoBehaviour
             if (fireToSpawn != null)
             {
                 // Instantiate at the toast's position and parent it to the toast
-                GameObject fireInstance = Instantiate(fireToSpawn, toast.transform.position, Quaternion.identity);
+                GameObject fireInstance = Instantiate(fireToSpawn, toast.transform.position - new Vector3(0f, 0.02f, 0f), Quaternion.identity);
                 fireInstance.transform.SetParent(toast.transform);
             }
         }
