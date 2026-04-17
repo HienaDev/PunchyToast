@@ -5601,13 +5601,34 @@ MonoBehaviour:
   gettingUpSound: []
   goingDownSound: []
   hurtRecoilSoundAnt: []
-  muchingFoodSoundAnt: []
+  muchingFoodSoundAnt:
+  - {fileID: 8300000, guid: f9514a3ae0a89534885ed03f270aea0b, type: 3}
+  - {fileID: 8300000, guid: 4004a283b53a831499ed4b3a7d683fe5, type: 3}
+  - {fileID: 8300000, guid: 99ad472c61b5bf942bb826c049d9b6a7, type: 3}
+  - {fileID: 8300000, guid: 5daf8f7666d110b46aa06dc51ded3722, type: 3}
+  - {fileID: 8300000, guid: f6514f67d04f42e4c9ebc545ec222c37, type: 3}
+  - {fileID: 8300000, guid: 24fc0679028ee1d41af325e24e73e66e, type: 3}
+  - {fileID: 8300000, guid: 3c4459a2741244a40bc96dc2da5afb65, type: 3}
   mouthIsOpenSoundAnt: []
   hurtRecoilSoundDan: []
-  muchingFoodSoundDan: []
+  muchingFoodSoundDan:
+  - {fileID: 8300000, guid: 68e85ecd6ce415e4d8041a521fa229ac, type: 3}
+  - {fileID: 8300000, guid: 23cbbf040776e324a922c45a561cf36d, type: 3}
+  - {fileID: 8300000, guid: 2de29062cca295948aa5086d62cb0b3c, type: 3}
+  - {fileID: 8300000, guid: d04c20a3f11670c46923636626f48498, type: 3}
+  - {fileID: 8300000, guid: ce17f9b9ac30d4343944eba1b74f4450, type: 3}
+  - {fileID: 8300000, guid: 383bc3c3ec84df945a0487e80b712718, type: 3}
+  - {fileID: 8300000, guid: 29dbf420cb09e4f4c9cd42416bf47083, type: 3}
   mouthIsOpenSoundDan: []
   hurtRecoilSoundFrei: []
-  muchingFoodSoundFrei: []
+  muchingFoodSoundFrei:
+  - {fileID: 8300000, guid: 0fa5d43edae7177499a47fac09a6f304, type: 3}
+  - {fileID: 8300000, guid: f5a815f91f1222d45b0aae42a98db0af, type: 3}
+  - {fileID: 8300000, guid: 82324b4d32fc5574dba9378bf092457c, type: 3}
+  - {fileID: 8300000, guid: 695d274faa70ce24bb8fcac63dbce635, type: 3}
+  - {fileID: 8300000, guid: 9da5568390a5e6c499e0ccf1837a0116, type: 3}
+  - {fileID: 8300000, guid: d2f1249801075504c9bc71e15d689e5c, type: 3}
+  - {fileID: 8300000, guid: 56104c774806eff4f927c60502d169da, type: 3}
   mouthIsOpenSoundFrei: []
   mouthAudioSource: {fileID: 8459887380780023882}
   eyeClampAngle: 45
