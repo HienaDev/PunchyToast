@@ -5527,7 +5527,11 @@ MonoBehaviour:
   easyModeToggle: {fileID: 195950091}
   easyMode: 0
   activeToasts: []
-  punchSounds: []
+  punchSounds:
+  - {fileID: 8300000, guid: e7519703de7660f479fced61d3d25423, type: 3}
+  - {fileID: 8300000, guid: 80ab44caa3ddd45489366f94e7dd0469, type: 3}
+  - {fileID: 8300000, guid: 605ab645006bcae458ed1093e8b0d95e, type: 3}
+  - {fileID: 8300000, guid: b99a9e8a28dcf3646807f44c351f50ea, type: 3}
   toastGettingIntoMouth:
   - {fileID: 8300000, guid: df6fd1fb34e1b074a846fd1da7ac5837, type: 3}
   toastFlying: []
