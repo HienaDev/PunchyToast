@@ -3489,6 +3489,8 @@ MonoBehaviour:
   thoughtBubble: {fileID: 1792011874159153842}
   wantIcon: {fileID: 3427600503985974363}
   gettingUpSound:
+  - {fileID: 8300000, guid: 1c47b20b671347342b4b47e360f96a7a, type: 3}
+  - {fileID: 8300000, guid: d298747ea77ea4d428e8dc1b06da77e1, type: 3}
   - {fileID: 8300000, guid: 7c60b057704e41c4ea6f5ec29e70db55, type: 3}
   goingDownSound:
   - {fileID: 8300000, guid: 1cb130ec4413ce540859aa0c56f3a060, type: 3}
