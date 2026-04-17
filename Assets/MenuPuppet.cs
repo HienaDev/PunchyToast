@@ -45,6 +45,8 @@ public class MenuPuppet : MonoBehaviour
     private Vector3 initialPivotPos;
     private Coroutine cycleCoroutine;
 
+    [SerializeField] private AudioSource menuGuySound;
+
     void Awake()
     {
         // Cache initial states in Awake to ensure they are captured before any movement
@@ -74,9 +76,10 @@ public class MenuPuppet : MonoBehaviour
     {
         while (true)
         {
+            
             float delay = Random.Range(minSpawnDelay, maxSpawnDelay);
             yield return new WaitForSeconds(delay);
-
+            menuGuySound.Play();
             ApplyRandomVisuals();
 
             // Safety kill before starting new sequence

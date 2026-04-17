@@ -26,7 +26,7 @@ public class JamDecider : MonoBehaviour
     public float dipDepth = 0.8f;
     public float dipDuration = 0.15f;
     public float zOffset = 2.0f;
-    [SerializeField] private float dipCooldown = 1.0f;
+    [SerializeField] private float dipCooldown = 0.5f;
     private float lastDipTime = -10f; // Initialized so first dip always works
 
     public int currentJamIndex = 0;

@@ -1499,7 +1499,7 @@ RectTransform:
   m_GameObject: {fileID: 2531772277262837581}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.015639951, y: 0.015639951, z: 0.015639951}
+  m_LocalScale: {x: 0.012045735, y: 0.012045735, z: 0.012045735}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6624962391152640303}
@@ -1508,7 +1508,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0.259, y: 0.007}
+  m_AnchoredPosition: {x: 0.208, y: 0.061}
   m_SizeDelta: {x: 167, y: 104.24999}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &3835369990953641418
@@ -3960,7 +3960,7 @@ AudioSource:
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 128
+  Priority: 0
   DopplerLevel: 1
   MinDistance: 1
   MaxDistance: 500
@@ -3998,7 +3998,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 1
+      value: 0.9
       inSlope: 0
       outSlope: 0
       tangentMode: 0
