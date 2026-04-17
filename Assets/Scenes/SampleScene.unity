@@ -36595,13 +36595,16 @@ MonoBehaviour:
   dipDepth: 0.1
   dipDuration: 0.15
   zOffset: 0.1
-  dipCooldown: 0.5
+  dipCooldown: 0.35
   currentJamIndex: -1
   butterFist: {fileID: 1874931177}
   stawberryFist: {fileID: 1403185107}
   grapeFist: {fileID: 2088356146}
   peanutFist: {fileID: 388920394}
-  dipSounds: []
+  dipSounds:
+  - {fileID: 8300000, guid: ce2f30ad0c6c4354b8b2ab98e3be9a65, type: 3}
+  - {fileID: 8300000, guid: 816d42522c474154bbe46b608d5b04f2, type: 3}
+  - {fileID: 8300000, guid: a649b6b555576534cb31993420915d03, type: 3}
 --- !u!1 &2029612508
 GameObject:
   m_ObjectHideFlags: 0
