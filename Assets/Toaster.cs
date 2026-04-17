@@ -69,7 +69,7 @@ public class Toaster : MonoBehaviour
         if (currentCombo >= 1)
         {
             float pitch = 1f + (currentCombo * 0.1f);
-            return Mathf.Min(pitch, 1.7f); // Cap the pitch increase at 2x
+            return Mathf.Min(pitch, 2.0f); // Cap the pitch increase at 2x
         }
         else
         {

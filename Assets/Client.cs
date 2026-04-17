@@ -100,8 +100,12 @@ public class Client : MonoBehaviour
     [SerializeField] private AudioSource mouthAudioSource;
     private float originalMouthVolume;
 
+    private Vector3 originalEyelidRotation;
+
     void Start()
     {
+
+        originalEyelidRotation = eyeLidL.localEulerAngles;
 
         // choose a random from 1 to 3, and assign the corresponding audio arrays to the generic ones
         int characterVariant = Random.Range(1, 4);
@@ -126,8 +130,10 @@ public class Client : MonoBehaviour
 
         // Store the designer-set volume and ensure we start silent
         originalMouthVolume = mouthAudioSource.volume;
+        mouthAudioSource.priority = 0;
         mouthAudioSource.volume = 0;
         mouthAudioSource.loop = true; // Ensure it loops for the chatter
+        mouthAudioSource.playOnAwake = false; // We'll trigger it manually
         mouthAudioSource.Play();
 
         if(mouthIsOpenSound != null && mouthIsOpenSound.Length > 0)
@@ -377,8 +383,8 @@ public class Client : MonoBehaviour
 
             eyeLidL.DOLocalRotate(new Vector3(-90, 0, 0), 0.1f);
             eyeRidL.DOLocalRotate(new Vector3(-90, 0, 0), 0.1f).OnComplete(() => {
-                eyeLidL.DOLocalRotate(Vector3.zero, 0.1f);
-                eyeRidL.DOLocalRotate(Vector3.zero, 0.1f);
+                eyeLidL.DOLocalRotate(originalEyelidRotation, 0.1f);
+                eyeRidL.DOLocalRotate(originalEyelidRotation, 0.1f);
                 StartBlinking();
             });
         });

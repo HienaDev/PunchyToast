@@ -141,19 +141,16 @@ public class ToastBehavior : MonoBehaviour
         arm.transform.DOMove(transform.position, armPunchDuration).SetEase(Ease.Linear).OnComplete(() => {
             StartCoroutine(ImpactSequence(arm, targetTransform, dirToTarget));
 
-            AudioManager.Instance.PlaySound(punchSounds, transform.position);
+            AudioManager.Instance.PlaySound(punchSounds, transform.position, volume:0.4f);
 
             float pitch = Toaster.Instance.GetComboPitch();
             if (Toaster.Instance.currentCombo >= 1)
             {
-                if(Toaster.Instance.currentCombo < 7)
-                {
-                    AudioManager.Instance.PlaySoundFixedPitch(Toaster.Instance.toastComboSound, pitch, volume: 1f);
-                }
-                else
-                {
-                    AudioManager.Instance.PlaySound(Toaster.Instance.toastFinalComboSound, volume: 1f);
-                }
+                
+                    AudioManager.Instance.PlaySoundFixedPitch(Toaster.Instance.toastComboSound, pitch, transform.position, volume: 0.3f);
+                
+               
+                
             }
 
             Toaster.Instance.IncrementCombo();
