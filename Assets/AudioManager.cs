@@ -63,4 +63,32 @@ public class AudioManager : MonoBehaviour
         source.Play();
         Destroy(go, clip.length / source.pitch);
     }
+
+    /// <summary>
+    /// Plays a sound with a specific fixed pitch.
+    /// </summary>
+    public void PlaySoundFixedPitch(AudioClip clip, float pitch, Vector3? position = null, float volume = 1f)
+    {
+        if (clip == null) return;
+
+        GameObject go = new GameObject("TempAudio_Fixed_" + clip.name);
+        AudioSource source = go.AddComponent<AudioSource>();
+
+        if (position.HasValue)
+        {
+            go.transform.position = position.Value;
+            source.spatialBlend = 1f;
+        }
+        else
+        {
+            source.spatialBlend = 0f;
+        }
+
+        source.clip = clip;
+        source.volume = volume;
+        source.pitch = pitch; // Uses the passed value directly
+
+        source.Play();
+        Destroy(go, clip.length / Mathf.Max(0.01f, pitch));
+    }
 }

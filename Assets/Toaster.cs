@@ -61,6 +61,27 @@ public class Toaster : MonoBehaviour
     public AudioClip[] toastFlying;
     public AudioClip[] toastLandingNaturally;
 
+    public AudioClip toastComboSound;
+    public AudioClip toastFinalComboSound;
+
+    public float GetComboPitch()
+    {
+        if (currentCombo >= 1)
+        {
+            float pitch = 1f + (currentCombo * 0.1f);
+            return Mathf.Min(pitch, 1.7f); // Cap the pitch increase at 2x
+        }
+        else
+        {
+            return -1f; // Normal pitch when no combo
+        }
+    }
+
+    public int currentCombo = 0;
+
+    public void IncrementCombo() => currentCombo++;
+    public void ResetCombo() => currentCombo = 0;
+
     private void Awake()
     {
         if (Instance == null) Instance = this;

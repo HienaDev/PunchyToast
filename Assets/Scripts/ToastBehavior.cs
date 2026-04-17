@@ -143,6 +143,21 @@ public class ToastBehavior : MonoBehaviour
 
             AudioManager.Instance.PlaySound(punchSounds, transform.position);
 
+            float pitch = Toaster.Instance.GetComboPitch();
+            if (Toaster.Instance.currentCombo >= 1)
+            {
+                if(Toaster.Instance.currentCombo < 7)
+                {
+                    AudioManager.Instance.PlaySoundFixedPitch(Toaster.Instance.toastComboSound, pitch);
+                }
+                else
+                {
+                    AudioManager.Instance.PlaySound(Toaster.Instance.toastFinalComboSound);
+                }
+            }
+
+            Toaster.Instance.IncrementCombo();
+
             // Normal launch only happens if we AREN'T currently in a simultaneous burst
             // or if the air is clear.
             if (!ClientManager.Instance.IsLastClientOfWave(currentFlightTargetClient) && !Toaster.Instance.AreTherePunchableToasts())
@@ -226,6 +241,8 @@ public class ToastBehavior : MonoBehaviour
             rb.useGravity = true;
             rb.constraints = RigidbodyConstraints.None;
 
+            Toaster.Instance.ResetCombo();
+
             // Use the new Manager method to find the puppet at this seat
             Client clientToBonk = ClientManager.Instance.GetClientInSeat(target);
             if (clientToBonk != null)
@@ -258,6 +275,7 @@ public class ToastBehavior : MonoBehaviour
 
     void ReleaseToast()
     {
+        Toaster.Instance.ResetCombo();
         isHovering = false;
         if (bobTween != null) bobTween.Kill();
         rb.useGravity = true;
