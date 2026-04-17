@@ -64,12 +64,16 @@ public class Toaster : MonoBehaviour
     public AudioClip toastComboSound;
     public AudioClip toastFinalComboSound;
 
+    [SerializeField] private GameObject fireLvl1;
+    [SerializeField] private GameObject fireLvl2;
+    [SerializeField] private GameObject fireLvl3;
+
     public float GetComboPitch()
     {
         if (currentCombo >= 1)
         {
             float pitch = 1f + (currentCombo * 0.1f);
-            return Mathf.Min(pitch, 2.0f); // Cap the pitch increase at 2x
+            return Mathf.Min(pitch, 1.7f); // Cap the pitch increase at 2x
         }
         else
         {
@@ -154,6 +158,23 @@ public class Toaster : MonoBehaviour
         GameObject toast = Instantiate(toastPrefab, ejectPoint.position, ejectPoint.rotation);
         Rigidbody rb = toast.GetComponent<Rigidbody>();
         ToastBehavior behavior = toast.AddComponent<ToastBehavior>();
+
+        if (currentCombo > 1)
+        {
+            // Choose which fire prefab to use based on combo intensity
+            GameObject fireToSpawn = null;
+
+            if (currentCombo >= 7) fireToSpawn = fireLvl3;
+            else if (currentCombo >= 3) fireToSpawn = fireLvl2;
+            else fireToSpawn = fireLvl1;
+
+            if (fireToSpawn != null)
+            {
+                // Instantiate at the toast's position and parent it to the toast
+                GameObject fireInstance = Instantiate(fireToSpawn, toast.transform.position, Quaternion.identity);
+                fireInstance.transform.SetParent(toast.transform);
+            }
+        }
 
         activeToasts.Add(behavior);
         behavior.isSimultaneous = isSimul;
