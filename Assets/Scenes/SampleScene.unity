@@ -27273,6 +27273,10 @@ MonoBehaviour:
     spawnWeight: 40
     favoriteFlavors: 00000000
     preferenceMultiplier: 2
+  - prefab: {fileID: 4944069869090490802, guid: d3ec36328ddb13f41a936ea45de5ac05, type: 3}
+    spawnWeight: 40
+    favoriteFlavors: 00000000
+    preferenceMultiplier: 2
   seatingPositions:
   - {fileID: 182842326}
   - {fileID: 1766857180}
