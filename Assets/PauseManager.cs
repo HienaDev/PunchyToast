@@ -1,16 +1,19 @@
 using UnityEngine;
+using DG.Tweening; // Required for killing tweens
 
 public class PauseManager : MonoBehaviour
 {
     public static PauseManager Instance;
 
     [SerializeField] private GameObject pauseMenuPanel;
+    [SerializeField] private GameObject levelSelectionPanel; // Assign your Level Select screen here
+    [SerializeField] private GameObject gameplayUI;         // The UI that shows during play (combo, etc)
+
     private bool isPaused = false;
 
     void Awake()
     {
         if (Instance == null) Instance = this;
-        // Ensure menu is off at start
         if (pauseMenuPanel != null) pauseMenuPanel.SetActive(false);
     }
 
@@ -25,25 +28,32 @@ public class PauseManager : MonoBehaviour
     public void TogglePause()
     {
         isPaused = !isPaused;
+        Time.timeScale = isPaused ? 0f : 1f;
+        pauseMenuPanel.SetActive(isPaused);
 
-        if (isPaused)
-        {
-            Time.timeScale = 0f;
-            pauseMenuPanel.SetActive(true);
-            // Optional: Show mouse cursor if it was hidden
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.None;
-        }
-        else
-        {
-            Time.timeScale = 1f;
-            pauseMenuPanel.SetActive(false);
-            // Optional: Re-hide cursor
-            // Cursor.visible = false;
-        }
+        Cursor.visible = isPaused;
+        Cursor.lockState = isPaused ? CursorLockMode.None : CursorLockMode.Locked;
     }
 
-    // Call this from a "Quit" button in the menu
+    public void BackToLevelSelection()
+    {
+        // 1. Resume time so things can be destroyed properly if needed
+        Time.timeScale = 1f;
+        isPaused = false;
+
+        // 3. Call the Full Reset on the Managers
+        ClientManager.Instance.FullResetGame();
+
+        // 4. UI Swapping
+        pauseMenuPanel.SetActive(false);
+        gameplayUI.SetActive(false);
+        levelSelectionPanel.SetActive(true);
+
+        // 5. Cursor management
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+    }
+
     public void ResumeGame()
     {
         if (isPaused) TogglePause();

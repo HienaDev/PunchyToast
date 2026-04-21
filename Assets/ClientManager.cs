@@ -60,6 +60,7 @@ public class ClientManager : MonoBehaviour
         currentWaveIndex = 0;
         totalClientsSatisfied = 0;
         Toaster.Instance.SetupToasterSettings(config);
+        Toaster.Instance.ResetCombo();
         clientCounterUI.SetActive(true);
         CalculateTotalLevelClients();
         UpdateUI();
@@ -350,6 +351,44 @@ public class ClientManager : MonoBehaviour
             return client;
         }
         return null;
+    }
+
+    public void FullResetGame()
+    {
+        // 1. Stop all Spawning Coroutines
+        StopAllCoroutines();
+
+        // 2. Clear the Toaster
+        Toaster.Instance.StopAllCoroutines();
+        Toaster.Instance.ResetCombo();
+        Toaster.Instance.activeToasts.Clear();
+
+        // 3. Destroy all leftover GameObjects in the scene
+        // Find all Toasts
+        ToastBehavior[] toasts = Object.FindObjectsByType<ToastBehavior>(FindObjectsSortMode.None);
+        foreach (var t in toasts) Destroy(t.gameObject);
+
+        // Find all Clients
+        Client[] clients = Object.FindObjectsByType<Client>(FindObjectsSortMode.None);
+        foreach (var c in clients) Destroy(c.gameObject);
+
+        // Find all Arms/Fists (they usually have a specific tag or we can find by name/component if you have one)
+        TAG_Fist[] arms = GameObject.FindObjectsByType<TAG_Fist>(FindObjectsSortMode.None);
+
+        for (int i = 0; i < arms.Length; i++)
+        {
+            Destroy(arms[i].gameObject);
+        }
+
+
+        // 4. Reset internal Manager logic
+        activeClients.Clear();
+        availableIndexes.Clear();
+        currentWord = "";
+        currentIndex = 0;
+        levelFinished = false;
+
+        Debug.Log("Game Simulation Fully Reset");
     }
 
     public Transform GetBestTarget(string currentJamInHand)

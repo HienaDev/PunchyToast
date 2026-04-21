@@ -378,13 +378,29 @@ public class Client : MonoBehaviour
     {
         float delay = Random.Range(2f, 4f);
 
-        DOVirtual.DelayedCall(delay, () => {
-            if (this == null) return;
+        DOVirtual.DelayedCall(delay, () =>
+        {
+            if (this == null || eyeLidL == null || eyeRidL == null) return;
 
-            eyeLidL.DOLocalRotate(new Vector3(-90, 0, 0), 0.1f);
-            eyeRidL.DOLocalRotate(new Vector3(-90, 0, 0), 0.1f).OnComplete(() => {
-                eyeLidL.DOLocalRotate(originalEyelidRotation, 0.1f);
-                eyeRidL.DOLocalRotate(originalEyelidRotation, 0.1f);
+            // 1. Capture the "Open" state (current tracking rotation)
+            Vector3 openRotL = eyeLidL.localEulerAngles;
+            Vector3 openRotR = eyeRidL.localEulerAngles;
+
+            // 2. Calculate "Closed" state (Current + 90 degrees on Local X)
+            // Note: Depending on your model's import, this might need to be +90 or -90
+            Vector3 closedRotL = openRotL + new Vector3(90, 0, 0);
+            Vector3 closedRotR = openRotR + new Vector3(90, 0, 0);
+
+            // 3. Perform the Blink
+            // We use DOLocalRotate with RotateMode.FastToRecalculate to keep it smooth
+            eyeLidL.DOLocalRotate(closedRotL, 0.05f).SetEase(Ease.InQuad);
+            eyeRidL.DOLocalRotate(closedRotR, 0.05f).SetEase(Ease.InQuad).OnComplete(() =>
+            {
+
+                // Return to whatever the current rotation is (it might have moved while blinking!)
+                eyeLidL.DOLocalRotate(eyeLidL.localEulerAngles - new Vector3(90, 0, 0), 0.08f).SetEase(Ease.OutQuad);
+                eyeRidL.DOLocalRotate(eyeRidL.localEulerAngles - new Vector3(90, 0, 0), 0.08f).SetEase(Ease.OutQuad);
+
                 StartBlinking();
             });
         });

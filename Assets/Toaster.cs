@@ -1,6 +1,7 @@
 using DG.Tweening;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -68,6 +69,18 @@ public class Toaster : MonoBehaviour
     [SerializeField] private GameObject fireLvl2;
     [SerializeField] private GameObject fireLvl3;
 
+    [Header("Combo UI & VFX")]
+    [SerializeField] private RectTransform comboTextParent;
+    [SerializeField] private TextMeshProUGUI comboTextMain;   // Drag your main text here
+    [SerializeField] private TextMeshProUGUI comboTextShadow; // Drag your shadow text here
+    [SerializeField] private GameObject comboFireParticle;   // Drag your fire particle here
+    [SerializeField] private float comboBounceForce = 1.2f;
+    [SerializeField] private float comboShakeStrength = 10f;
+
+    private Vector3 originalParentScale;
+    private Vector3 originalParentPos;
+    private Vector3 originalComboScale;
+
     public float GetComboPitch()
     {
         if (currentCombo >= 1)
@@ -83,12 +96,31 @@ public class Toaster : MonoBehaviour
 
     public int currentCombo = 0;
 
-    public void IncrementCombo() => currentCombo++;
-    public void ResetCombo() => currentCombo = 0;
+    public void IncrementCombo()
+    {
+        currentCombo++;
+        UpdateComboUI(); 
+    }
+
+    public void ResetCombo()
+    {
+        currentCombo = 0;
+        comboTextParent.gameObject.SetActive(false);
+        UpdateComboUI(); 
+    }
 
     private void Awake()
     {
         if (Instance == null) Instance = this;
+
+        if (comboTextParent != null)
+        {
+            originalParentScale = comboTextParent.localScale;
+            originalParentPos = comboTextParent.localPosition;
+        }
+           
+
+        UpdateComboUI();
     }
 
     void Update()
@@ -98,6 +130,35 @@ public class Toaster : MonoBehaviour
             if (!AreTherePunchableToasts())
             {
                 LaunchToast();
+            }
+        }
+    }
+
+    private void UpdateComboUI()
+    {
+        bool hasCombo = currentCombo > 0;
+
+        if (comboTextParent != null) comboTextParent.gameObject.SetActive(hasCombo);
+
+        if (comboFireParticle != null)
+            comboFireParticle.SetActive(currentCombo >= 7);
+
+        if (hasCombo)
+        {
+            string comboStr = "x" + currentCombo;
+            if (comboTextMain != null) comboTextMain.text = comboStr;
+            if (comboTextShadow != null) comboTextShadow.text = comboStr;
+
+            if (comboTextParent != null)
+            {
+                comboTextParent.DOKill();
+
+                comboTextParent.localScale = originalParentScale;
+                comboTextParent.localPosition = originalParentPos;
+
+                comboTextParent.DOPunchScale(originalParentScale * (comboBounceForce - 1f), 0.2f, 5, 1);
+
+                comboTextParent.DOShakePosition(0.2f, comboShakeStrength);
             }
         }
     }
