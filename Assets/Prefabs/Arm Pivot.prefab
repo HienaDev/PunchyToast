@@ -95,6 +95,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4589873802885246622}
+  - component: {fileID: 2654704155224332311}
   m_Layer: 0
   m_Name: Arm Pivot
   m_TagString: Untagged
@@ -118,3 +119,15 @@ Transform:
   - {fileID: 6557720362089994828}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2654704155224332311
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5662322208263055636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c69e8d07adac8844a2dfeb6fefb9548, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
