@@ -81,7 +81,7 @@ Material:
     - _HairTextureColor: {r: 0, g: 0, b: 1, a: 1}
     - _ShirtColor: {r: 0.0754717, g: 0.065859735, b: 0.065859735, a: 1}
     - _ShirtTextureColor: {r: 0, g: 0, b: 0, a: 0}
-    - _SkinColor: {r: 0.45521206, g: 0.49056602, b: 0.4466002, a: 1}
+    - _SkinColor: {r: 0.8584906, g: 0.84634215, b: 0.84634215, a: 1}
     - _SkinColorr: {r: 0.79622644, g: 0.7123517, b: 0.3169882, a: 1}
     - _SkinTextureColor: {r: 1, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
