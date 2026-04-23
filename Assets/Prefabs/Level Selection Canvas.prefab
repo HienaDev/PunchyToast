@@ -125,7 +125,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Modo F\xE1cil"
+  m_text: Modo Tosta
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 490ae6a9dc642f34fa28464fc78dc987, type: 2}
   m_sharedMaterial: {fileID: -5799306287876894685, guid: 490ae6a9dc642f34fa28464fc78dc987, type: 2}
