@@ -50,3 +50,4 @@ MonoBehaviour:
   effectAsset: {fileID: 11400000, guid: f28c435cedf34004ca62808491be582b, type: 2}
   playOnStart: 1
   isLooping: 0
+  destroyOnFinish: 1

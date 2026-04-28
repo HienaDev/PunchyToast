@@ -42,6 +42,8 @@ public class ClientManager : MonoBehaviour
     private float levelStartTime;
     private bool levelFinished = false;
 
+    private List<string> slapWords = new List<string>();
+
     [SerializeField] private LevelComplete levelCompleteUI;
     [SerializeField] private GameObject clientCounterUI;
 
@@ -123,6 +125,7 @@ public class ClientManager : MonoBehaviour
         currentWord = "";
         currentIndex = 0;
         availableIndexes = new List<int>();
+        slapWords = new List<string>();
 
         foreach (var clientData in wave.clientsInWave)
         {
@@ -130,6 +133,11 @@ public class ClientManager : MonoBehaviour
             SpawnClient(clientData, wave); // Pass wave data here
             yield return new WaitForSeconds(0.1f);
         }
+    }
+
+    public string GetSlapWordForIndex(int index)
+    {
+        return index < slapWords.Count ? slapWords[index] : null;
     }
 
     public char GetCurrentLetter()
@@ -202,8 +210,19 @@ public class ClientManager : MonoBehaviour
 
         if (availableSeats.Count == 0) return;
 
-        currentWord += data.customLetter;
+        if(data.isSlappable)
+        {
+            slapWords.Add(data.slapString);
+            currentWord += (slapWords.Count - 1).ToString();
+        }
+        else
+        {
+            currentWord += data.customLetter;
+        }
+
         availableIndexes.Add(currentWord.Length - 1);
+
+
         Transform chosenSeat = availableSeats[Random.Range(0, availableSeats.Count)];
 
         GameObject chosenPrefab = GetWeightedRandomPrefab();

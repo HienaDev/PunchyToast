@@ -95,15 +95,23 @@ namespace Effekseer
 		/// </summary>
 		public bool isLooping = false;
 
-		/// <summary xml:lang="en">
-		/// The last played handle.
-		/// Don't touch it!!
-		/// </summary>
-		/// <summary xml:lang="ja">
-		/// 最後にPlayされたハンドル
-		/// Effekseer開発者以外は触ってはいけない
-		/// </summary>
-		public List<EffekseerHandle> handles = new List<EffekseerHandle>();
+        /// <summary xml:lang="en">
+        /// Whether to destroy the GameObject when all effects have finished playing
+        /// </summary>
+        /// <summary xml:lang="ja">
+        /// 全てのエフェクトが再生終了した時にGameObjectを破棄するかどうか
+        /// </summary>
+        public bool destroyOnFinish = false;
+
+        /// <summary xml:lang="en">
+        /// The last played handle.
+        /// Don't touch it!!
+        /// </summary>
+        /// <summary xml:lang="ja">
+        /// 最後にPlayされたハンドル
+        /// Effekseer開発者以外は触ってはいけない
+        /// </summary>
+        public List<EffekseerHandle> handles = new List<EffekseerHandle>();
 
 		const int DynamicInputCount = EffekseerPlayEffectParameters.DynamicInputCount;
 		readonly float[] dynamicInputs = new float[DynamicInputCount];
@@ -569,7 +577,12 @@ namespace Effekseer
 					handles.RemoveAt(i);
 				}
 			}
-		}
+
+            if (destroyOnFinish && handles.Count == 0 && !isLooping)
+            {
+                Destroy(gameObject);
+            }
+        }
 
 		public void Update()
 		{

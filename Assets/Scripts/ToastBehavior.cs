@@ -13,8 +13,10 @@ public class ToastBehavior : MonoBehaviour
     [HideInInspector] public float armSpawnOffset, armPunchDuration, targetFlightForce;
 
     [Header("Slap Settings")]
-    public int slapsLeft = 2;           // Set this in the inspector for "tough" toasts
+    public int slapsLeft = 0;           // Set this in the inspector for "tough" toasts
     public float slapSpinDuration = 0.4f;
+    string slapString = "";
+    private bool isSlappable = false;
 
     public float exitMomentumScale = 0.8f;
     public float armShrinkDuration = 0.8f;
@@ -57,19 +59,51 @@ public class ToastBehavior : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        assignedLetter = ClientManager.Instance.GetCurrentLetter();
-
         int assignedIndex = ClientManager.Instance.GetAvailableIndex();
 
-        if(assignedIndex != -1)
+        if (assignedIndex != -1)
         {
             myLetterIndex = assignedIndex;
             assignedLetter = ClientManager.Instance.GetCurrentWord()[assignedIndex];
         }
         else assignedLetter = (char)('A' + Random.Range(0, 26));
 
-        assignedLetter = char.ToUpper(assignedLetter);
-        assignedKey = (KeyCode)System.Enum.Parse(typeof(KeyCode), assignedLetter.ToString());
+        Debug.Log($"Toast assigned letter {assignedLetter} at index {myLetterIndex}");
+
+        slapsLeft = 0;
+
+        // check if assigned letter is a number
+        if (char.IsDigit(assignedLetter))
+        {
+            Debug.Log("Digit found, current digit is: " + assignedLetter);
+            isSlappable = true;
+            slapString = ClientManager.Instance.GetSlapWordForIndex(assignedLetter - '0');
+            Debug.Log("Slap string for this toast is: " + slapString);
+            slapsLeft = slapString.Length;
+
+            SetCurrentLetter(slapString[slapString.Length - slapsLeft]);
+        }
+        else
+        {
+            //int assignedIndex = ClientManager.Instance.GetAvailableIndex();
+
+            if (assignedIndex != -1)
+            {
+                myLetterIndex = assignedIndex;
+                assignedLetter = ClientManager.Instance.GetCurrentWord()[assignedIndex];
+            }
+            else assignedLetter = (char)('A' + Random.Range(0, 26));
+
+            assignedLetter = char.ToUpper(assignedLetter);
+            assignedKey = (KeyCode)System.Enum.Parse(typeof(KeyCode), assignedLetter.ToString());
+        }
+    }
+
+    private void SetCurrentLetter(char c)
+    {
+            assignedLetter = c;
+            assignedKey = (KeyCode)System.Enum.Parse(typeof(KeyCode), assignedLetter.ToString());
+            if (letterText != null) letterText.text = assignedLetter.ToString();
     }
 
     private void Start()
@@ -123,7 +157,8 @@ public class ToastBehavior : MonoBehaviour
     void StartPunchSequence()
     {
         hasBeenHit = true;
-        
+        slapsLeft--;
+
         string currentJam = JamDecider.Instance.GetCurrentJamName();
         Transform targetTransform = ClientManager.Instance.GetBestTarget(currentJam);
         currentFlightTargetClient = targetTransform.GetComponent<Client>();
@@ -193,9 +228,14 @@ public class ToastBehavior : MonoBehaviour
         transform.DOShakePosition(0.05f, shakeIntensity, shakeVibrato);
         yield return new WaitForSeconds(impactFreezeTime);
 
-        if (slapsLeft > 0)
+        
+
+        if (slapsLeft > 0 && isSlappable)
         {
-            slapsLeft--;
+            
+
+            
+            SetCurrentLetter(slapString[slapString.Length - slapsLeft]);
 
             // 1. Invert drift and Reset Physics
             driftFactor *= -1;

@@ -25,15 +25,20 @@ public class LevelConfiguration : ScriptableObject
         public JamFlavor jamFlavor;
         public string customLetter;
         public bool simultaneousToast;
-        public int toastsNeeded; // New Variable
+        public int toastsNeeded;
 
-        // Ensures new clients in the list start with 1 toast needed
+        // New Variables
+        public bool isSlappable;
+        public string slapString;
+
         public ClientData(bool dummy)
         {
             jamFlavor = JamFlavor.Butter;
             customLetter = "A";
             simultaneousToast = false;
             toastsNeeded = 1;
+            isSlappable = false; // Default off
+            slapString = "SLAP"; // Default string
         }
     }
 
