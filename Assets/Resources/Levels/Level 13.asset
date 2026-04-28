@@ -38,7 +38,7 @@ MonoBehaviour:
       isSlappable: 1
       slapString: TOSTA
     - jamFlavor: 1
-      customLetter: T
+      customLetter: s
       simultaneousToast: 0
       toastsNeeded: 0
       isSlappable: 0

@@ -206,7 +206,7 @@ public class ToastBehavior : MonoBehaviour
             bool isLastHit = ClientManager.Instance.IsLastToastOfLevel() && slapsLeft <= 1;
             if (isLastHit)
             {
-                Time.timeScale = 0.1f; // Slow down time as punch connects
+                Time.timeScale = 0.05f; // Slow down time as punch connects
                 if (Toaster.Instance.cinematicCamera != null)
                 {
                     Toaster.Instance.cinematicCamera.gameObject.SetActive(true);
@@ -364,7 +364,7 @@ public class ToastBehavior : MonoBehaviour
                 if (Toaster.Instance.cinematicCamera != null && Time.timeScale < 1f)
                 {
 
-                    DOVirtual.DelayedCall(2f, () =>
+                    DOVirtual.DelayedCall(0f, () =>
                     {
                         Time.timeScale = 1f;
                         currentFlightTargetClient.TryEatToast(JamDecider.Instance.allAvailableJams[JamDecider.Instance.currentJamIndex].flavor.ToString(), gameObject);
