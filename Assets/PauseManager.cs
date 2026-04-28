@@ -9,6 +9,9 @@ public class PauseManager : MonoBehaviour
     [SerializeField] private GameObject levelSelectionPanel; // Assign your Level Select screen here
     [SerializeField] private GameObject gameplayUI;         // The UI that shows during play (combo, etc)
 
+    [SerializeField] private GameObject mainMenu;
+    [SerializeField] private GameObject menuPuppet;
+
     private bool isPaused = false;
 
     void Awake()
@@ -47,10 +50,17 @@ public class PauseManager : MonoBehaviour
         // 4. UI Swapping
         pauseMenuPanel.SetActive(false);
         gameplayUI.SetActive(false);
-        levelSelectionPanel.SetActive(true);
 
-        // 5. Cursor management
-        Cursor.visible = true;
+        if(!EndlessModeManager.Instance.isRunning)
+            levelSelectionPanel.SetActive(true);
+        else
+        {
+            mainMenu.SetActive(true);
+            menuPuppet.SetActive(true);
+        }
+
+            // 5. Cursor management
+            Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
     }
 

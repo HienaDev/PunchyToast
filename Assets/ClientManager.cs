@@ -147,6 +147,20 @@ public class ClientManager : MonoBehaviour
         return (char)('A' + Random.Range(0, 26));
     }
 
+    public bool HasAvailableSeat()
+    {
+        return activeClients.Count < seatingPositions.Count;
+    }
+
+    public void ResetWordState()
+    {
+        currentWord = "";
+        currentIndex = 0;
+        availableIndexes.Clear();
+        slapWords.Clear();
+        clientsFinishedInWave = 0;
+    }
+
     public int GetAvailableIndex()
     {
         // Ensure the list of active toasts is clean (no nulls)
@@ -195,6 +209,25 @@ public class ClientManager : MonoBehaviour
         return count;
     }
 
+    public void SpawnEndlessClient(LevelConfiguration.ClientData data)
+    {
+        // Rebuild the fake "wave" context the same way SpawnWave does
+        if (data.isSlappable)
+        {
+            slapWords.Add(data.slapString);
+            currentWord += (slapWords.Count - 1).ToString();
+        }
+        else
+        {
+            currentWord += data.customLetter;
+        }
+
+        availableIndexes.Add(currentWord.Length - 1);
+
+        // Use a dummy wave that allows all rows
+        LevelConfiguration.Wave dummyWave = new LevelConfiguration.Wave(true);
+        SpawnClient(data, dummyWave);
+    }
     void SpawnClient(LevelConfiguration.ClientData data, LevelConfiguration.Wave wave)
     {
         List<Transform> availableSeats = new List<Transform>();
@@ -260,6 +293,8 @@ public class ClientManager : MonoBehaviour
         clientScript.SetOrder(finalFlavor.ToString(), JamDecider.Instance.GetColorFromFlavor(finalFlavor));
     }
 
+
+
     private GameObject GetWeightedRandomPrefab()
     {
         // Get the current flavor from your JamDecider
@@ -298,16 +333,19 @@ public class ClientManager : MonoBehaviour
 
     public void OnClientFinished()
     {
-        Debug.Log("Client Finished! Updating counters.");
         clientsFinishedInWave++;
         totalClientsSatisfied++;
         UpdateUI();
-        if (clientsFinishedInWave >= levelConfig.waves[currentWaveIndex].clientsInWave.Count)
+
+        // Only do wave progression if we're in a normal level
+        if (levelConfig != null && currentWaveIndex < levelConfig.waves.Count &&
+            clientsFinishedInWave >= levelConfig.waves[currentWaveIndex].clientsInWave.Count)
         {
             currentWaveIndex++;
             StartCoroutine(SpawnWave(currentWaveIndex));
         }
     }
+
 
     private IEnumerator FinishLevelRoutine()
     {
@@ -420,7 +458,13 @@ public class ClientManager : MonoBehaviour
 
     public void ClearSeat(Transform seat)
     {
-        if (activeClients.Remove(seat) && currentWaveIndex >= levelConfig.waves.Count && activeClients.Count == 0 && !levelFinished)
+        if (activeClients.Remove(seat)
+            && levelConfig != null  // <-- add this null check
+            && currentWaveIndex >= levelConfig.waves.Count
+            && activeClients.Count == 0
+            && !levelFinished)
+        {
             StartCoroutine(FinishLevelRoutine());
+        }
     }
 }
