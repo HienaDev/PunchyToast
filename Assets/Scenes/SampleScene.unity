@@ -22350,18 +22350,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3ada04cdba088f469a42867e46377b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingHoverTime: 4
-  minimumHoverTime: 0.6
+  easyMode: 0
+  easyModeHoverTime: 10
+  tier2At: 10
+  tier3At: 30
+  tier4At: 50
+  startingHoverTime: 5
+  minimumHoverTime: 0.5
   hoverTimeDecreasePerClient: 0.05
-  normalCooldown: 3
+  slappableChanceStart: 0
+  slappableChanceMax: 0.4
+  normalCooldown: 10
+  minCooldown: 0.3
+  cooldownDecreasePerClient: 0.05
   emptyCooldown: 0.8
-  simultaneousChance: 0.2
-  slappableChance: 0.15
+  instantDoubleSpawnChance: 0.2
   possibleSlapWords:
   - SLAP
   - POW
   - BAM
   - ZAP
+  jamUnlockOrder: 01000000020000000300000004000000
   isRunning: 0
 --- !u!4 &1281635668
 Transform:
@@ -37396,7 +37405,7 @@ MonoBehaviour:
   dipDepth: 0.1
   dipDuration: 0.15
   zOffset: 0.1
-  dipCooldown: 0.35
+  dipCooldown: 0.1
   currentJamIndex: -1
   butterFist: {fileID: 1874931177}
   stawberryFist: {fileID: 1403185107}

@@ -34,6 +34,7 @@ public class ClientManager : MonoBehaviour
     public List<WeightedClient> clientPrefabs;
     public List<Transform> seatingPositions;
     private Dictionary<Transform, Client> activeClients = new Dictionary<Transform, Client>();
+    public bool areThereActiveClients => activeClients.Count > 0;
     public bool areThereClients => activeClients.Values.Count(c => c.isSat) > 0;
 
     private string currentWord = "";
@@ -43,6 +44,9 @@ public class ClientManager : MonoBehaviour
     private bool levelFinished = false;
 
     private List<string> slapWords = new List<string>();
+
+    // Add this field alongside currentWord, availableIndexes, slapWords:
+    private List<bool> simultaneousFlags = new List<bool>();
 
     [SerializeField] private LevelComplete levelCompleteUI;
     [SerializeField] private GameObject clientCounterUI;
@@ -102,7 +106,15 @@ public class ClientManager : MonoBehaviour
 
     public bool GetSimultaneousStatusForNextToast()
     {
-        if (levelConfig == null || currentWaveIndex >= levelConfig.waves.Count) return false;
+        // Endless mode: read from our own flags list
+        if (levelConfig == null)
+        {
+            if (currentIndex < simultaneousFlags.Count)
+                return simultaneousFlags[currentIndex];
+            return false;
+        }
+        // Normal mode: existing code unchanged
+        if (currentWaveIndex >= levelConfig.waves.Count) return false;
         var wave = levelConfig.waves[currentWaveIndex];
         int dataIndex = Mathf.Clamp(currentIndex, 0, wave.clientsInWave.Count - 1);
         return wave.clientsInWave[dataIndex].simultaneousToast;
@@ -158,6 +170,7 @@ public class ClientManager : MonoBehaviour
         currentIndex = 0;
         availableIndexes.Clear();
         slapWords.Clear();
+        simultaneousFlags.Clear(); // add this line
         clientsFinishedInWave = 0;
     }
 
@@ -194,40 +207,37 @@ public class ClientManager : MonoBehaviour
 
     public int GetSimultaneousBurstCount()
     {
-        if (levelConfig == null || currentWaveIndex >= levelConfig.waves.Count) return 1;
-
-        var wave = levelConfig.waves[currentWaveIndex];
-        int count = 1; // The current one
-        int checkIndex = currentIndex;
-
-        // Look ahead to see how many more are simultaneous
-        while (checkIndex < wave.clientsInWave.Count && wave.clientsInWave[checkIndex].simultaneousToast)
+        // Endless mode: look ahead in simultaneousFlags
+        if (levelConfig == null)
         {
-            count++;
-            checkIndex++;
+            int count = 1;
+            int checkIndex = currentIndex;
+            while (checkIndex < simultaneousFlags.Count && simultaneousFlags[checkIndex])
+            {
+                count++;
+                checkIndex++;
+            }
+            return count;
         }
-        return count;
+        // Normal mode: existing code unchanged
+        if (currentWaveIndex >= levelConfig.waves.Count) return 1;
+        var wave = levelConfig.waves[currentWaveIndex];
+        int cnt = 1;
+        int ci = currentIndex;
+        while (ci < wave.clientsInWave.Count && wave.clientsInWave[ci].simultaneousToast)
+        {
+            cnt++;
+            ci++;
+        }
+        return cnt;
     }
 
     public void SpawnEndlessClient(LevelConfiguration.ClientData data)
     {
-        // Rebuild the fake "wave" context the same way SpawnWave does
-        if (data.isSlappable)
-        {
-            slapWords.Add(data.slapString);
-            currentWord += (slapWords.Count - 1).ToString();
-        }
-        else
-        {
-            currentWord += data.customLetter;
-        }
-
-        availableIndexes.Add(currentWord.Length - 1);
-
-        // Use a dummy wave that allows all rows
         LevelConfiguration.Wave dummyWave = new LevelConfiguration.Wave(true);
         SpawnClient(data, dummyWave);
     }
+
     void SpawnClient(LevelConfiguration.ClientData data, LevelConfiguration.Wave wave)
     {
         List<Transform> availableSeats = new List<Transform>();
@@ -419,6 +429,9 @@ public class ClientManager : MonoBehaviour
         Toaster.Instance.StopAllCoroutines();
         Toaster.Instance.ResetCombo();
         Toaster.Instance.activeToasts.Clear();
+
+        // Inside FullResetGame(), alongside availableIndexes.Clear():
+        simultaneousFlags.Clear();
 
         // 3. Destroy all leftover GameObjects in the scene
         // Find all Toasts

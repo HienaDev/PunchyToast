@@ -38,10 +38,19 @@ public class JamDecider : MonoBehaviour
 
     [SerializeField] private AudioClip[] dipSounds;
 
+    private bool alreadyDipped = false;
+
     void Awake()
     {
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
+    }
+
+    private void Start()
+    {
+        // Force initialize the first jam without triggering cooldown
+        currentJamIndex = -1;
+        lastDipTime = -10f;
     }
 
     public void SetupLevelJams(HashSet<JamFlavor> requiredFlavors)
@@ -61,10 +70,10 @@ public class JamDecider : MonoBehaviour
             }
         }
 
-        // Force initialize the first jam without triggering cooldown
-        currentJamIndex = -1;
-        lastDipTime = -10f;
-        SelectJam(0, true);
+
+
+        if(!alreadyDipped)
+            SelectJam(0, true);
     }
 
     void Update()
@@ -81,6 +90,7 @@ public class JamDecider : MonoBehaviour
     // Added 'bypassCooldown' parameter for level startup
     void SelectJam(int index, bool bypassCooldown = false)
     {
+        alreadyDipped = true;
         if (activeJams == null || index < 0 || index >= activeJams.Count) return;
         if (index == currentJamIndex) return;
 
