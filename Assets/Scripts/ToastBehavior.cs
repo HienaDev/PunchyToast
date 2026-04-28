@@ -376,7 +376,7 @@ public class ToastBehavior : MonoBehaviour
 
     void ReleaseToast()
     {
-        Toaster.Instance.ResetCombo();
+        
         isHovering = false;
         if (bobTween != null) bobTween.Kill();
         rb.useGravity = true;
@@ -391,6 +391,7 @@ public class ToastBehavior : MonoBehaviour
         {
             isPunchable = false;
             rb.constraints = RigidbodyConstraints.None;
+            Toaster.Instance.ResetCombo();
             letterText.enabled = false;
         }
     }
