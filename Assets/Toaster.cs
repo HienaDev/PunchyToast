@@ -222,22 +222,6 @@ public class Toaster : MonoBehaviour
         Rigidbody rb = toast.GetComponent<Rigidbody>();
         ToastBehavior behavior = toast.AddComponent<ToastBehavior>();
 
-        if (currentCombo > 1)
-        {
-            // Choose which fire prefab to use based on combo intensity
-            GameObject fireToSpawn = null;
-
-            if (currentCombo >= 7) fireToSpawn = fireLvl3;
-            else if (currentCombo >= 3) fireToSpawn = fireLvl2;
-            else fireToSpawn = fireLvl1;
-
-            if (fireToSpawn != null)
-            {
-                // Instantiate at the toast's position and parent it to the toast
-                GameObject fireInstance = Instantiate(fireToSpawn, toast.transform.position - new Vector3(0f, 0.02f, 0f), Quaternion.identity);
-                fireInstance.transform.SetParent(toast.transform);
-            }
-        }
 
         activeToasts.Add(behavior);
         behavior.isSimultaneous = isSimul;

@@ -1,8 +1,9 @@
-using UnityEngine;
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
-using DG.Tweening;
 using TMPro;
+using UnityEngine;
+using UnityEngine.WSA;
 
 public class ToastBehavior : MonoBehaviour
 {
@@ -51,6 +52,8 @@ public class ToastBehavior : MonoBehaviour
 
     public GameObject punchEffect;
 
+    private FireController fireController;
+
     private void OnCollisionEnter(Collision collision)
     {
         AudioManager.Instance.PlaySound(toastLandingNaturally, transform.position);
@@ -60,6 +63,8 @@ public class ToastBehavior : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         int assignedIndex = ClientManager.Instance.GetAvailableIndex();
+
+        fireController = GetComponent<FireController>();
 
         if (assignedIndex != -1)
         {
@@ -99,15 +104,32 @@ public class ToastBehavior : MonoBehaviour
         }
     }
 
+
+
     private void SetCurrentLetter(char c)
     {
+        SetFire();
             assignedLetter = c;
             assignedKey = (KeyCode)System.Enum.Parse(typeof(KeyCode), assignedLetter.ToString());
             if (letterText != null) letterText.text = assignedLetter.ToString();
     }
 
+    private void SetFire()
+    {
+        fireController.Disable();
+
+        if (Toaster.Instance.currentCombo > 0)
+        {
+            if (Toaster.Instance.currentCombo >= 7) fireController.fire3.SetActive(true);
+            else if (Toaster.Instance.currentCombo >= 3) fireController.fire2.SetActive(true);
+            else fireController.fire1.SetActive(true);
+
+        }
+    }
+
     private void Start()
     {
+        SetFire();
         letterText = GetComponentInChildren<TextMeshProUGUI>();
         if (letterText != null) { letterText.text = assignedLetter.ToString(); }
     }
