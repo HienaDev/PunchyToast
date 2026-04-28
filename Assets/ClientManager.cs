@@ -487,7 +487,7 @@ public class ClientManager : MonoBehaviour
 
         bool isLastWave = currentWaveIndex == levelConfig.waves.Count - 1;
         // Check if only one client remains in availableIndexes (the one currently in the air)
-        bool isLastClient = availableIndexes.Count <= 1;
+        bool isLastClient = availableIndexes.Count <= 0;
 
         return isLastWave && isLastClient;
     }

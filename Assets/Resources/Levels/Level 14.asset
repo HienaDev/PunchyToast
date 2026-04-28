@@ -32,8 +32,32 @@ MonoBehaviour:
       isSlappable: 0
       slapString: 
   - allowBottomRow: 1
-    allowTopRow: 0
+    allowTopRow: 1
     clientsInWave:
+    - jamFlavor: 1
+      customLetter: t
+      simultaneousToast: 1
+      toastsNeeded: 0
+      isSlappable: 0
+      slapString: 
+    - jamFlavor: 1
+      customLetter: o
+      simultaneousToast: 1
+      toastsNeeded: 0
+      isSlappable: 0
+      slapString: 
+    - jamFlavor: 1
+      customLetter: s
+      simultaneousToast: 1
+      toastsNeeded: 0
+      isSlappable: 0
+      slapString: 
+    - jamFlavor: 1
+      customLetter: t
+      simultaneousToast: 1
+      toastsNeeded: 0
+      isSlappable: 0
+      slapString: 
     - jamFlavor: 1
       customLetter: a
       simultaneousToast: 0
