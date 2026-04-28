@@ -167,6 +167,10 @@ public class LevelMenuManager : MonoBehaviour
                 }
 
                 lastPlayedLevelNumber = nextLevel; // Update the last played level number
+
+                Toaster.Instance.ResetCombo();
+                Toaster.Instance.activeToasts.Clear();
+
                 return;
             }
         }
@@ -195,6 +199,10 @@ public class LevelMenuManager : MonoBehaviour
                 }
 
                 lastPlayedLevelNumber = nextLevel; // Update the last played level number
+
+                Toaster.Instance.ResetCombo();
+                Toaster.Instance.activeToasts.Clear();
+
                 return;
             }
         }

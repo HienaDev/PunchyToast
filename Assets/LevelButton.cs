@@ -79,6 +79,9 @@ public class LevelButton : MonoBehaviour
             menuPanel.SetActive(false);
         }
 
+        Toaster.Instance.ResetCombo();
+        Toaster.Instance.activeToasts.Clear();
+
         SetLastPlayed(true);
         menuManager.SetLastPlayedLevel(levelConfig.levelNumber);
     }
