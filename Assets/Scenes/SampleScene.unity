@@ -5677,6 +5677,7 @@ MonoBehaviour:
   comboFireParticle: {fileID: 922431105}
   comboBounceForce: 2
   comboShakeStrength: 0.03
+  punchHitEffect: {fileID: 3028825562507657342, guid: a455eb854fb86f84588377d0982dd654, type: 3}
   currentCombo: 0
 --- !u!1001 &449085326
 PrefabInstance:

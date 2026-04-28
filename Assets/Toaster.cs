@@ -81,6 +81,8 @@ public class Toaster : MonoBehaviour
     private Vector3 originalParentPos;
     private Vector3 originalComboScale;
 
+    [SerializeField] private GameObject punchHitEffect;
+
     public float GetComboPitch()
     {
         if (currentCombo >= 1)
@@ -267,6 +269,8 @@ public class Toaster : MonoBehaviour
         behavior.armPunchDuration = armPunchDuration;
         behavior.targetFlightForce = targetFlightForce;
         behavior.armShrinkDuration = 0.6f;
+
+        behavior.punchEffect = punchHitEffect;
 
         behavior.punchSounds = punchSounds;
         behavior.toastGettingIntoMouth = toastGettingIntoMouth;

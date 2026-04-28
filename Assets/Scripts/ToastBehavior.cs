@@ -43,6 +43,7 @@ public class ToastBehavior : MonoBehaviour
     public AudioClip[] toastFlying;
     public AudioClip[] toastLandingNaturally;
 
+    public GameObject punchEffect;
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -171,13 +172,17 @@ public class ToastBehavior : MonoBehaviour
         if (hoverRoutine != null) StopCoroutine(hoverRoutine);
         rb.linearVelocity = Vector3.zero;
         rb.isKinematic = true;
+
+        // Instantiate punch effect
+        Instantiate(punchEffect, transform.position, Quaternion.identity);
+
         ApplyJamSplat();
 
         arm.transform.DOMove(arm.transform.position + (dirToTarget * pushForce), impactFreezeTime).SetEase(Ease.Linear);
         transform.DOMove(transform.position + (dirToTarget * pushForce), impactFreezeTime).SetEase(Ease.Linear);
         yield return new WaitForSeconds(impactFreezeTime);
 
-        if (CameraShake.Instance != null) CameraShake.Instance.Shake(0.1f, 0.05f, 30);
+        if (CameraShake.Instance != null) CameraShake.Instance.Shake(0.2f, 0.1f, 30);
         transform.DOShakePosition(0.05f, shakeIntensity, shakeVibrato);
         yield return new WaitForSeconds(impactFreezeTime);
 
