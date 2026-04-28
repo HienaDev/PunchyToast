@@ -12,6 +12,10 @@ public class ToastBehavior : MonoBehaviour
     [HideInInspector] public bool debugAlwaysL;
     [HideInInspector] public float armSpawnOffset, armPunchDuration, targetFlightForce;
 
+    [Header("Slap Settings")]
+    public int slapsLeft = 2;           // Set this in the inspector for "tough" toasts
+    public float slapSpinDuration = 0.4f;
+
     public float exitMomentumScale = 0.8f;
     public float armShrinkDuration = 0.8f;
     public float flightDuration = 0.5f;
@@ -119,18 +123,18 @@ public class ToastBehavior : MonoBehaviour
     void StartPunchSequence()
     {
         hasBeenHit = true;
-        isPunchable = false;
+        
         string currentJam = JamDecider.Instance.GetCurrentJamName();
         Transform targetTransform = ClientManager.Instance.GetBestTarget(currentJam);
         currentFlightTargetClient = targetTransform.GetComponent<Client>();
 
-        if (currentFlightTargetClient != null)
+        if (currentFlightTargetClient != null && slapsLeft <= 0)
         {
             ClientManager.Instance.IncreaseLetterIndex();
             currentFlightTargetClient.Satisfy();
             if (currentFlightTargetClient.isSatisfied)
                 ClientManager.Instance.RemoveIndex(myLetterIndex);
-            
+
             targetTransform = currentFlightTargetClient.TargetForToast;
         }
 
@@ -156,12 +160,15 @@ public class ToastBehavior : MonoBehaviour
 
             Toaster.Instance.IncrementCombo();
 
-            // Normal launch only happens if we AREN'T currently in a simultaneous burst
-            // or if the air is clear.
-            if (!ClientManager.Instance.IsLastClientOfWave(currentFlightTargetClient) && !Toaster.Instance.AreTherePunchableToasts())
+            // ONLY launch a new toast if this hit is going to finish the current toast
+            if (slapsLeft <= 0)
             {
-                // The Toaster's Update loop or this call will handle normal flow
-                Toaster.Instance.LaunchToast();
+                isPunchable = false;
+                if (!ClientManager.Instance.IsLastClientOfWave(currentFlightTargetClient) && !Toaster.Instance.AreTherePunchableToasts())
+                {
+                    Debug.Log("Launching new toast from punch because no punchable toasts remain!");
+                    Toaster.Instance.LaunchToast();
+                }
             }
         });
     }
@@ -186,12 +193,42 @@ public class ToastBehavior : MonoBehaviour
         transform.DOShakePosition(0.05f, shakeIntensity, shakeVibrato);
         yield return new WaitForSeconds(impactFreezeTime);
 
-        LaunchAtTarget(target);
-        Vector3 recoilPos = arm.transform.position - (dirToTarget * armRecoilDistance);
-        Sequence armSeq = DOTween.Sequence();
-        armSeq.Append(arm.transform.DOMove(recoilPos, armShrinkDuration * 0.8f).SetEase(Ease.OutBack));
-        armSeq.Append(arm.transform.DOScale(Vector3.zero, armShrinkDuration).SetEase(Ease.InQuad));
-        armSeq.OnComplete(() => Destroy(arm));
+        if (slapsLeft > 0)
+        {
+            slapsLeft--;
+
+            // 1. Invert drift and Reset Physics
+            driftFactor *= -1;
+            rb.isKinematic = false;
+            rb.useGravity = false;
+
+            // 2. Clear previous rotation and Spin (720 degrees)
+            transform.DORotate(new Vector3(0, 720, 0), slapSpinDuration, RotateMode.LocalAxisAdd).SetEase(Ease.OutBack);
+
+            // 3. Recoil the arm so it disappears
+            Vector3 armRecoilPos = arm.transform.position - (dirToTarget * armRecoilDistance);
+            arm.transform.DOMove(armRecoilPos, armShrinkDuration).SetEase(Ease.OutBack).OnComplete(() => Destroy(arm));
+
+            //yield return new WaitForSeconds(slapSpinDuration * 0.25f);
+
+            // 4. Reset state to allow hitting again
+            hasBeenHit = false;
+            isPunchable = true;
+
+            // Restart the hover behavior
+            hoverRoutine = StartCoroutine(HoverRoutine());
+        }
+        else
+        {
+            // FINAL HIT: Normal Launch behavior
+            LaunchAtTarget(target);
+
+            Vector3 recoilPos = arm.transform.position - (dirToTarget * armRecoilDistance);
+            Sequence armSeq = DOTween.Sequence();
+            armSeq.Append(arm.transform.DOMove(recoilPos, armShrinkDuration * 0.8f).SetEase(Ease.OutBack));
+            armSeq.Append(arm.transform.DOScale(Vector3.zero, armShrinkDuration).SetEase(Ease.InQuad));
+            armSeq.OnComplete(() => Destroy(arm));
+        }
     }
 
     void ApplyJamSplat()

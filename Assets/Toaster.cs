@@ -270,6 +270,9 @@ public class Toaster : MonoBehaviour
         behavior.targetFlightForce = targetFlightForce;
         behavior.armShrinkDuration = 0.6f;
 
+        behavior.slapsLeft = 0;
+        behavior.slapSpinDuration = 0.4f;
+
         behavior.punchEffect = punchHitEffect;
 
         behavior.punchSounds = punchSounds;
