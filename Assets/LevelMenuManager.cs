@@ -174,6 +174,31 @@ public class LevelMenuManager : MonoBehaviour
         MusicManager.Instance.FadeToMenu();
     }
 
+    public void RetryCurrentLevel()
+    {
+        int nextLevel = lastPlayedLevelNumber;
+
+        foreach (LevelConfiguration config in allLevels)
+        {
+            if (config.levelNumber == nextLevel)
+            {
+                ClientManager.Instance.StartLevel(config);
+
+                if (MusicManager.Instance != null)
+                {
+                    MusicManager.Instance.FadeToLevel();
+                }
+
+                if (gameObject.transform.parent.gameObject != null)
+                {
+                    gameObject.transform.parent.gameObject.SetActive(false);
+                }
+
+                lastPlayedLevelNumber = nextLevel; // Update the last played level number
+                return;
+            }
+        }
+    }
 
 
 }
