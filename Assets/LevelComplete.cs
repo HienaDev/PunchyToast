@@ -71,4 +71,6 @@ public class LevelComplete : MonoBehaviour
         // Step C: Show the time last
         finishSeq.Append(timeText.transform.DOScale(timeOriginalScale, 0.4f).SetEase(Ease.OutBack));
     }
+
+
 }

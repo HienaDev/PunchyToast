@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
+using System.Collections;
 
 public class LevelMenuManager : MonoBehaviour
 {
@@ -23,6 +24,10 @@ public class LevelMenuManager : MonoBehaviour
     private int levelsPerPage = 10;
     private GameObject currentActivePage;
     private bool isTransitioning = false;
+
+    private LevelButton lastPlayedLevel;
+
+    private int lastPlayedLevelNumber = -1;
 
     void Start()
     {
@@ -117,7 +122,15 @@ public class LevelMenuManager : MonoBehaviour
             {
                 // Add actual Level Button
                 GameObject btn = Instantiate(levelButtonPrefab, pageObj.transform);
-                btn.GetComponent<LevelButton>().Initialize(allLevels[dataIdx], gameObject.transform.parent.gameObject);
+
+                LevelButton levelButton = btn.GetComponent<LevelButton>();
+
+                levelButton.Initialize(allLevels[dataIdx], gameObject.transform.parent.gameObject, this);
+
+                if(lastPlayedLevelNumber == allLevels[dataIdx].levelNumber)
+                {
+                    levelButton.SetLastPlayed(true);
+                }
             }
             else
             {
@@ -126,4 +139,41 @@ public class LevelMenuManager : MonoBehaviour
             }
         }
     }
+
+
+    public void SetLastPlayedLevel(int levelNumber)
+    {
+        lastPlayedLevelNumber = levelNumber;
+    }
+
+    public void StartNextLevel()
+    {
+        int nextLevel = lastPlayedLevelNumber + 1;
+        
+        foreach (LevelConfiguration config in allLevels)
+        {
+            if (config.levelNumber == nextLevel)
+            {
+                ClientManager.Instance.StartLevel(config);
+
+                if (MusicManager.Instance != null)
+                {
+                    MusicManager.Instance.FadeToLevel();
+                }
+
+                if (gameObject.transform.parent.gameObject != null)
+                {
+                    gameObject.transform.parent.gameObject.SetActive(false);
+                }
+
+                lastPlayedLevelNumber = nextLevel; // Update the last played level number
+                return;
+            }
+        }
+
+        MusicManager.Instance.FadeToMenu();
+    }
+
+
+
 }

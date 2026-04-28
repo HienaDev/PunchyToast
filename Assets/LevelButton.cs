@@ -17,11 +17,28 @@ public class LevelButton : MonoBehaviour
     private LevelConfiguration levelConfig;
     private GameObject menuPanel; // Reference to the menu to close it
 
+    public GameObject lastPlayedText;
+    public Image lastPlayedOutline;
 
-    public void Initialize(LevelConfiguration config, GameObject menuToClose)
+    private LevelMenuManager menuManager;
+
+    public void SetLastPlayed(bool isLastPlayed)
+    {
+        if (lastPlayedText != null)
+        {
+            lastPlayedText.SetActive(isLastPlayed);
+        }
+        if (lastPlayedOutline != null)
+        {
+            lastPlayedOutline.enabled = isLastPlayed;
+        }
+    }
+
+    public void Initialize(LevelConfiguration config, GameObject menuToClose, LevelMenuManager menuManager)
     {
         levelConfig = config;
         menuPanel = menuToClose;
+        this.menuManager = menuManager;
 
         levelNumber.text = config.levelNumber.ToString();
         int starsEarned = PlayerPrefs.GetInt($"Level_{config.levelNumber}_Stars", 0);
@@ -45,6 +62,7 @@ public class LevelButton : MonoBehaviour
 
 
         levelButton.onClick.AddListener(StartLevel);
+        
     }
 
     public void StartLevel()
@@ -60,5 +78,8 @@ public class LevelButton : MonoBehaviour
         {
             menuPanel.SetActive(false);
         }
+
+        SetLastPlayed(true);
+        menuManager.SetLastPlayedLevel(levelConfig.levelNumber);
     }
 }
