@@ -83,6 +83,10 @@ public class Toaster : MonoBehaviour
 
     [SerializeField] private GameObject punchHitEffect;
 
+    [Header("Cinematic Settings")]
+    public Camera cinematicCamera; // Assign a side-view camera in the Inspector (disabled by default)
+    public Camera defaultCamera;
+
     public float GetComboPitch()
     {
         if (currentCombo >= 1)

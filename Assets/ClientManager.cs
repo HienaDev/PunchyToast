@@ -480,4 +480,15 @@ public class ClientManager : MonoBehaviour
             StartCoroutine(FinishLevelRoutine());
         }
     }
+
+    public bool IsLastToastOfLevel()
+    {
+        if (levelConfig == null) return false; // Endless mode doesn't have a "last" toast
+
+        bool isLastWave = currentWaveIndex == levelConfig.waves.Count - 1;
+        // Check if only one client remains in availableIndexes (the one currently in the air)
+        bool isLastClient = availableIndexes.Count <= 1;
+
+        return isLastWave && isLastClient;
+    }
 }

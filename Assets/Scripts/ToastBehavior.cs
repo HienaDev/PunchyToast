@@ -109,9 +109,9 @@ public class ToastBehavior : MonoBehaviour
     private void SetCurrentLetter(char c)
     {
         SetFire();
-            assignedLetter = c;
-            assignedKey = (KeyCode)System.Enum.Parse(typeof(KeyCode), assignedLetter.ToString());
-            if (letterText != null) letterText.text = assignedLetter.ToString();
+        assignedLetter = c;
+        assignedKey = (KeyCode)System.Enum.Parse(typeof(KeyCode), assignedLetter.ToString());
+        if (letterText != null) letterText.text = assignedLetter.ToString();
     }
 
     private void SetFire()
@@ -200,19 +200,32 @@ public class ToastBehavior : MonoBehaviour
         if (Camera.main.WorldToViewportPoint(transform.position).x > 0.5f)
             arm.transform.localScale = Vector3.Scale(arm.transform.localScale, new Vector3(-1, 1, 1));
 
-        arm.transform.DOMove(transform.position, armPunchDuration).SetEase(Ease.Linear).OnComplete(() => {
+        arm.transform.DOMove(transform.position, armPunchDuration).SetEase(Ease.Linear).OnComplete(() =>
+        {
+
+            bool isLastHit = ClientManager.Instance.IsLastToastOfLevel() && slapsLeft <= 1;
+            if (isLastHit)
+            {
+                Time.timeScale = 0.1f; // Slow down time as punch connects
+                if (Toaster.Instance.cinematicCamera != null)
+                {
+                    Toaster.Instance.cinematicCamera.gameObject.SetActive(true);
+                    Toaster.Instance.defaultCamera.gameObject.SetActive(false);
+                }
+            }
+
             StartCoroutine(ImpactSequence(arm, targetTransform, dirToTarget));
 
-            AudioManager.Instance.PlaySound(punchSounds, transform.position, volume:0.4f);
+            AudioManager.Instance.PlaySound(punchSounds, transform.position, volume: 0.4f);
 
             float pitch = Toaster.Instance.GetComboPitch();
             if (Toaster.Instance.currentCombo >= 1)
             {
-                
-                    AudioManager.Instance.PlaySoundFixedPitch(Toaster.Instance.toastComboSound, pitch, transform.position, volume: 2.0f);
-                
-               
-                
+
+                AudioManager.Instance.PlaySoundFixedPitch(Toaster.Instance.toastComboSound, pitch, transform.position, volume: 2.0f);
+
+
+
             }
 
             Toaster.Instance.IncrementCombo();
@@ -250,13 +263,13 @@ public class ToastBehavior : MonoBehaviour
         transform.DOShakePosition(0.05f, shakeIntensity, shakeVibrato);
         yield return new WaitForSeconds(impactFreezeTime);
 
-        
+
 
         if (slapsLeft > 0 && isSlappable)
         {
-            
 
-            
+
+
             SetCurrentLetter(slapString[slapString.Length - slapsLeft]);
 
             // 1. Invert drift and Reset Physics
@@ -302,6 +315,8 @@ public class ToastBehavior : MonoBehaviour
 
     void LaunchAtTarget(Transform target)
     {
+        bool isCinematic = Time.timeScale < 1f;
+
         isHovering = false;
 
         AudioManager.Instance.PlaySound(toastFlying, transform.position);
@@ -319,21 +334,57 @@ public class ToastBehavior : MonoBehaviour
         if (currentFlightTargetClient != null)
         {
             rb.isKinematic = true;
+
+            //float actualFlightDuration = isCinematic ? flightDuration * 2f : flightDuration;
+
             transform.DOLookAt(target.position, flightDuration / 4).SetEase(Ease.Linear);
             currentFlightTargetClient.OpenMouth();
 
             gameObject.GetComponent<Collider>().enabled = false; // Disable collider to prevent mid-flight collisions
 
             Sequence flightSeq = DOTween.Sequence();
+
+            if (isCinematic && Toaster.Instance.cinematicCamera != null)
+            {
+                // Update camera to look at the toast during flight
+                flightSeq.OnUpdate(() =>
+                {
+                    Toaster.Instance.cinematicCamera.transform.LookAt(transform.position);
+                });
+            }
+
             flightSeq.Append(transform.DOMove(target.position, flightDuration).SetEase(Ease.Linear));
             flightSeq.InsertCallback(flightDuration / 2f, () => { if (currentFlightTargetClient != null) currentFlightTargetClient.Recoil(); });
-            flightSeq.OnComplete(() => {
+            flightSeq.OnComplete(() =>
+            {
                 rb.isKinematic = false;
                 rb.useGravity = true;
 
+
+                if (Toaster.Instance.cinematicCamera != null && Time.timeScale < 1f)
+                {
+
+                    DOVirtual.DelayedCall(2f, () =>
+                    {
+                        Time.timeScale = 1f;
+                        currentFlightTargetClient.TryEatToast(JamDecider.Instance.allAvailableJams[JamDecider.Instance.currentJamIndex].flavor.ToString(), gameObject);
+
+                        DOVirtual.DelayedCall(3f, () =>
+                        {
+
+                            Toaster.Instance.cinematicCamera.gameObject.SetActive(false);
+                            Toaster.Instance.defaultCamera.gameObject.SetActive(true);
+                        });
+                    });
+                }
+                else
+                {
+                    currentFlightTargetClient.TryEatToast(JamDecider.Instance.allAvailableJams[JamDecider.Instance.currentJamIndex].flavor.ToString(), gameObject);
+
+                }
+
                 AudioManager.Instance.PlaySound(toastGettingIntoMouth, transform.position);
 
-                currentFlightTargetClient.TryEatToast(JamDecider.Instance.allAvailableJams[JamDecider.Instance.currentJamIndex].flavor.ToString(), gameObject);
             });
         }
         else
@@ -349,7 +400,8 @@ public class ToastBehavior : MonoBehaviour
             if (clientToBonk != null)
             {
                 // Delay the recoil so it happens when the toast actually arrives
-                DOVirtual.DelayedCall(flightDuration / 2f, () => {
+                DOVirtual.DelayedCall(flightDuration / 2f, () =>
+                {
                     if (clientToBonk != null) clientToBonk.HardRecoil();
                 });
             }
@@ -376,7 +428,7 @@ public class ToastBehavior : MonoBehaviour
 
     void ReleaseToast()
     {
-        
+
         isHovering = false;
         if (bobTween != null) bobTween.Kill();
         rb.useGravity = true;
