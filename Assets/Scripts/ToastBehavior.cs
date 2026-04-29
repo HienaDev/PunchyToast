@@ -54,6 +54,8 @@ public class ToastBehavior : MonoBehaviour
 
     private FireController fireController;
 
+    private string jamOnThisToast = "";
+
     private void OnCollisionEnter(Collision collision)
     {
         AudioManager.Instance.PlaySound(toastLandingNaturally, transform.position);
@@ -183,6 +185,9 @@ public class ToastBehavior : MonoBehaviour
 
         string currentJam = JamDecider.Instance.GetCurrentJamName();
         Transform targetTransform = ClientManager.Instance.GetBestTarget(currentJam);
+
+        jamOnThisToast = JamDecider.Instance.GetCurrentJamName();
+
         currentFlightTargetClient = targetTransform.GetComponent<Client>();
 
         if (currentFlightTargetClient != null && slapsLeft <= 0)
@@ -315,6 +320,7 @@ public class ToastBehavior : MonoBehaviour
 
     void LaunchAtTarget(Transform target)
     {
+        
         bool isCinematic = Time.timeScale < 1f;
 
         isHovering = false;
@@ -367,7 +373,7 @@ public class ToastBehavior : MonoBehaviour
                     DOVirtual.DelayedCall(0f, () =>
                     {
                         Time.timeScale = 1f;
-                        currentFlightTargetClient.TryEatToast(JamDecider.Instance.allAvailableJams[JamDecider.Instance.currentJamIndex].flavor.ToString(), gameObject);
+                        currentFlightTargetClient.TryEatToast(jamOnThisToast, gameObject);
 
                         DOVirtual.DelayedCall(3f, () =>
                         {
@@ -379,7 +385,7 @@ public class ToastBehavior : MonoBehaviour
                 }
                 else
                 {
-                    currentFlightTargetClient.TryEatToast(JamDecider.Instance.allAvailableJams[JamDecider.Instance.currentJamIndex].flavor.ToString(), gameObject);
+                    currentFlightTargetClient.TryEatToast(jamOnThisToast, gameObject);
 
                 }
 

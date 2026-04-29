@@ -283,6 +283,15 @@ public class Toaster : MonoBehaviour
             simultaneousCount = 0;
             simultaneousIndex = 0;
         }
+
+        if (EndlessModeManager.Instance.isRunning)
+        {
+            float randomChance = Random.Range(0f, 1f);
+            if (randomChance <= EndlessModeManager.Instance.simultaneousChanceMax)
+            {
+                LaunchToast();
+            }
+        }
     }
 
     public void UnregisterToast(ToastBehavior toast) => activeToasts.Remove(toast);
