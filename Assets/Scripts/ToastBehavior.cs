@@ -430,7 +430,7 @@ public class ToastBehavior : MonoBehaviour
             Toaster.Instance.TriggerPunishmentCooldown();
 
             rb.isKinematic = true;
-            gameObject.GetComponent<Collider>().enabled = false;//
+            gameObject.GetComponent<Collider>().enabled = false;
             if (letterText != null) letterText.enabled = false;
 
             Toaster.Instance.ResetCombo();
@@ -459,6 +459,13 @@ public class ToastBehavior : MonoBehaviour
             float originalFOV = mainCam.fieldOfView;
             Quaternion originalCamRot = mainCam.transform.rotation;
 
+            // --- FLAVOR OBJECT CACHING ---
+            Vector3 originalFlavorPos = Vector3.zero;
+            if (clientToBonk != null && clientToBonk.flavorObject != null)
+            {
+                originalFlavorPos = clientToBonk.flavorObject.transform.position;
+            }
+
             float zoomedFOV = 25f;
 
             Sequence splatSeq = DOTween.Sequence();
@@ -474,13 +481,18 @@ public class ToastBehavior : MonoBehaviour
                     clientToBonk.FreezeClient();
                     clientToBonk.SetAngryEyelids();
 
+                    // Move the flavor UI to the "Wrong" position
+                    if (clientToBonk.flavorObject != null && clientToBonk.positionForWrongFlavor != null)
+                    {
+                        clientToBonk.flavorObject.transform.DOMove(clientToBonk.positionForWrongFlavor.position, 0.25f).SetEase(Ease.OutBack);
+                    }
                 }
                 transform.DOScaleZ(0.1f, 0.05f);
 
                 // --- CINEMATIC CAMERA: Zoom + Kickback Shake ---
                 mainCam.DOFieldOfView(zoomedFOV, 0.25f).SetEase(Ease.OutExpo);
                 mainCam.transform.DOLookAt(impactPoint, 0.25f).SetEase(Ease.OutExpo);
-                mainCam.transform.DOShakePosition(0.3f, 0.05f, 20); // Adds a "thud" feel to the camera
+                mainCam.transform.DOShakePosition(0.3f, 0.05f, 20);
             });
 
             // 3. The Sticky Pause
@@ -497,9 +509,15 @@ public class ToastBehavior : MonoBehaviour
                 {
                     clientToBonk.RestoreEyelids();
                     clientToBonk.UnfreezeClient();
+
+                    // Move the flavor UI back to where it was
+                    if (clientToBonk.flavorObject != null)
+                    {
+                        clientToBonk.flavorObject.transform.DOMove(originalFlavorPos, 0.5f).SetEase(Ease.InOutQuad);
+                    }
                 }
 
-                // --- CINEMATIC CAMERA: Snap back with a "Back" ease for extra style ---
+                // --- CINEMATIC CAMERA: Return ---
                 mainCam.DOFieldOfView(originalFOV, 0.6f).SetEase(Ease.InOutBack);
                 mainCam.transform.DORotateQuaternion(originalCamRot, 0.6f).SetEase(Ease.InOutBack);
 

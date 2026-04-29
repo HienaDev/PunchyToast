@@ -1223,6 +1223,41 @@ Transform:
   - {fileID: 4345793867552736307}
   m_Father: {fileID: 587734885453136046}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2085799527742424594
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6403855431784463325}
+  m_Layer: 5
+  m_Name: Position for wrong flavor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &6403855431784463325
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2085799527742424594}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -0.20600002}
+  m_LocalScale: {x: 0.012044445, y: 0.012044445, z: 0.012044445}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6737263488336162567}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -0.008, y: -0.21500027}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2131901739311074411
 GameObject:
   m_ObjectHideFlags: 0
@@ -5486,6 +5521,7 @@ Transform:
   - {fileID: 2687447279669200411}
   - {fileID: 5875913998127339899}
   - {fileID: 8110363736401180882}
+  - {fileID: 6403855431784463325}
   - {fileID: 667640669269773326}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5508,6 +5544,8 @@ MonoBehaviour:
   mouthOpenRotation: {x: 60, y: 0, z: 0}
   entranceDuration: 1
   popUpDistance: 2
+  flavorObject: {fileID: 8110363736401180882}
+  positionForWrongFlavor: {fileID: 6403855431784463325}
   useRandomVisual: 1
   toastsToSatisfy: 1
   bossBar: {fileID: 2163544963556225321}
