@@ -36,6 +36,8 @@ public class ClientManager : MonoBehaviour
     public List<Transform> seatingPositions;
     private Dictionary<Transform, Client> activeClients = new Dictionary<Transform, Client>();
     public bool areThereActiveClients => activeClients.Count > 0;
+    public int activeClientCount => activeClients.Count;
+    public int notSatisfiedClientCount => activeClients.Values.Count(c => !c.isSatisfied);
     public bool areThereClients => activeClients.Values.Count(c => c.isSat) > 0;
 
     private string currentWord = "";

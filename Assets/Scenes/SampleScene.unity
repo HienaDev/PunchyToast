@@ -22433,7 +22433,7 @@ MonoBehaviour:
   minCooldown: 0.3
   cooldownDecreasePerClient: 0.05
   emptyCooldown: 0.8
-  instantDoubleSpawnChance: 0.2
+  instantDoubleSpawnChance: 0.3
   possibleSlapWords:
   - SLAP
   - POW
