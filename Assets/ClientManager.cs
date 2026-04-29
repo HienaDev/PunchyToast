@@ -122,7 +122,7 @@ public class ClientManager : MonoBehaviour
         return wave.clientsInWave[dataIndex].simultaneousToast;
     }
 
-    public bool IsLastClientOfWave(Client client)
+    public bool IsLastClientOfWave()
     {
         if (levelConfig == null || currentWaveIndex >= levelConfig.waves.Count) return false;
         int progress = clientsFinishedInWave + activeClients.Values.Count(c => c.isSatisfied);

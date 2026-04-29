@@ -72,6 +72,11 @@ public class Client : MonoBehaviour
     [SerializeField] private Transform eyeLidL;
     [SerializeField] private Transform eyeRidL;
 
+    [SerializeField] private Renderer leftEyeRenderer;
+    private Material originalLeftEyeMat;
+    [SerializeField] private Renderer rightEyeRenderer;
+    private Material originalRightEyeMat;
+
     private Tween hopTween;
     private Tween mouthTween;
 
@@ -107,10 +112,15 @@ public class Client : MonoBehaviour
     private Vector3 originalEyelidLRot;
     private Vector3 originalEyelidRRot;
 
+    private bool isFrozen = false;
+
     void Start()
     {
         originalEyelidLRot = eyeLidL.localEulerAngles;
         originalEyelidRRot = eyeRidL.localEulerAngles;
+
+        originalLeftEyeMat = leftEyeRenderer.material;
+        originalRightEyeMat = rightEyeRenderer.material;
 
         // choose a random from 1 to 3, and assign the corresponding audio arrays to the generic ones
         int characterVariant = Random.Range(1, 4);
@@ -171,6 +181,7 @@ public class Client : MonoBehaviour
 
     void Update()
     {
+        if (isFrozen) return; // Add this line
         HandleEyeTracking();
     }
 
@@ -384,15 +395,40 @@ public class Client : MonoBehaviour
         float delay = Random.Range(2f, 4f);
 
         DOVirtual.DelayedCall(delay, () => {
-            if (this == null) return;
+            if (this == null || isFrozen) return; // Added isFrozen check
 
             eyeLidL.DOLocalRotate(new Vector3(-90, 0, 0), 0.1f);
             eyeRidL.DOLocalRotate(new Vector3(-90, 0, 0), 0.1f).OnComplete(() => {
+                if (isFrozen) return; // Don't loop if frozen
                 eyeLidL.DOLocalRotate(originalEyelidLRot, 0.1f);
                 eyeRidL.DOLocalRotate(originalEyelidRRot, 0.1f);
                 StartBlinking();
             });
         });
+    }
+
+    public void SetAngryEyelids()
+    {
+        // Kill any existing eyelid tweens (like blinking)
+        eyeLidL.DOKill();
+        eyeRidL.DOKill();
+
+        leftEyeRenderer.material = redMaterial;
+        rightEyeRenderer.material = redMaterial;
+
+        // Snap to the angry/squint position
+        eyeLidL.DOLocalRotate(new Vector3(-65, -9, 38), 0.15f).SetEase(Ease.OutBack);
+        eyeRidL.DOLocalRotate(new Vector3(-65, -9, -38), 0.15f).SetEase(Ease.OutBack);
+    }
+
+    public void RestoreEyelids()
+    {
+        leftEyeRenderer.material = originalLeftEyeMat;
+        rightEyeRenderer.material = originalRightEyeMat;
+
+        // Smoothly return to the original cached rotations
+        eyeLidL.DOLocalRotate(originalEyelidLRot, 0.3f).SetEase(Ease.OutQuad);
+        eyeRidL.DOLocalRotate(originalEyelidRRot, 0.3f).SetEase(Ease.OutQuad);
     }
 
     public void SetOrder(string jamName, Color jamColor)
@@ -542,6 +578,43 @@ public class Client : MonoBehaviour
         exitSeq.Append(transform.DOMoveY(targetPosition.y + 0.1f, 0.15f).SetEase(Ease.OutQuad));
         exitSeq.Append(transform.DOMoveY(targetPosition.y - popUpDistance, 0.4f).SetEase(Ease.InBack));
         exitSeq.OnComplete(() => Destroy(gameObject));
+    }
+
+    public void FreezeClient()
+    {
+        isFrozen = true;
+
+        // 1. Kill the chatter and the hops immediately
+        if (mouthTween != null) mouthTween.Kill();
+        if (hopTween != null) hopTween.Kill();
+
+        // 2. Kill all active tweens on the bones to stop them mid-motion
+        pivot.DOKill();
+        mouthBone.DOKill();
+        recoilBone.DOKill();
+        eyeLidL.DOKill();
+        eyeRidL.DOKill();
+
+        // 3. Force the client into a "stunned" pose
+        mouthBone.DOLocalRotate(waitingMouthClosed, 0.1f); // Shut the mouth
+
+        // 4. Silence
+        mouthAudioSource.Pause();
+    }
+
+    public void UnfreezeClient()
+    {
+        isFrozen = false;
+
+        mouthAudioSource.UnPause();
+
+        // Restart the loops
+        if (!isSatisfied)
+        {
+            StartRandomHop();
+            StartWaitingForFood();
+            StartBlinking(); // Restart the blinking loop
+        }
     }
 
     private void ApplyRandomVisuals()

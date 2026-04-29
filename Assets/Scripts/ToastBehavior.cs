@@ -58,6 +58,8 @@ public class ToastBehavior : MonoBehaviour
 
     private string jamOnThisToast = "";
 
+    private bool isWrongToast = false;
+
     private void OnCollisionEnter(Collision collision)
     {
         AudioManager.Instance.PlaySound(toastLandingNaturally, sfxMixer, transform.position);
@@ -241,10 +243,17 @@ public class ToastBehavior : MonoBehaviour
             if (slapsLeft <= 0)
             {
                 isPunchable = false;
-                if (!ClientManager.Instance.IsLastClientOfWave(currentFlightTargetClient) && !Toaster.Instance.AreTherePunchableToasts())
+                if (!ClientManager.Instance.IsLastClientOfWave() && !Toaster.Instance.AreTherePunchableToasts())
                 {
                     Debug.Log("Launching new toast from punch because no punchable toasts remain!");
-                    Toaster.Instance.LaunchToast();
+                    if(currentFlightTargetClient != null)
+                        Toaster.Instance.LaunchToast();
+                    else
+                    {
+                        //do wrong toast sequence
+                        isWrongToast = true;
+
+                    }
                 }
             }
         });
@@ -418,33 +427,83 @@ public class ToastBehavior : MonoBehaviour
         }
         else
         {
-            rb.isKinematic = false;
-            rb.useGravity = true;
-            rb.constraints = RigidbodyConstraints.None;
+            Toaster.Instance.TriggerPunishmentCooldown();
+
+            rb.isKinematic = true;
+            gameObject.GetComponent<Collider>().enabled = false;
+            if (letterText != null) letterText.enabled = false;
 
             Toaster.Instance.ResetCombo();
 
-            // Use the new Manager method to find the puppet at this seat
-            Client clientToBonk = ClientManager.Instance.GetClientInSeat(target);
-            if (clientToBonk != null)
+            foreach (ToastBehavior tb in Toaster.Instance.activeToasts)
             {
-                // Delay the recoil so it happens when the toast actually arrives
-                DOVirtual.DelayedCall(flightDuration / 2f, () =>
-                {
-                    if (clientToBonk != null) clientToBonk.HardRecoil();
-                });
+                if (tb != null && tb != this)
+                    tb.ForceReleaseToast();
             }
 
-            Vector3 throwDir = (target.position - transform.position).normalized;
-            throwDir.y += 0.2f; // Give it that nice "oops" arc
+            Client clientToBonk = ClientManager.Instance.GetClientInSeat(target);
+            SphereCollider headCollider = clientToBonk != null ? clientToBonk.GetComponentInChildren<SphereCollider>() : null;
+            Vector3 impactPoint = target.position;
 
-            rb.AddForce(throwDir * targetFlightForce, ForceMode.Impulse);
-            rb.AddTorque(new Vector3(Random.value, Random.value, Random.value) * 10f, ForceMode.Impulse);
+            if (headCollider != null)
+            {
+                Vector3 dirToHead = (target.position - transform.position).normalized;
+                float worldRadius = headCollider.radius * headCollider.transform.lossyScale.x;
+                impactPoint = target.position - (dirToHead * worldRadius);
+            }
 
-            // change layer to default layer so it can interact with the environment properly on its way down
-            gameObject.layer = LayerMask.NameToLayer("Default");
+            // --- CAMERA & EYELID CACHING ---
+            Camera mainCam = Camera.main;
+            float originalFOV = mainCam.fieldOfView;
+            Quaternion originalCamRot = mainCam.transform.rotation;
 
-            if (letterText != null) letterText.enabled = false;
+            float zoomedFOV = 25f;
+
+            Sequence splatSeq = DOTween.Sequence();
+
+            // 1. Travel to face
+            splatSeq.Append(transform.DOMove(impactPoint, flightDuration).SetEase(Ease.InQuad));
+
+            // 2. Impact Phase
+            splatSeq.AppendCallback(() => {
+                if (clientToBonk != null)
+                {
+                    clientToBonk.HardRecoil();
+                    clientToBonk.FreezeClient();
+                    clientToBonk.SetAngryEyelids();
+
+                }
+                transform.DOScaleZ(0.1f, 0.05f);
+
+                // --- CINEMATIC CAMERA: Zoom + Kickback Shake ---
+                mainCam.DOFieldOfView(zoomedFOV, 0.25f).SetEase(Ease.OutExpo);
+                mainCam.transform.DOLookAt(impactPoint, 0.25f).SetEase(Ease.OutExpo);
+                mainCam.transform.DOShakePosition(0.3f, 0.05f, 20); // Adds a "thud" feel to the camera
+            });
+
+            // 3. The Sticky Pause
+            splatSeq.AppendInterval(1.2f);
+
+            // 4. The Slow Slide
+            float slideDistance = headCollider != null ? headCollider.radius * 3f : 2f;
+            splatSeq.Append(transform.DOMoveY(impactPoint.y - slideDistance, 4.0f).SetEase(Ease.InSine));
+            splatSeq.Join(transform.DORotate(new Vector3(60, transform.eulerAngles.y, 0), 4.0f).SetEase(Ease.InSine));
+
+            // 5. Cleanup & Return
+            splatSeq.OnComplete(() => {
+                if (clientToBonk != null)
+                {
+                    clientToBonk.RestoreEyelids();
+                    clientToBonk.UnfreezeClient();
+                }
+
+                // --- CINEMATIC CAMERA: Snap back with a "Back" ease for extra style ---
+                mainCam.DOFieldOfView(originalFOV, 0.6f).SetEase(Ease.InOutBack);
+                mainCam.transform.DORotateQuaternion(originalCamRot, 0.6f).SetEase(Ease.InOutBack);
+
+                Destroy(gameObject);
+            });
+
             isPunchable = false;
         }
     }
@@ -463,6 +522,19 @@ public class ToastBehavior : MonoBehaviour
         rb.useGravity = true;
         rb.linearVelocity = new Vector3(capturedXVel * exitMomentumScale, -0.1f, capturedZVel * exitMomentumScale);
         StartCoroutine(GracePeriodTimer());
+    }
+
+    void ForceReleaseToast()
+    {
+        isHovering = false;
+        if (bobTween != null) bobTween.Kill();
+        rb.useGravity = true;
+        rb.linearVelocity = new Vector3(capturedXVel, -0.1f, capturedZVel);
+
+        isPunchable = false;
+        rb.constraints = RigidbodyConstraints.None;
+        Toaster.Instance.ResetCombo();
+        letterText.enabled = false;
     }
 
     IEnumerator GracePeriodTimer()

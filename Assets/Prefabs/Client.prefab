@@ -946,17 +946,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1792011874159153842}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1.1}
+  m_LocalRotation: {x: -0.10725567, y: -0, z: -0, w: 0.9942315}
+  m_LocalPosition: {x: 0, y: 0, z: -12.7}
   m_LocalScale: {x: 2.0324, y: 2.0324, z: 2.0324}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1480143497406351257}
   m_Father: {fileID: 8110363736401180882}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -12.314, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -18.7, y: 21.9}
+  m_AnchoredPosition: {x: -18.7, y: 17.7}
   m_SizeDelta: {x: 10, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6539774555245488103
@@ -5597,6 +5597,8 @@ MonoBehaviour:
   numberOfBites: 2
   eyeLidL: {fileID: 8259780320068034240}
   eyeRidL: {fileID: 8394726479015219607}
+  leftEyeRenderer: {fileID: 3065129680127334206}
+  rightEyeRenderer: {fileID: 3072591452827406901}
   thoughtBubble: {fileID: 1792011874159153842}
   wantIcon: {fileID: 3427600503985974363}
   sfxMixer: {fileID: 24100000, guid: af3b66b11444e4a42b96b7d31c077263, type: 2}

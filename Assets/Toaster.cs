@@ -16,6 +16,8 @@ public class Toaster : MonoBehaviour
     public List<Transform> targets;
     public GameObject armPrefab;
 
+    [SerializeField] private float punishmentCooldown = 4.0f;
+    private float? nextLaunchOverride = null; // Nullable float to track if we have a punishment pending
     [SerializeField] private float timeToLaunchToast = 2f;
     private float lastLaunchTime = 0f;
 
@@ -133,10 +135,14 @@ public class Toaster : MonoBehaviour
 
     void Update()
     {
-        if (Time.time - lastLaunchTime >= timeToLaunchToast && ClientManager.Instance.areThereClients)
+        // Use the override if it exists, otherwise use the normal level time
+        float currentCooldown = nextLaunchOverride ?? timeToLaunchToast;
+        Debug.Log("currentCooldown: " + currentCooldown + " | nextLaunchOverride: " + nextLaunchOverride);
+        if (Time.time - lastLaunchTime >= currentCooldown && ClientManager.Instance.areThereClients)
         {
             if (!AreTherePunchableToasts())
             {
+                nextLaunchOverride = null; // Reset the punishment so the next one is back to normal
                 LaunchToast();
             }
         }
@@ -299,4 +305,10 @@ public class Toaster : MonoBehaviour
     }
 
     public void UnregisterToast(ToastBehavior toast) => activeToasts.Remove(toast);
+
+    public void TriggerPunishmentCooldown()
+    {
+        lastLaunchTime = Time.time;
+        nextLaunchOverride = punishmentCooldown;
+    }
 }
