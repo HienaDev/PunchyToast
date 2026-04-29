@@ -37,8 +37,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 2.497}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 316, y: -200}
-  m_SizeDelta: {x: 42.0475, y: 30}
+  m_AnchoredPosition: {x: 200, y: -200}
+  m_SizeDelta: {x: 30, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1775520181972606945
 CanvasRenderer:
@@ -134,13 +134,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e3f501005e78904685b847f46dbd02e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialRandom: 1
+  initialRandom: 0
   hoverHeight: 0.1
-  hoverSpeed: 1
-  hoverVariance: 0.2
+  hoverSpeed: 2
+  hoverVariance: 0
   scaleMultiplier: 1.1
   scaleSpeed: 1
-  scaleVariance: 0.2
+  scaleVariance: 0
   transitionDuration: 0.4
   introEase: 27
   outroEase: 26
@@ -482,7 +482,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -200}
-  m_SizeDelta: {x: 45.4654, y: 30}
+  m_SizeDelta: {x: 30, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &762808074712371095
 CanvasRenderer:
@@ -578,13 +578,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e3f501005e78904685b847f46dbd02e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialRandom: 1
+  initialRandom: 0
   hoverHeight: 0.1
-  hoverSpeed: 1
-  hoverVariance: 0.2
+  hoverSpeed: 2
+  hoverVariance: 0
   scaleMultiplier: 1.1
   scaleSpeed: 1
-  scaleVariance: 0.2
+  scaleVariance: 0
   transitionDuration: 0.4
   introEase: 27
   outroEase: 26
@@ -1000,8 +1000,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -2.145}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -302.2, y: -200}
-  m_SizeDelta: {x: 45.7849, y: 30}
+  m_AnchoredPosition: {x: -200, y: -200}
+  m_SizeDelta: {x: 30, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7431735007227537946
 CanvasRenderer:
@@ -1097,13 +1097,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e3f501005e78904685b847f46dbd02e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialRandom: 1
+  initialRandom: 0
   hoverHeight: 0.1
-  hoverSpeed: 1
-  hoverVariance: 0.2
+  hoverSpeed: 2
+  hoverVariance: 0
   scaleMultiplier: 1.1
   scaleSpeed: 1
-  scaleVariance: 0.2
+  scaleVariance: 0
   transitionDuration: 0.4
   introEase: 27
   outroEase: 26

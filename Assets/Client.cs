@@ -58,6 +58,9 @@ public class Client : MonoBehaviour
     [SerializeField] private float minHopSpeed = 0.3f;
     [SerializeField] private float maxHopSpeed = 0.6f;
 
+    [SerializeField] private GameObject eyeToastL;
+    [SerializeField] private GameObject eyeToastR;
+
     [Header("Current Order")]
     public string desiredCondiment;
     public Color condimentColor;
@@ -453,7 +456,8 @@ public class Client : MonoBehaviour
 
     public void PlayMunchAnimation(System.Action onComplete)
     {
-
+        eyeToastL.SetActive(true);
+        eyeToastR.SetActive(true);
         AudioManager.Instance.PlaySound(muchingFoodSound, puppetMixer, transform.position);
 
         Sequence munchSeq = DOTween.Sequence();
@@ -541,6 +545,8 @@ public class Client : MonoBehaviour
                     
 
                 PlayMunchAnimation(() => {
+                    eyeToastL.SetActive(false);
+                    eyeToastR.SetActive(false);
                     if (isSatisfied && !hasEaten)
                         ReceiveFood();
                 });
@@ -556,6 +562,9 @@ public class Client : MonoBehaviour
     {
         hasEaten = true;
         thoughtBubble.GetComponent<HoverAndScale>().Descale();
+
+        eyeToastL.SetActive(true);
+        eyeToastR.SetActive(true);
 
         if (hopTween != null) hopTween.Kill();
         if (mouthTween != null) mouthTween.Kill();
