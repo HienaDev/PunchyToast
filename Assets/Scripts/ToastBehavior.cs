@@ -430,10 +430,12 @@ public class ToastBehavior : MonoBehaviour
             Toaster.Instance.TriggerPunishmentCooldown();
 
             rb.isKinematic = true;
-            gameObject.GetComponent<Collider>().enabled = false;
+            gameObject.GetComponent<Collider>().enabled = false;//
             if (letterText != null) letterText.enabled = false;
 
             Toaster.Instance.ResetCombo();
+
+            MusicManager.Instance.RecordScratchStop(5.2f);
 
             foreach (ToastBehavior tb in Toaster.Instance.activeToasts)
             {
