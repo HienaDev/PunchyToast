@@ -204,6 +204,17 @@ public class ToastBehavior : MonoBehaviour
             targetTransform = currentFlightTargetClient.TargetForToast;
         }
 
+        if (currentFlightTargetClient == null)
+        {
+            //do wrong toast sequence
+            isWrongToast = true;
+            foreach (ToastBehavior tb in Toaster.Instance.activeToasts)
+            {
+                if (tb != null && tb != this)
+                    tb.ForceReleaseToast();
+            }
+        }
+
         Vector3 dirToTarget = (targetTransform.position - transform.position).normalized;
         GameObject arm = Instantiate(armPrefab, transform.position - (dirToTarget * armSpawnOffset), Quaternion.LookRotation(dirToTarget));
         if (Camera.main.WorldToViewportPoint(transform.position).x > 0.5f)
@@ -248,12 +259,7 @@ public class ToastBehavior : MonoBehaviour
                     Debug.Log("Launching new toast from punch because no punchable toasts remain!");
                     if(currentFlightTargetClient != null)
                         Toaster.Instance.LaunchToast();
-                    else
-                    {
-                        //do wrong toast sequence
-                        isWrongToast = true;
 
-                    }
                 }
             }
         });
@@ -437,11 +443,7 @@ public class ToastBehavior : MonoBehaviour
 
             MusicManager.Instance.RecordScratchStop(4f);
 
-            foreach (ToastBehavior tb in Toaster.Instance.activeToasts)
-            {
-                if (tb != null && tb != this)
-                    tb.ForceReleaseToast();
-            }
+
 
             Client clientToBonk = ClientManager.Instance.GetClientInSeat(target);
             SphereCollider headCollider = clientToBonk != null ? clientToBonk.GetComponentInChildren<SphereCollider>() : null;

@@ -580,7 +580,11 @@ public class Client : MonoBehaviour
         Sequence exitSeq = DOTween.Sequence();
         exitSeq.Append(transform.DOMoveY(targetPosition.y + 0.1f, 0.15f).SetEase(Ease.OutQuad));
         exitSeq.Append(transform.DOMoveY(targetPosition.y - popUpDistance, 0.4f).SetEase(Ease.InBack));
-        exitSeq.OnComplete(() => Destroy(gameObject));
+        exitSeq.OnComplete(() =>
+        {
+            transform.DOKill();
+            Destroy(gameObject);
+        });
     }
 
     public void FreezeClient()
