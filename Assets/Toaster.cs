@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.UI;
 
 public class Toaster : MonoBehaviour
@@ -57,6 +58,7 @@ public class Toaster : MonoBehaviour
     private int simultaneousCount = 0;
     private int simultaneousIndex = 0;
 
+    public AudioMixer sfxMixer;
     public AudioClip[] punchSounds;
     public AudioClip[] toastGettingIntoMouth;
     public AudioClip[] toastFlying;
@@ -257,6 +259,8 @@ public class Toaster : MonoBehaviour
         behavior.armPunchDuration = armPunchDuration;
         behavior.targetFlightForce = targetFlightForce;
         behavior.armShrinkDuration = 0.6f;
+
+        behavior.sfxMixer = sfxMixer;
 
         behavior.slapSpinDuration = 0.4f;
 

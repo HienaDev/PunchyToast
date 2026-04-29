@@ -46,6 +46,7 @@ public class WalkingPuppet : MonoBehaviour
             .OnComplete(() =>
             {
                 isWalking = false;
+                transform.DOKill(); // Stop any ongoing movement tweens
                 Destroy(gameObject);
             });
     }

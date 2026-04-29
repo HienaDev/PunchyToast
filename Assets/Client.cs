@@ -1,7 +1,8 @@
 using UnityEngine;
 using DG.Tweening;
 using System.Collections.Generic;
-using UnityEngine.UI; // Added for List
+using UnityEngine.UI;
+using UnityEngine.Audio; // Added for List
 
 public class Client : MonoBehaviour
 {
@@ -77,7 +78,10 @@ public class Client : MonoBehaviour
     [SerializeField] private GameObject thoughtBubble;
     [SerializeField] private Image wantIcon;
 
-    
+
+    [SerializeField] private AudioMixer sfxMixer;
+    [SerializeField] private AudioMixer puppetMixer;
+
     [SerializeField] private AudioClip[] gettingUpSound;
     [SerializeField] private AudioClip[] goingDownSound;
 
@@ -280,7 +284,7 @@ public class Client : MonoBehaviour
     private void EnterScene()
     {
 
-        AudioManager.Instance.PlaySound(gettingUpSound, transform.position);
+        AudioManager.Instance.PlaySound(gettingUpSound, sfxMixer, transform.position);
 
         transform.position = targetPosition + Vector3.down * popUpDistance;
         transform.DOMove(targetPosition, entranceDuration).SetEase(Ease.Linear).OnComplete(() => {
@@ -411,7 +415,7 @@ public class Client : MonoBehaviour
     public void PlayMunchAnimation(System.Action onComplete)
     {
 
-        AudioManager.Instance.PlaySound(muchingFoodSound, transform.position);
+        AudioManager.Instance.PlaySound(muchingFoodSound, puppetMixer, transform.position);
 
         Sequence munchSeq = DOTween.Sequence();
 
@@ -446,7 +450,7 @@ public class Client : MonoBehaviour
             mouthAudioSource.DOKill(); // Stop the active fade
             mouthAudioSource.volume = 0; // Instant silence
 
-            AudioManager.Instance.PlaySound(hurtRecoilSound, transform.position);
+            AudioManager.Instance.PlaySound(hurtRecoilSound, puppetMixer, transform.position);
             recoilBone.DOKill();
             Sequence hardRecoilSeq = DOTween.Sequence();
 
@@ -527,7 +531,7 @@ public class Client : MonoBehaviour
     private void ExitScene()
     {
 
-        AudioManager.Instance.PlaySound(goingDownSound, transform.position);
+        AudioManager.Instance.PlaySound(goingDownSound, sfxMixer, transform.position);
 
         Sequence exitSeq = DOTween.Sequence();
         exitSeq.Append(transform.DOMoveY(targetPosition.y + 0.1f, 0.15f).SetEase(Ease.OutQuad));

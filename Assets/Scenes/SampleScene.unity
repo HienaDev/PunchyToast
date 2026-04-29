@@ -3122,7 +3122,7 @@ AudioSource:
   m_GameObject: {fileID: 274024435}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300002, guid: af3b66b11444e4a42b96b7d31c077263, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 6418180475301049370, guid: eb4a2fb02f46e894ba46661bcd1f03ea, type: 2}
   m_PlayOnAwake: 0
@@ -5317,6 +5317,7 @@ MonoBehaviour:
   easyModeToggle: {fileID: 195950091}
   easyMode: 0
   activeToasts: []
+  sfxMixer: {fileID: 24100000, guid: af3b66b11444e4a42b96b7d31c077263, type: 2}
   punchSounds:
   - {fileID: 8300000, guid: e7519703de7660f479fced61d3d25423, type: 3}
   - {fileID: 8300000, guid: 80ab44caa3ddd45489366f94e7dd0469, type: 3}
@@ -11933,6 +11934,10 @@ PrefabInstance:
       value: -57.00001
       objectReference: {fileID: 0}
     - target: {fileID: 7399854355397305843, guid: 96b9328cb05d2e04292e3355086d51ef, type: 3}
+      propertyPath: sfxMixer
+      value: 
+      objectReference: {fileID: 24100000, guid: af3b66b11444e4a42b96b7d31c077263, type: 2}
+    - target: {fileID: 7399854355397305843, guid: 96b9328cb05d2e04292e3355086d51ef, type: 3}
       propertyPath: timeText
       value: 
       objectReference: {fileID: 125104768}
@@ -14373,7 +14378,7 @@ AudioSource:
   m_GameObject: {fileID: 1138770721}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300002, guid: af3b66b11444e4a42b96b7d31c077263, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: eaf01957c49de8c4eb0b00be4336c950, type: 3}
   m_PlayOnAwake: 0
@@ -27946,6 +27951,7 @@ MonoBehaviour:
   strawberryIcon: {fileID: 21300000, guid: 995c4e6e12061544893f54782c47eac9, type: 3}
   grapeIcon: {fileID: 21300000, guid: 4249e195c6483ba4b966184e6865f3ff, type: 3}
   chocolateIcon: {fileID: 21300000, guid: d1a86773b3db9d54c8a22ff77cb651fc, type: 3}
+  sfxMixer: {fileID: 24100000, guid: af3b66b11444e4a42b96b7d31c077263, type: 2}
   levelCompleteSound: []
 --- !u!1001 &1690399932
 PrefabInstance:
@@ -37599,6 +37605,7 @@ MonoBehaviour:
   stawberryFist: {fileID: 1403185107}
   grapeFist: {fileID: 2088356146}
   peanutFist: {fileID: 388920394}
+  sfxMixer: {fileID: 24100000, guid: af3b66b11444e4a42b96b7d31c077263, type: 2}
   dipSounds:
   - {fileID: 8300000, guid: ce2f30ad0c6c4354b8b2ab98e3be9a65, type: 3}
   - {fileID: 8300000, guid: 816d42522c474154bbe46b608d5b04f2, type: 3}
@@ -45138,7 +45145,7 @@ AudioSource:
   m_GameObject: {fileID: 8000513501581082207}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300002, guid: af3b66b11444e4a42b96b7d31c077263, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 6418180475301049370, guid: 67ef922aa5a7a754b8f2d25c91ab586c, type: 2}
   m_PlayOnAwake: 0

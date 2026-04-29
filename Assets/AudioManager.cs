@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class AudioManager : MonoBehaviour
 {
@@ -21,24 +22,26 @@ public class AudioManager : MonoBehaviour
     /// Plays a random clip from an array. 
     /// Pass a Vector3 for 3D spatial audio, or null for 2D (UI/Global) audio.
     /// </summary>
-    public void PlaySound(AudioClip[] clips, Vector3? position = null, float volume = 1f)
+    public void PlaySound(AudioClip[] clips, AudioMixer mixer, Vector3? position = null, float volume = 1f)
     {
         if (clips == null || clips.Length == 0) return;
 
         AudioClip randomClip = clips[Random.Range(0, clips.Length)];
-        PlaySound(randomClip, position, volume);
+        PlaySound(randomClip, mixer, position, volume);
     }
 
     /// <summary>
     /// Plays a single clip.
     /// </summary>
-    public void PlaySound(AudioClip clip, Vector3? position = null, float volume = 1f)
+    public void PlaySound(AudioClip clip, AudioMixer mixer, Vector3? position = null, float volume = 1f)
     {
         if (clip == null) return;
 
         // 1. Create a temporary GameObject for the sound
         GameObject go = new GameObject("TempAudio_" + clip.name);
         AudioSource source = go.AddComponent<AudioSource>();
+
+        source.outputAudioMixerGroup = mixer.FindMatchingGroups("Master")[0];
 
         // 2. Configure Position (3D vs 2D)
         if (position.HasValue)
@@ -67,7 +70,7 @@ public class AudioManager : MonoBehaviour
     /// <summary>
     /// Plays a sound with a specific fixed pitch.
     /// </summary>
-    public void PlaySoundFixedPitch(AudioClip clip, float pitch, Vector3? position = null, float volume = 1f)
+    public void PlaySoundFixedPitch(AudioClip clip, float pitch, AudioMixer mixer, Vector3? position = null, float volume = 1f)
     {
         if (clip == null) return;
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
 using TMPro;
+using UnityEngine.Audio;
 
 [System.Serializable]
 public class WeightedClient
@@ -56,6 +57,7 @@ public class ClientManager : MonoBehaviour
     [SerializeField] private Sprite grapeIcon;
     [SerializeField] private Sprite chocolateIcon;
 
+    [SerializeField] private AudioMixer sfxMixer;
     [SerializeField] private AudioClip[] levelCompleteSound;
     void Awake() { if (Instance == null) Instance = this; }
 
@@ -364,7 +366,7 @@ public class ClientManager : MonoBehaviour
         float totalTime = Time.time - levelStartTime;
         int stars = CalculateStars(totalTime);
 
-        AudioManager.Instance.PlaySound(levelCompleteSound);
+        AudioManager.Instance.PlaySound(levelCompleteSound, sfxMixer);
 
         levelCompleteUI.gameObject.SetActive(true);
         levelCompleteUI.Initialize(stars, totalTime);

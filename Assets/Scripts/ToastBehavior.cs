@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.WSA;
 
 public class ToastBehavior : MonoBehaviour
@@ -45,6 +46,7 @@ public class ToastBehavior : MonoBehaviour
 
     public int myLetterIndex = 0;
 
+    public AudioMixer sfxMixer;
     public AudioClip[] punchSounds;
     public AudioClip[] toastGettingIntoMouth;
     public AudioClip[] toastFlying;
@@ -58,7 +60,7 @@ public class ToastBehavior : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        AudioManager.Instance.PlaySound(toastLandingNaturally, transform.position);
+        AudioManager.Instance.PlaySound(toastLandingNaturally, sfxMixer, transform.position);
     }
 
     void Awake()
@@ -221,13 +223,13 @@ public class ToastBehavior : MonoBehaviour
 
             StartCoroutine(ImpactSequence(arm, targetTransform, dirToTarget));
 
-            AudioManager.Instance.PlaySound(punchSounds, transform.position, volume: 0.4f);
+            AudioManager.Instance.PlaySound(punchSounds, sfxMixer, transform.position, volume: 0.4f);
 
             float pitch = Toaster.Instance.GetComboPitch();
             if (Toaster.Instance.currentCombo >= 1)
             {
 
-                AudioManager.Instance.PlaySoundFixedPitch(Toaster.Instance.toastComboSound, pitch, transform.position, volume: 2.0f);
+                AudioManager.Instance.PlaySoundFixedPitch(Toaster.Instance.toastComboSound, pitch, sfxMixer, transform.position, volume: 2.0f);
 
 
 
@@ -341,7 +343,7 @@ public class ToastBehavior : MonoBehaviour
 
         isHovering = false;
 
-        AudioManager.Instance.PlaySound(toastFlying, transform.position);
+        AudioManager.Instance.PlaySound(toastFlying, sfxMixer, transform.position);
 
         foreach (TrailRenderer lr in GetComponentsInChildren<TrailRenderer>()) lr.enabled = true;
         foreach (TAG_JamDroplets droplet in GetComponentsInChildren<TAG_JamDroplets>(true))
@@ -405,7 +407,7 @@ public class ToastBehavior : MonoBehaviour
 
                 }
 
-                AudioManager.Instance.PlaySound(toastGettingIntoMouth, transform.position);
+                AudioManager.Instance.PlaySound(toastGettingIntoMouth, sfxMixer, transform.position);
 
             });
         }
