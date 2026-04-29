@@ -325,7 +325,12 @@ public class ToastBehavior : MonoBehaviour
             Sequence armSeq = DOTween.Sequence();
             armSeq.Append(arm.transform.DOMove(recoilPos, armShrinkDuration * 0.8f).SetEase(Ease.OutBack));
             armSeq.Append(arm.transform.DOScale(Vector3.zero, armShrinkDuration).SetEase(Ease.InQuad));
-            armSeq.OnComplete(() => Destroy(arm));
+            armSeq.OnComplete(() =>
+            {
+                arm.transform.DOKill();
+                Destroy(arm);
+            });
+            
         }
     }
 

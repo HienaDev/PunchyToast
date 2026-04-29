@@ -494,7 +494,12 @@ public class Client : MonoBehaviour
             OpenMouth();
 
             DOVirtual.DelayedCall(0.4f, () => {
-                if (toast != null) Destroy(toast);
+                if (toast != null)
+                {
+                    toast.transform.DOKill();
+                    Destroy(toast);
+                }
+                    
 
                 PlayMunchAnimation(() => {
                     if (isSatisfied && !hasEaten)
