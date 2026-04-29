@@ -99,8 +99,13 @@ public class EndlessModeManager : MonoBehaviour
 
     private float GetCurrentSlappableChance()
     {
-        if (easyMode) return 0f;
         return Mathf.Lerp(slappableChanceStart, slappableChanceMax,
+                          Mathf.Clamp01((float)clientsSpawned / tier4At));
+    }
+
+    public float GetCurrentSimultaneousChance()
+    {
+        return Mathf.Lerp(simultaneousChanceStart, simultaneousChanceMax,
                           Mathf.Clamp01((float)clientsSpawned / tier4At));
     }
 

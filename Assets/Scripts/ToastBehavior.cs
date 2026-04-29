@@ -255,17 +255,33 @@ public class ToastBehavior : MonoBehaviour
         rb.linearVelocity = Vector3.zero;
         rb.isKinematic = true;
 
-        // Instantiate punch effect
-        Instantiate(punchEffect, transform.position, Quaternion.identity);
+        // 1. Instantiate punch effect
+        GameObject punchEffectInstance = Instantiate(punchEffect, transform.position, Quaternion.identity);
 
         ApplyJamSplat();
 
-        arm.transform.DOMove(arm.transform.position + (dirToTarget * pushForce), impactFreezeTime).SetEase(Ease.Linear);
-        transform.DOMove(transform.position + (dirToTarget * pushForce), impactFreezeTime).SetEase(Ease.Linear);
+        // Calculate the common destination offset
+        Vector3 moveOffset = dirToTarget * pushForce;
+
+        // 2. Fire all three Tweens at once. 
+        // Using the same duration (impactFreezeTime) and Ease (Linear) keeps them locked together.
+        arm.transform.DOMove(arm.transform.position + moveOffset, impactFreezeTime).SetEase(Ease.Linear);
+        transform.DOMove(transform.position + moveOffset, impactFreezeTime).SetEase(Ease.Linear);
+
+        // The effect now moves alongside the toast without being a child
+        if (punchEffectInstance != null)
+        {
+            punchEffectInstance.transform.DOMove(punchEffectInstance.transform.position + moveOffset, impactFreezeTime).SetEase(Ease.Linear);
+        }
+
         yield return new WaitForSeconds(impactFreezeTime);
+
+        // After this point, the punchEffectInstance has finished its move and stays in place 
+        // while the toast continues with the shake and the rest of the logic.
 
         if (CameraShake.Instance != null) CameraShake.Instance.Shake(0.2f, 0.1f, 30);
         transform.DOShakePosition(0.05f, shakeIntensity, shakeVibrato);
+
         yield return new WaitForSeconds(impactFreezeTime);
 
 

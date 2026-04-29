@@ -287,7 +287,7 @@ public class Toaster : MonoBehaviour
         if (EndlessModeManager.Instance.isRunning)
         {
             float randomChance = Random.Range(0f, 1f);
-            if (randomChance <= EndlessModeManager.Instance.simultaneousChanceMax)
+            if (randomChance <= EndlessModeManager.Instance.GetCurrentSimultaneousChance())
             {
                 LaunchToast();
             }

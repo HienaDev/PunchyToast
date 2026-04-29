@@ -3,6 +3,9 @@ using DG.Tweening;
 
 public class HoverAndScale : MonoBehaviour
 {
+    [Header("Behavior Settings")]
+    public bool initialRandom = true; // Added this boolean
+
     [Header("Hover Settings")]
     public float hoverHeight = 0.5f;
     public float hoverSpeed = 1f;
@@ -37,13 +40,25 @@ public class HoverAndScale : MonoBehaviour
         float varScaleMult = scaleMultiplier + Random.Range(-scaleVariance, scaleVariance);
         float varHoverSpeed = hoverSpeed + Random.Range(-hoverVariance, hoverVariance);
         float varScaleSpeed = scaleSpeed + Random.Range(-scaleVariance, scaleVariance);
-        float randomPhase = Random.Range(0f, 1f);
 
-        float initialYOffset = Mathf.Lerp(-varHoverHeight, varHoverHeight, randomPhase);
-        float initialScaleOffset = Mathf.Lerp(1f, varScaleMult, randomPhase);
+        Vector3 spawnPos;
+        Vector3 spawnScale;
 
-        Vector3 spawnPos = new Vector3(startPos.x, startPos.y + initialYOffset, startPos.z);
-        Vector3 spawnScale = startScale * initialScaleOffset;
+        if (initialRandom)
+        {
+            float randomPhase = Random.Range(0f, 1f);
+            float initialYOffset = Mathf.Lerp(-varHoverHeight, varHoverHeight, randomPhase);
+            float initialScaleOffset = Mathf.Lerp(1f, varScaleMult, randomPhase);
+
+            spawnPos = new Vector3(startPos.x, startPos.y + initialYOffset, startPos.z);
+            spawnScale = startScale * initialScaleOffset;
+        }
+        else
+        {
+            // Start at default position/scale when initialRandom is false
+            spawnPos = startPos;
+            spawnScale = startScale;
+        }
 
         transform.localScale = Vector3.zero;
         transform.localPosition = startPos;
@@ -58,9 +73,9 @@ public class HoverAndScale : MonoBehaviour
 
     private void StartLooping(Vector3 currentPos, Vector3 currentScale, float hHeight, float sMult, float hSpeed, float sSpeed)
     {
+        // Determine the first target direction based on where we ended our intro
         float targetY = (currentPos.y >= startPos.y) ? startPos.y - hHeight : startPos.y + hHeight;
 
-        // Apply SetUpdate(true) to continuous loops
         transform.DOLocalMoveY(targetY, hSpeed)
             .SetEase(Ease.InOutSine)
             .SetLoops(-1, LoopType.Yoyo)

@@ -8,3 +8,8 @@ options,Options,Opções
 exit,Quit,Sair
 easy_mode,Easy Mode,Modo Fácil
 endless,Endless,Infinito
+reset,"Reset\nProgress","Reiniciar\nProgresso"
+language,Language,Idioma
+are_you_sure,Are you sure you want to reset all your progress?,Tens a certeza que queres reiniciar todo o teu progresso?
+yes,Yes,Sim
+no,No,Não

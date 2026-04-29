@@ -363,6 +363,17 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 16179522}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &22632459 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 980810152309958788, guid: a8d93d6abe674d041a18fd35ff24c0fe, type: 3}
+  m_PrefabInstance: {fileID: 4475662730135148746}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b743370ac3e4ec2a1668f5455a8ef8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &23149401
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -567,7 +578,7 @@ AudioSource:
   m_GameObject: {fileID: 32640515}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300002, guid: 1395e0ffce7ebf44babcf6467d8bbd0b, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 27f37451a155a4849ada572f0092b6b3, type: 3}
   m_PlayOnAwake: 0
@@ -1051,6 +1062,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e3f501005e78904685b847f46dbd02e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  initialRandom: 1
   hoverHeight: 0.5
   hoverSpeed: 2
   hoverVariance: 0.2
@@ -2280,7 +2292,7 @@ MonoBehaviour:
   inspectorLanguage: 0
   startingLanguage: English
   csvFileName: localization_portuguese_english.csv
-  languageDropdown: {fileID: 0}
+  languageDropdown: {fileID: 22632459}
 --- !u!1 &214487197
 GameObject:
   m_ObjectHideFlags: 0
@@ -5788,6 +5800,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e3f501005e78904685b847f46dbd02e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  initialRandom: 1
   hoverHeight: 0.5
   hoverSpeed: 1
   hoverVariance: 0.2
@@ -9726,6 +9739,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e3f501005e78904685b847f46dbd02e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  initialRandom: 1
   hoverHeight: 0.005
   hoverSpeed: 1.5
   hoverVariance: 0.1
@@ -11539,7 +11553,7 @@ AudioSource:
   m_GameObject: {fileID: 801892850}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300002, guid: 1395e0ffce7ebf44babcf6467d8bbd0b, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: b71efa7e69ac4a9409da687eee6e9400, type: 3}
   m_PlayOnAwake: 1
@@ -14137,6 +14151,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e3f501005e78904685b847f46dbd02e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  initialRandom: 1
   hoverHeight: 0.005
   hoverSpeed: 1.5
   hoverVariance: 0.1
@@ -14497,6 +14512,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e3f501005e78904685b847f46dbd02e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  initialRandom: 1
   hoverHeight: 0.5
   hoverSpeed: 1
   hoverVariance: 0.2
@@ -14722,6 +14738,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e3f501005e78904685b847f46dbd02e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  initialRandom: 1
   hoverHeight: 0.5
   hoverSpeed: 1
   hoverVariance: 0.2
@@ -22367,14 +22384,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   easyMode: 0
   easyModeHoverTime: 10
-  tier2At: 10
-  tier3At: 30
-  tier4At: 50
-  startingHoverTime: 5
+  tier2At: 20
+  tier3At: 40
+  tier4At: 60
+  startingHoverTime: 7.5
   minimumHoverTime: 0.5
   hoverTimeDecreasePerClient: 0.05
   slappableChanceStart: 0
   slappableChanceMax: 0.4
+  simultaneousChanceStart: 0
+  simultaneousChanceMax: 0.5
   normalCooldown: 10
   minCooldown: 0.3
   cooldownDecreasePerClient: 0.05
@@ -26813,6 +26832,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e3f501005e78904685b847f46dbd02e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  initialRandom: 1
   hoverHeight: 0.005
   hoverSpeed: 1.5
   hoverVariance: 0.1
@@ -27175,6 +27195,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e3f501005e78904685b847f46dbd02e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  initialRandom: 1
   hoverHeight: 0.005
   hoverSpeed: 1.5
   hoverVariance: 0.1
@@ -28245,6 +28266,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e3f501005e78904685b847f46dbd02e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  initialRandom: 1
   hoverHeight: 0.5
   hoverSpeed: 2
   hoverVariance: 0.2
@@ -36467,6 +36489,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e3f501005e78904685b847f46dbd02e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  initialRandom: 1
   hoverHeight: 0.005
   hoverSpeed: 1
   hoverVariance: 0.01
@@ -41189,6 +41212,18 @@ PrefabInstance:
       propertyPath: localizationKey
       value: endless
       objectReference: {fileID: 0}
+    - target: {fileID: 1413593628113325896, guid: a8d93d6abe674d041a18fd35ff24c0fe, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.000020980835
+      objectReference: {fileID: 0}
+    - target: {fileID: 1781464935599091403, guid: a8d93d6abe674d041a18fd35ff24c0fe, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2156217871187817023, guid: a8d93d6abe674d041a18fd35ff24c0fe, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2161788455907823095, guid: a8d93d6abe674d041a18fd35ff24c0fe, type: 3}
       propertyPath: m_Name
       value: Main Menu
@@ -41253,6 +41288,42 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2815413827886822915, guid: a8d93d6abe674d041a18fd35ff24c0fe, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4084371756697217146, guid: a8d93d6abe674d041a18fd35ff24c0fe, type: 3}
+      propertyPath: hoverSpeed
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4084371756697217146, guid: a8d93d6abe674d041a18fd35ff24c0fe, type: 3}
+      propertyPath: hoverVariance
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4084371756697217146, guid: a8d93d6abe674d041a18fd35ff24c0fe, type: 3}
+      propertyPath: scaleVariance
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4084371756697217146, guid: a8d93d6abe674d041a18fd35ff24c0fe, type: 3}
+      propertyPath: scaleMultiplier
+      value: 1.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 4202482679936363635, guid: a8d93d6abe674d041a18fd35ff24c0fe, type: 3}
+      propertyPath: hoverSpeed
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4202482679936363635, guid: a8d93d6abe674d041a18fd35ff24c0fe, type: 3}
+      propertyPath: hoverVariance
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4202482679936363635, guid: a8d93d6abe674d041a18fd35ff24c0fe, type: 3}
+      propertyPath: scaleVariance
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4202482679936363635, guid: a8d93d6abe674d041a18fd35ff24c0fe, type: 3}
+      propertyPath: scaleMultiplier
+      value: 1.05
+      objectReference: {fileID: 0}
     - target: {fileID: 4299548703469074562, guid: a8d93d6abe674d041a18fd35ff24c0fe, type: 3}
       propertyPath: m_SizeDelta.x
       value: 183.48
@@ -41280,6 +41351,62 @@ PrefabInstance:
     - target: {fileID: 4302861894625239877, guid: a8d93d6abe674d041a18fd35ff24c0fe, type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4593439675074044640, guid: a8d93d6abe674d041a18fd35ff24c0fe, type: 3}
+      propertyPath: hoverSpeed
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4593439675074044640, guid: a8d93d6abe674d041a18fd35ff24c0fe, type: 3}
+      propertyPath: hoverVariance
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4593439675074044640, guid: a8d93d6abe674d041a18fd35ff24c0fe, type: 3}
+      propertyPath: scaleVariance
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4593439675074044640, guid: a8d93d6abe674d041a18fd35ff24c0fe, type: 3}
+      propertyPath: scaleMultiplier
+      value: 1.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 5320251769659057439, guid: a8d93d6abe674d041a18fd35ff24c0fe, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5442685444977369304, guid: a8d93d6abe674d041a18fd35ff24c0fe, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5811492193766660628, guid: a8d93d6abe674d041a18fd35ff24c0fe, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6583075911602666964, guid: a8d93d6abe674d041a18fd35ff24c0fe, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6774522426562667604, guid: a8d93d6abe674d041a18fd35ff24c0fe, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6774522426562667604, guid: a8d93d6abe674d041a18fd35ff24c0fe, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8175624867202431932, guid: a8d93d6abe674d041a18fd35ff24c0fe, type: 3}
+      propertyPath: hoverSpeed
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8175624867202431932, guid: a8d93d6abe674d041a18fd35ff24c0fe, type: 3}
+      propertyPath: hoverVariance
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8175624867202431932, guid: a8d93d6abe674d041a18fd35ff24c0fe, type: 3}
+      propertyPath: scaleVariance
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8175624867202431932, guid: a8d93d6abe674d041a18fd35ff24c0fe, type: 3}
+      propertyPath: scaleMultiplier
+      value: 1.05
       objectReference: {fileID: 0}
     - target: {fileID: 8851287058758352503, guid: a8d93d6abe674d041a18fd35ff24c0fe, type: 3}
       propertyPath: m_Pivot.x
@@ -41417,8 +41544,7 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 4202482679936363635, guid: a8d93d6abe674d041a18fd35ff24c0fe, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
