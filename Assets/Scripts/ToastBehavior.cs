@@ -435,7 +435,7 @@ public class ToastBehavior : MonoBehaviour
 
             Toaster.Instance.ResetCombo();
 
-            MusicManager.Instance.RecordScratchStop(5.2f);
+            MusicManager.Instance.RecordScratchStop(4f);
 
             foreach (ToastBehavior tb in Toaster.Instance.activeToasts)
             {
@@ -484,12 +484,12 @@ public class ToastBehavior : MonoBehaviour
             });
 
             // 3. The Sticky Pause
-            splatSeq.AppendInterval(1.2f);
+            splatSeq.AppendInterval(1f);
 
             // 4. The Slow Slide
             float slideDistance = headCollider != null ? headCollider.radius * 3f : 2f;
-            splatSeq.Append(transform.DOMoveY(impactPoint.y - slideDistance, 4.0f).SetEase(Ease.InSine));
-            splatSeq.Join(transform.DORotate(new Vector3(60, transform.eulerAngles.y, 0), 4.0f).SetEase(Ease.InSine));
+            splatSeq.Append(transform.DOMoveY(impactPoint.y - slideDistance, 3.0f).SetEase(Ease.InSine));
+            splatSeq.Join(transform.DORotate(new Vector3(60, transform.eulerAngles.y, 0), 3.0f).SetEase(Ease.InSine));
 
             // 5. Cleanup & Return
             splatSeq.OnComplete(() => {

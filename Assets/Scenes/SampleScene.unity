@@ -5294,7 +5294,7 @@ MonoBehaviour:
   - {fileID: 665972114}
   - {fileID: 37156030}
   armPrefab: {fileID: 5662322208263055636, guid: e9746a3154706664c81a732ec30c61d2, type: 3}
-  punishmentCooldown: 7
+  punishmentCooldown: 5
   timeToLaunchToast: 3
   upForce: 3
   xSpread: 0.7
