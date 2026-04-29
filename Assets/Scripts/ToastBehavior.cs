@@ -461,9 +461,13 @@ public class ToastBehavior : MonoBehaviour
 
             // --- FLAVOR OBJECT CACHING ---
             Vector3 originalFlavorPos = Vector3.zero;
+            Vector3 originalFlavorRot = Vector3.zero;
+            Vector3 originalFlavorScale = Vector3.zero;
             if (clientToBonk != null && clientToBonk.flavorObject != null)
             {
                 originalFlavorPos = clientToBonk.flavorObject.transform.position;
+                originalFlavorRot = clientToBonk.flavorObject.transform.rotation.eulerAngles;
+                originalFlavorScale = clientToBonk.flavorObject.transform.localScale;
             }
 
             float zoomedFOV = 25f;
@@ -485,6 +489,8 @@ public class ToastBehavior : MonoBehaviour
                     if (clientToBonk.flavorObject != null && clientToBonk.positionForWrongFlavor != null)
                     {
                         clientToBonk.flavorObject.transform.DOMove(clientToBonk.positionForWrongFlavor.position, 0.25f).SetEase(Ease.OutBack);
+                        clientToBonk.flavorObject.transform.DORotate(clientToBonk.positionForWrongFlavor.eulerAngles, 0.25f).SetEase(Ease.OutBack);
+                        clientToBonk.flavorObject.transform.DOScale(clientToBonk.positionForWrongFlavor.localScale, 0.25f).SetEase(Ease.OutBack);
                     }
                 }
                 transform.DOScaleZ(0.1f, 0.05f);
@@ -514,6 +520,8 @@ public class ToastBehavior : MonoBehaviour
                     if (clientToBonk.flavorObject != null)
                     {
                         clientToBonk.flavorObject.transform.DOMove(originalFlavorPos, 0.5f).SetEase(Ease.InOutQuad);
+                        clientToBonk.flavorObject.transform.DORotate(originalFlavorRot, 0.5f).SetEase(Ease.InOutQuad);
+                        clientToBonk.flavorObject.transform.DOScale(originalFlavorScale, 0.5f).SetEase(Ease.InOutQuad);
                     }
                 }
 
