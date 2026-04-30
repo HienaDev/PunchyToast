@@ -1,7 +1,8 @@
 using UnityEngine;
 using DG.Tweening;
 using System.Collections.Generic;
-using UnityEngine.UI; // Added for List
+using UnityEngine.UI;
+using UnityEngine.Audio; // Added for List
 
 public class Client : MonoBehaviour
 {
@@ -13,6 +14,10 @@ public class Client : MonoBehaviour
     public Vector3 mouthOpenRotation = new Vector3(-45, 0, 0);
     public float entranceDuration = 0.6f;
     public float popUpDistance = 2.0f;
+
+    public Transform flavorObject;
+    public Transform flavorWantedUI;
+    public Transform positionForWrongFlavor;
 
     [SerializeField] private bool useRandomVisual = true;
 
@@ -54,6 +59,9 @@ public class Client : MonoBehaviour
     [SerializeField] private float minHopSpeed = 0.3f;
     [SerializeField] private float maxHopSpeed = 0.6f;
 
+    [SerializeField] private GameObject eyeToastL;
+    [SerializeField] private GameObject eyeToastR;
+
     [Header("Current Order")]
     public string desiredCondiment;
     public Color condimentColor;
@@ -71,13 +79,21 @@ public class Client : MonoBehaviour
     [SerializeField] private Transform eyeLidL;
     [SerializeField] private Transform eyeRidL;
 
+    [SerializeField] private Renderer leftEyeRenderer;
+    private Material originalLeftEyeMat;
+    [SerializeField] private Renderer rightEyeRenderer;
+    private Material originalRightEyeMat;
+
     private Tween hopTween;
     private Tween mouthTween;
 
     [SerializeField] private GameObject thoughtBubble;
     [SerializeField] private Image wantIcon;
 
-    
+
+    [SerializeField] private AudioMixer sfxMixer;
+    [SerializeField] private AudioMixer puppetMixer;
+
     [SerializeField] private AudioClip[] gettingUpSound;
     [SerializeField] private AudioClip[] goingDownSound;
 
@@ -103,10 +119,15 @@ public class Client : MonoBehaviour
     private Vector3 originalEyelidLRot;
     private Vector3 originalEyelidRRot;
 
+    private bool isFrozen = false;
+
     void Start()
     {
         originalEyelidLRot = eyeLidL.localEulerAngles;
         originalEyelidRRot = eyeRidL.localEulerAngles;
+
+        originalLeftEyeMat = leftEyeRenderer.material;
+        originalRightEyeMat = rightEyeRenderer.material;
 
         // choose a random from 1 to 3, and assign the corresponding audio arrays to the generic ones
         int characterVariant = Random.Range(1, 4);
@@ -167,6 +188,7 @@ public class Client : MonoBehaviour
 
     void Update()
     {
+        if (isFrozen) return; // Add this line
         HandleEyeTracking();
     }
 
@@ -280,7 +302,7 @@ public class Client : MonoBehaviour
     private void EnterScene()
     {
 
-        AudioManager.Instance.PlaySound(gettingUpSound, transform.position);
+        AudioManager.Instance.PlaySound(gettingUpSound, sfxMixer, transform.position);
 
         transform.position = targetPosition + Vector3.down * popUpDistance;
         transform.DOMove(targetPosition, entranceDuration).SetEase(Ease.Linear).OnComplete(() => {
@@ -380,15 +402,40 @@ public class Client : MonoBehaviour
         float delay = Random.Range(2f, 4f);
 
         DOVirtual.DelayedCall(delay, () => {
-            if (this == null) return;
+            if (this == null || isFrozen) return; // Added isFrozen check
 
             eyeLidL.DOLocalRotate(new Vector3(-90, 0, 0), 0.1f);
             eyeRidL.DOLocalRotate(new Vector3(-90, 0, 0), 0.1f).OnComplete(() => {
+                if (isFrozen) return; // Don't loop if frozen
                 eyeLidL.DOLocalRotate(originalEyelidLRot, 0.1f);
                 eyeRidL.DOLocalRotate(originalEyelidRRot, 0.1f);
                 StartBlinking();
             });
         });
+    }
+
+    public void SetAngryEyelids()
+    {
+        // Kill any existing eyelid tweens (like blinking)
+        eyeLidL.DOKill();
+        eyeRidL.DOKill();
+
+        leftEyeRenderer.material = redMaterial;
+        rightEyeRenderer.material = redMaterial;
+
+        // Snap to the angry/squint position
+        eyeLidL.DOLocalRotate(new Vector3(-65, -9, 38), 0.15f).SetEase(Ease.OutBack);
+        eyeRidL.DOLocalRotate(new Vector3(-65, -9, -38), 0.15f).SetEase(Ease.OutBack);
+    }
+
+    public void RestoreEyelids()
+    {
+        leftEyeRenderer.material = originalLeftEyeMat;
+        rightEyeRenderer.material = originalRightEyeMat;
+
+        // Smoothly return to the original cached rotations
+        eyeLidL.DOLocalRotate(originalEyelidLRot, 0.3f).SetEase(Ease.OutQuad);
+        eyeRidL.DOLocalRotate(originalEyelidRRot, 0.3f).SetEase(Ease.OutQuad);
     }
 
     public void SetOrder(string jamName, Color jamColor)
@@ -410,8 +457,9 @@ public class Client : MonoBehaviour
 
     public void PlayMunchAnimation(System.Action onComplete)
     {
-
-        AudioManager.Instance.PlaySound(muchingFoodSound, transform.position);
+        eyeToastL.SetActive(true);
+        eyeToastR.SetActive(true);
+        AudioManager.Instance.PlaySound(muchingFoodSound, puppetMixer, transform.position);
 
         Sequence munchSeq = DOTween.Sequence();
 
@@ -446,7 +494,7 @@ public class Client : MonoBehaviour
             mouthAudioSource.DOKill(); // Stop the active fade
             mouthAudioSource.volume = 0; // Instant silence
 
-            AudioManager.Instance.PlaySound(hurtRecoilSound, transform.position);
+            AudioManager.Instance.PlaySound(hurtRecoilSound, puppetMixer, transform.position);
             recoilBone.DOKill();
             Sequence hardRecoilSeq = DOTween.Sequence();
 
@@ -490,9 +538,16 @@ public class Client : MonoBehaviour
             OpenMouth();
 
             DOVirtual.DelayedCall(0.4f, () => {
-                if (toast != null) Destroy(toast);
+                if (toast != null)
+                {
+                    toast.transform.DOKill();
+                    Destroy(toast);
+                }
+                    
 
                 PlayMunchAnimation(() => {
+                    eyeToastL.SetActive(false);
+                    eyeToastR.SetActive(false);
                     if (isSatisfied && !hasEaten)
                         ReceiveFood();
                 });
@@ -508,6 +563,9 @@ public class Client : MonoBehaviour
     {
         hasEaten = true;
         thoughtBubble.GetComponent<HoverAndScale>().Descale();
+
+        eyeToastL.SetActive(true);
+        eyeToastR.SetActive(true);
 
         if (hopTween != null) hopTween.Kill();
         if (mouthTween != null) mouthTween.Kill();
@@ -527,12 +585,53 @@ public class Client : MonoBehaviour
     private void ExitScene()
     {
 
-        AudioManager.Instance.PlaySound(goingDownSound, transform.position);
+        AudioManager.Instance.PlaySound(goingDownSound, sfxMixer, transform.position);
 
         Sequence exitSeq = DOTween.Sequence();
         exitSeq.Append(transform.DOMoveY(targetPosition.y + 0.1f, 0.15f).SetEase(Ease.OutQuad));
         exitSeq.Append(transform.DOMoveY(targetPosition.y - popUpDistance, 0.4f).SetEase(Ease.InBack));
-        exitSeq.OnComplete(() => Destroy(gameObject));
+        exitSeq.OnComplete(() =>
+        {
+            transform.DOKill();
+            Destroy(gameObject);
+        });
+    }
+
+    public void FreezeClient()
+    {
+        isFrozen = true;
+
+        // 1. Kill the chatter and the hops immediately
+        if (mouthTween != null) mouthTween.Kill();
+        if (hopTween != null) hopTween.Kill();
+
+        // 2. Kill all active tweens on the bones to stop them mid-motion
+        pivot.DOKill();
+        mouthBone.DOKill();
+        recoilBone.DOKill();
+        eyeLidL.DOKill();
+        eyeRidL.DOKill();
+
+        // 3. Force the client into a "stunned" pose
+        mouthBone.DOLocalRotate(waitingMouthClosed, 0.1f); // Shut the mouth
+
+        // 4. Silence
+        mouthAudioSource.Pause();
+    }
+
+    public void UnfreezeClient()
+    {
+        isFrozen = false;
+
+        mouthAudioSource.UnPause();
+
+        // Restart the loops
+        if (!isSatisfied)
+        {
+            StartRandomHop();
+            StartWaitingForFood();
+            StartBlinking(); // Restart the blinking loop
+        }
     }
 
     private void ApplyRandomVisuals()

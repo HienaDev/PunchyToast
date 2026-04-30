@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.UI;
 
 public class Toaster : MonoBehaviour
@@ -15,6 +16,8 @@ public class Toaster : MonoBehaviour
     public List<Transform> targets;
     public GameObject armPrefab;
 
+    [SerializeField] private float punishmentCooldown = 4.0f;
+    private float? nextLaunchOverride = null; // Nullable float to track if we have a punishment pending
     [SerializeField] private float timeToLaunchToast = 2f;
     private float lastLaunchTime = 0f;
 
@@ -57,6 +60,7 @@ public class Toaster : MonoBehaviour
     private int simultaneousCount = 0;
     private int simultaneousIndex = 0;
 
+    public AudioMixer sfxMixer;
     public AudioClip[] punchSounds;
     public AudioClip[] toastGettingIntoMouth;
     public AudioClip[] toastFlying;
@@ -131,10 +135,14 @@ public class Toaster : MonoBehaviour
 
     void Update()
     {
-        if (Time.time - lastLaunchTime >= timeToLaunchToast && ClientManager.Instance.areThereClients)
+        // Use the override if it exists, otherwise use the normal level time
+        float currentCooldown = nextLaunchOverride ?? timeToLaunchToast;
+        Debug.Log("currentCooldown: " + currentCooldown + " | nextLaunchOverride: " + nextLaunchOverride);
+        if (Time.time - lastLaunchTime >= currentCooldown && ClientManager.Instance.areThereClients)
         {
             if (!AreTherePunchableToasts())
             {
+                nextLaunchOverride = null; // Reset the punishment so the next one is back to normal
                 LaunchToast();
             }
         }
@@ -258,6 +266,8 @@ public class Toaster : MonoBehaviour
         behavior.targetFlightForce = targetFlightForce;
         behavior.armShrinkDuration = 0.6f;
 
+        behavior.sfxMixer = sfxMixer;
+
         behavior.slapSpinDuration = 0.4f;
 
         behavior.punchEffect = punchHitEffect;
@@ -283,7 +293,23 @@ public class Toaster : MonoBehaviour
             simultaneousCount = 0;
             simultaneousIndex = 0;
         }
+
+        if (EndlessModeManager.Instance.isRunning)
+        {
+            float randomChance = Random.Range(0f, 1f);
+            if (randomChance <= EndlessModeManager.Instance.GetCurrentSimultaneousChance())
+            {
+                if(ClientManager.Instance.notSatisfiedClientCount > activeToasts.Count)
+                    LaunchToast();
+            }
+        }
     }
 
     public void UnregisterToast(ToastBehavior toast) => activeToasts.Remove(toast);
+
+    public void TriggerPunishmentCooldown()
+    {
+        lastLaunchTime = Time.time;
+        nextLaunchOverride = punishmentCooldown;
+    }
 }

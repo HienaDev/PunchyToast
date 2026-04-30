@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
 using TMPro;
+using UnityEngine.Audio;
 
 [System.Serializable]
 public class WeightedClient
@@ -35,6 +36,8 @@ public class ClientManager : MonoBehaviour
     public List<Transform> seatingPositions;
     private Dictionary<Transform, Client> activeClients = new Dictionary<Transform, Client>();
     public bool areThereActiveClients => activeClients.Count > 0;
+    public int activeClientCount => activeClients.Count;
+    public int notSatisfiedClientCount => activeClients.Values.Count(c => !c.isSatisfied);
     public bool areThereClients => activeClients.Values.Count(c => c.isSat) > 0;
 
     private string currentWord = "";
@@ -56,6 +59,7 @@ public class ClientManager : MonoBehaviour
     [SerializeField] private Sprite grapeIcon;
     [SerializeField] private Sprite chocolateIcon;
 
+    [SerializeField] private AudioMixer sfxMixer;
     [SerializeField] private AudioClip[] levelCompleteSound;
     void Awake() { if (Instance == null) Instance = this; }
 
@@ -120,7 +124,7 @@ public class ClientManager : MonoBehaviour
         return wave.clientsInWave[dataIndex].simultaneousToast;
     }
 
-    public bool IsLastClientOfWave(Client client)
+    public bool IsLastClientOfWave()
     {
         if (levelConfig == null || currentWaveIndex >= levelConfig.waves.Count) return false;
         int progress = clientsFinishedInWave + activeClients.Values.Count(c => c.isSatisfied);
@@ -364,7 +368,7 @@ public class ClientManager : MonoBehaviour
         float totalTime = Time.time - levelStartTime;
         int stars = CalculateStars(totalTime);
 
-        AudioManager.Instance.PlaySound(levelCompleteSound);
+        AudioManager.Instance.PlaySound(levelCompleteSound, sfxMixer);
 
         levelCompleteUI.gameObject.SetActive(true);
         levelCompleteUI.Initialize(stars, totalTime);

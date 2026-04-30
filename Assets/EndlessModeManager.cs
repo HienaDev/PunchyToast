@@ -23,6 +23,10 @@ public class EndlessModeManager : MonoBehaviour
     public float slappableChanceStart = 0f;
     public float slappableChanceMax = 0.25f;
 
+    [Header("Difficulty Curve - Simultaneous Chance")]
+    public float simultaneousChanceStart = 0f;
+    public float simultaneousChanceMax = 0.5f;
+
     [Header("Client Spawn Cooldown")]
     public float normalCooldown = 3f;
     public float minCooldown = 0.2f;
@@ -95,8 +99,13 @@ public class EndlessModeManager : MonoBehaviour
 
     private float GetCurrentSlappableChance()
     {
-        if (easyMode) return 0f;
         return Mathf.Lerp(slappableChanceStart, slappableChanceMax,
+                          Mathf.Clamp01((float)clientsSpawned / tier4At));
+    }
+
+    public float GetCurrentSimultaneousChance()
+    {
+        return Mathf.Lerp(simultaneousChanceStart, simultaneousChanceMax,
                           Mathf.Clamp01((float)clientsSpawned / tier4At));
     }
 

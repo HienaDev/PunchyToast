@@ -27,18 +27,18 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 74323792504298691}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: 0.02178616, w: 0.99976265}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 4.3369775, y: 4.3369775, z: 4.3369775}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 4189880121863443069}
   m_Father: {fileID: 990600124894610512}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 2.497}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 300, y: -200}
-  m_SizeDelta: {x: 133.0203, y: 30}
+  m_AnchoredPosition: {x: 200, y: -200}
+  m_SizeDelta: {x: 30, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1775520181972606945
 CanvasRenderer:
@@ -68,7 +68,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: bbfb0112a3d5b9c42b471c7b54e7add4, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 7a12515231abee7438a3cb0c2daaff0d, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -134,12 +134,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e3f501005e78904685b847f46dbd02e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  initialRandom: 0
   hoverHeight: 0.1
-  hoverSpeed: 1
-  hoverVariance: 0.2
+  hoverSpeed: 2
+  hoverVariance: 0
   scaleMultiplier: 1.1
   scaleSpeed: 1
-  scaleVariance: 0.2
+  scaleVariance: 0
   transitionDuration: 0.4
   introEase: 27
   outroEase: 26
@@ -161,7 +162,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1121844587645152884
 RectTransform:
   m_ObjectHideFlags: 0
@@ -311,7 +312,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4189880121863443069
 RectTransform:
   m_ObjectHideFlags: 0
@@ -472,7 +473,7 @@ RectTransform:
   m_GameObject: {fileID: 1317362744119624059}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 3.8742905, y: 3.8742905, z: 3.8742905}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 4121480305581554149}
@@ -481,7 +482,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -200}
-  m_SizeDelta: {x: 133.0203, y: 30}
+  m_SizeDelta: {x: 30, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &762808074712371095
 CanvasRenderer:
@@ -511,7 +512,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: bbfb0112a3d5b9c42b471c7b54e7add4, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0075b98075c2b444bb9701f42971c47b, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -577,12 +578,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e3f501005e78904685b847f46dbd02e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  initialRandom: 0
   hoverHeight: 0.1
-  hoverSpeed: 1
-  hoverVariance: 0.2
+  hoverSpeed: 2
+  hoverVariance: 0
   scaleMultiplier: 1.1
   scaleSpeed: 1
-  scaleVariance: 0.2
+  scaleVariance: 0
   transitionDuration: 0.4
   introEase: 27
   outroEase: 26
@@ -604,7 +606,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4121480305581554149
 RectTransform:
   m_ObjectHideFlags: 0
@@ -988,18 +990,18 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4522437137618891536}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0.018716581, w: 0.9998248}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 3.796, y: 3.796, z: 3.796}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1121844587645152884}
   m_Father: {fileID: 990600124894610512}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -2.145}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -300, y: -200}
-  m_SizeDelta: {x: 133.0203, y: 30}
+  m_AnchoredPosition: {x: -200, y: -200}
+  m_SizeDelta: {x: 30, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7431735007227537946
 CanvasRenderer:
@@ -1029,7 +1031,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: bbfb0112a3d5b9c42b471c7b54e7add4, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3c71b2730583d424cacd91406a9059e0, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1095,12 +1097,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e3f501005e78904685b847f46dbd02e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  initialRandom: 0
   hoverHeight: 0.1
-  hoverSpeed: 1
-  hoverVariance: 0.2
+  hoverSpeed: 2
+  hoverVariance: 0
   scaleMultiplier: 1.1
   scaleSpeed: 1
-  scaleVariance: 0.2
+  scaleVariance: 0
   transitionDuration: 0.4
   introEase: 27
   outroEase: 26
@@ -1751,4 +1754,5 @@ MonoBehaviour:
   timeText: {fileID: 0}
   starPopDuration: 0.3
   delayBetweenStars: 0.15
+  sfxMixer: {fileID: 0}
   starPopSounds: []

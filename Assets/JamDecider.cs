@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine.UI;
+using UnityEngine.Audio;
 
 public enum JamFlavor { None, Butter, StrawberryJam, GrapeJam, PeanutButter, Random }
 public class JamDecider : MonoBehaviour
@@ -36,6 +37,7 @@ public class JamDecider : MonoBehaviour
     [SerializeField] private GameObject grapeFist;
     [SerializeField] private GameObject peanutFist;
 
+    [SerializeField] private AudioMixer sfxMixer;
     [SerializeField] private AudioClip[] dipSounds;
 
     private bool alreadyDipped = false;
@@ -132,7 +134,7 @@ public class JamDecider : MonoBehaviour
     void PerformDipAnimation(JamType jam)
     {
         if (AudioManager.Instance != null)
-            AudioManager.Instance.PlaySound(dipSounds, jam.dippingStation.position);
+            AudioManager.Instance.PlaySound(dipSounds, sfxMixer, jam.dippingStation.position);
 
         Vector3 spawnPos = jam.dippingStation.position + new Vector3(0, 0, -zOffset);
         GameObject dippingArm = Instantiate(armPrefab, spawnPos, Quaternion.identity);
