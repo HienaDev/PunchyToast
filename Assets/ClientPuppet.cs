@@ -204,6 +204,7 @@ public class ClientPuppet : MonoBehaviour
             yield return MoveTo(currentPath[i].position);
         }
 
+        transform.DOKill();
         Destroy(gameObject);
     }
 }
