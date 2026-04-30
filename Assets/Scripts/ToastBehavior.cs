@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.UI;
 
 public class ToastBehavior : MonoBehaviour
 {
@@ -104,6 +105,11 @@ public class ToastBehavior : MonoBehaviour
             assignedLetter = char.ToUpper(assignedLetter);
             assignedKey = (KeyCode)System.Enum.Parse(typeof(KeyCode), assignedLetter.ToString());
         }
+
+        if(slapsLeft > 0)
+        {
+            GetComponentInChildren<TAG_Slap>().GetComponent<Image>().enabled = true;
+        }
     }
 
 
@@ -182,6 +188,8 @@ public class ToastBehavior : MonoBehaviour
     {
         hasBeenHit = true;
         slapsLeft--;
+
+
 
         string currentJam = JamDecider.Instance.GetCurrentJamName();
         Transform targetTransform = ClientManager.Instance.GetBestTarget(currentJam);
@@ -296,7 +304,10 @@ public class ToastBehavior : MonoBehaviour
 
         yield return new WaitForSeconds(impactFreezeTime);
 
-
+        if (slapsLeft <= 1)
+        {
+            GetComponentInChildren<TAG_Slap>().GetComponent<Image>().enabled = false;
+        }
 
         if (slapsLeft > 0 && isSlappable)
         {
@@ -571,6 +582,7 @@ public class ToastBehavior : MonoBehaviour
         rb.constraints = RigidbodyConstraints.None;
         Toaster.Instance.ResetCombo();
         letterText.enabled = false;
+        GetComponentInChildren<TAG_Slap>().GetComponent<Image>().enabled = false;   
     }
 
     IEnumerator GracePeriodTimer()
@@ -582,6 +594,7 @@ public class ToastBehavior : MonoBehaviour
             rb.constraints = RigidbodyConstraints.None;
             Toaster.Instance.ResetCombo();
             letterText.enabled = false;
+            GetComponentInChildren<TAG_Slap>().GetComponent<Image>().enabled = false;
         }
     }
 

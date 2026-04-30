@@ -315,17 +315,30 @@ public class Client : MonoBehaviour
 
     private void StartRandomHop()
     {
-        if (pivot == null || isSatisfied) return;
+        // 1. HARD GUARD: If the script or the pivot bone is gone, stop everything immediately.
+        if (this == null || pivot == null || isSatisfied || isFrozen) return;
 
         float randomHeight = Random.Range(minHopHeight, maxHopHeight);
         float randomSpeed = Random.Range(minHopSpeed, maxHopSpeed);
 
+        // 2. Kill any existing hop on the pivot before starting a new one
+        pivot.DOKill();
+
         hopTween = pivot.DOLocalMoveY(pivotInitialLocalPos.y + randomHeight, randomSpeed)
             .SetEase(Ease.InOutQuad)
+            .SetLink(pivot.gameObject) // 3. LINK: Automatically kills this tween if pivot is destroyed
             .OnComplete(() => {
+                // 4. RE-CHECK: Ensure we are still alive before starting the downward move
+                if (this == null || pivot == null) return;
+
                 pivot.DOLocalMoveY(pivotInitialLocalPos.y, randomSpeed)
                     .SetEase(Ease.InOutQuad)
-                    .OnComplete(StartRandomHop);
+                    .SetLink(pivot.gameObject)
+                    .OnComplete(() => {
+                        // 5. RE-CHECK: Ensure we are still alive before looping back
+                        if (this == null || pivot == null) return;
+                        StartRandomHop();
+                    });
             });
     }
 
@@ -401,17 +414,19 @@ public class Client : MonoBehaviour
     {
         float delay = Random.Range(2f, 4f);
 
+        // Give the delayed call a specific ID so we can kill it in OnDestroy
         DOVirtual.DelayedCall(delay, () => {
-            if (this == null || isFrozen) return; // Added isFrozen check
+            // The "this == null" check is vital for destroyed objects
+            if (this == null || isFrozen || eyeLidL == null) return;
 
             eyeLidL.DOLocalRotate(new Vector3(-90, 0, 0), 0.1f);
             eyeRidL.DOLocalRotate(new Vector3(-90, 0, 0), 0.1f).OnComplete(() => {
-                if (isFrozen) return; // Don't loop if frozen
+                if (this == null || isFrozen) return;
                 eyeLidL.DOLocalRotate(originalEyelidLRot, 0.1f);
                 eyeRidL.DOLocalRotate(originalEyelidRRot, 0.1f);
                 StartBlinking();
             });
-        });
+        }).SetId("ClientBlink" + gameObject.GetInstanceID());
     }
 
     public void SetAngryEyelids()
@@ -452,7 +467,9 @@ public class Client : MonoBehaviour
 
     public void OpenMouth()
     {
-        mouthBone.DOLocalRotate(mouthOpenRotation, 0.15f).SetEase(Ease.OutQuad);
+        mouthBone.DOLocalRotate(mouthOpenRotation, 0.15f)
+                 .SetEase(Ease.OutQuad)
+                 .SetLink(mouthBone.gameObject); // Safety link
     }
 
     public void PlayMunchAnimation(System.Action onComplete)
@@ -592,7 +609,7 @@ public class Client : MonoBehaviour
         exitSeq.Append(transform.DOMoveY(targetPosition.y - popUpDistance, 0.4f).SetEase(Ease.InBack));
         exitSeq.OnComplete(() =>
         {
-            transform.DOKill();
+            transform.DOKill(true);
             Destroy(gameObject);
         });
     }
@@ -680,6 +697,31 @@ public class Client : MonoBehaviour
                 ApplyToGroup(hair, selectedHairMat);
             }
         }
+    }
+
+    private void OnDestroy()
+    {
+        // Kill every tween linked to this transform and its children
+        transform.DOKill(true);
+
+        // Kill any virtual delays (like the blinker) by using the unique ID
+        DOTween.Kill("ClientBlink" + gameObject.GetInstanceID());
+    }
+
+    public void KillAllClientTweens()
+    {
+        // The 'true' parameter tells DOTween to also kill tweens 
+        // on all children of this transform.
+        transform.DOKill(true);
+
+        // If you are using DOVirtual.DelayedCall (like in your StartBlinking method),
+        // those aren't attached to a Transform. 
+        // It's safer to also manually kill your stored tween references:
+        if (hopTween != null) hopTween.Kill();
+        if (mouthTween != null) mouthTween.Kill();
+
+        // Note: If you want to stop EVERYTHING in the whole game, 
+        // you would use DOTween.KillAll(); but that's usually overkill.
     }
 
     private void ApplySpecialMaterial()

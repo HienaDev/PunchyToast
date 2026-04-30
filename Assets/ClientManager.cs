@@ -4,6 +4,7 @@ using System.Collections;
 using System.Linq;
 using TMPro;
 using UnityEngine.Audio;
+using DG.Tweening;
 
 [System.Serializable]
 public class WeightedClient
@@ -425,12 +426,18 @@ public class ClientManager : MonoBehaviour
 
     public void FullResetGame()
     {
+
+        DOTween.KillAll();
+
         // 1. Stop all Spawning Coroutines
         StopAllCoroutines();
 
         // 2. Clear the Toaster
         Toaster.Instance.StopAllCoroutines();
         Toaster.Instance.ResetCombo();
+
+
+
         Toaster.Instance.activeToasts.Clear();
 
         // Inside FullResetGame(), alongside availableIndexes.Clear():
@@ -439,17 +446,28 @@ public class ClientManager : MonoBehaviour
         // 3. Destroy all leftover GameObjects in the scene
         // Find all Toasts
         ToastBehavior[] toasts = Object.FindObjectsByType<ToastBehavior>(FindObjectsSortMode.None);
-        foreach (var t in toasts) Destroy(t.gameObject);
+        foreach (var t in toasts)
+        {
+            t.transform.DOKill(); // Stop any ongoing tweens to prevent errors
+            Destroy(t.gameObject);
+        }
+        
 
         // Find all Clients
         Client[] clients = Object.FindObjectsByType<Client>(FindObjectsSortMode.None);
-        foreach (var c in clients) Destroy(c.gameObject);
+        foreach (var c in clients)
+        {
+            c.KillAllClientTweens();
+            Destroy(c.gameObject);
+        }
+        
 
         // Find all Arms/Fists (they usually have a specific tag or we can find by name/component if you have one)
         TAG_Fist[] arms = GameObject.FindObjectsByType<TAG_Fist>(FindObjectsSortMode.None);
 
         for (int i = 0; i < arms.Length; i++)
         {
+            arms[i].transform.DOKill(); // Stop any ongoing tweens to prevent errors
             Destroy(arms[i].gameObject);
         }
 
