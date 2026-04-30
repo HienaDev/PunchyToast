@@ -16,6 +16,7 @@ public class Client : MonoBehaviour
     public float popUpDistance = 2.0f;
 
     public Transform flavorObject;
+    public Transform flavorWantedUI;
     public Transform positionForWrongFlavor;
 
     [SerializeField] private bool useRandomVisual = true;

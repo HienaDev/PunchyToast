@@ -495,7 +495,6 @@ public class ToastBehavior : MonoBehaviour
                         clientToBonk.flavorObject.transform.DOScale(clientToBonk.positionForWrongFlavor.localScale, 0.25f).SetEase(Ease.OutBack);
                     }
                 }
-                transform.DOScaleZ(0.1f, 0.05f);
 
                 // --- CINEMATIC CAMERA: Zoom + Kickback Shake ---
                 mainCam.DOFieldOfView(zoomedFOV, 0.25f).SetEase(Ease.OutExpo);
@@ -510,6 +509,18 @@ public class ToastBehavior : MonoBehaviour
             float slideDistance = headCollider != null ? headCollider.radius * 3f : 2f;
             splatSeq.Append(transform.DOMoveY(impactPoint.y - slideDistance, 3.0f).SetEase(Ease.InSine));
             splatSeq.Join(transform.DORotate(new Vector3(60, transform.eulerAngles.y, 0), 3.0f).SetEase(Ease.InSine));
+
+            splatSeq.InsertCallback(2f, () => {
+                if (clientToBonk != null && clientToBonk.flavorWantedUI != null)
+                {
+                    mainCam.DOFieldOfView(12f, 0.6f).SetEase(Ease.OutSine);
+                    mainCam.transform.DOLookAt(clientToBonk.flavorWantedUI.position, 0.25f).SetEase(Ease.OutSine);
+                    
+                    
+                    
+                    //mainCam.transform.DOShakePosition(0.4f, 0.02f, 10);
+                }
+            });
 
             // 5. Cleanup & Return
             splatSeq.OnComplete(() => {
