@@ -6,6 +6,9 @@ public class LevelConfiguration : ScriptableObject
 {
     [Header("Level Info")]
     public int levelNumber;
+    public bool isBossFight; // NEW: The boolean you asked for
+    public GameObject bossPrefab; // NEW: The prefab for the boss client
+    public int bossToastsRequired = 10; // NEW: Specific count for the boss
 
     [Header("Hover Logic (Toaster)")]
     public float hoverTime = 1.5f;

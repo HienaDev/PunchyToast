@@ -60,6 +60,8 @@ public class ToastBehavior : MonoBehaviour
 
     private bool isWrongToast = false;
 
+    private Vector3 originalRotation = Vector3.zero;
+
     private void OnCollisionEnter(Collision collision)
     {
         AudioManager.Instance.PlaySound(toastLandingNaturally, sfxMixer, transform.position);
@@ -137,6 +139,8 @@ public class ToastBehavior : MonoBehaviour
 
     private void Start()
     {
+
+        originalRotation = transform.eulerAngles;
         SetFire();
         letterText = GetComponentInChildren<TextMeshProUGUI>();
         if (letterText != null) { letterText.text = assignedLetter.ToString(); }
@@ -321,7 +325,10 @@ public class ToastBehavior : MonoBehaviour
             rb.isKinematic = false;
             rb.useGravity = false;
 
+
             // 2. Clear previous rotation and Spin (720 degrees)
+            transform.DOKill(false); // kill existing rotation tweens without completing them
+            transform.eulerAngles = originalRotation; // snap back to clean starting rotation
             transform.DORotate(new Vector3(0, 720, 0), slapSpinDuration, RotateMode.LocalAxisAdd).SetEase(Ease.OutBack);
 
             // 3. Recoil the arm so it disappears
