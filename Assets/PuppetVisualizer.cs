@@ -78,8 +78,6 @@ public class PuppetVisualizer : MonoBehaviour
         {
             
             if (hairs[i] != null) hairs[i].SetActive(i == index);
-            Debug.Log(gameObject.name + " - Hair Index: " + i + ", Active: " + (hairs[i] != null && hairs[i].activeSelf));
-            Debug.LogFormat("Hair {0}: {1}", i, (hairs[i] != null) ? hairs[i].name : "null");
         }
     }
 

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
-using UnityEngine.WSA;
 
 public class ToastBehavior : MonoBehaviour
 {
@@ -79,17 +78,14 @@ public class ToastBehavior : MonoBehaviour
         }
         else assignedLetter = (char)('A' + Random.Range(0, 26));
 
-        Debug.Log($"Toast assigned letter {assignedLetter} at index {myLetterIndex}");
 
         slapsLeft = 0;
 
         // check if assigned letter is a number
         if (char.IsDigit(assignedLetter))
         {
-            Debug.Log("Digit found, current digit is: " + assignedLetter);
             isSlappable = true;
             slapString = ClientManager.Instance.GetSlapWordForIndex(assignedLetter - '0');
-            Debug.Log("Slap string for this toast is: " + slapString);
             slapsLeft = slapString.Length;
 
             SetCurrentLetter(slapString[slapString.Length - slapsLeft]);
@@ -256,7 +252,6 @@ public class ToastBehavior : MonoBehaviour
                 isPunchable = false;
                 if (!ClientManager.Instance.IsLastClientOfWave() && !Toaster.Instance.AreTherePunchableToasts())
                 {
-                    Debug.Log("Launching new toast from punch because no punchable toasts remain!");
                     if(currentFlightTargetClient != null)
                         Toaster.Instance.LaunchToast();
 

@@ -43,7 +43,6 @@ public class PuppetSpawner : MonoBehaviour
     {
         if (puppetPrefab == null)
         {
-            Debug.LogWarning("Puppet Spawner: No prefab assigned!");
             return;
         }
 

@@ -19,7 +19,6 @@ public class VolumeSliderController : MonoBehaviour
     void Start()
     {
         float savedVolume = PlayerPrefs.GetFloat(PlayerPrefsKey, 1f);
-        Debug.Log("Loaded volume: " + savedVolume);
 
         SetVolume(savedVolume);
 
@@ -53,11 +52,9 @@ public class VolumeSliderController : MonoBehaviour
         if (value <= 0.0001f) value = 0.0001f;
 
         float dB = Mathf.Log10(value) * 20f;
-        Debug.Log("Setting volume to: " + dB + " dB for slider value: " + value);
         mixer.SetFloat(volumeParameter, dB);
 
         mixer.GetFloat(volumeParameter, out float checkValue);
-        Debug.Log("Mixer stored this: " + checkValue);
 
 
 

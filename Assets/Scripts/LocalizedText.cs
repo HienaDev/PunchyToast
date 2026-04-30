@@ -32,6 +32,5 @@ public class LocalizedText : MonoBehaviour
     void UpdateText()
     {
         textComponent.text = Settings.GetText(localizationKey);
-        Debug.Log($"Updated text for {textComponent.text}");
     }
 }

@@ -137,7 +137,6 @@ public class Toaster : MonoBehaviour
     {
         // Use the override if it exists, otherwise use the normal level time
         float currentCooldown = nextLaunchOverride ?? timeToLaunchToast;
-        Debug.Log("currentCooldown: " + currentCooldown + " | nextLaunchOverride: " + nextLaunchOverride);
         if (Time.time - lastLaunchTime >= currentCooldown && ClientManager.Instance.areThereClients)
         {
             if (!AreTherePunchableToasts())

@@ -26,7 +26,7 @@ public class UIScaleJuice : MonoBehaviour
 
         if (sfxMixer == null)
         {
-            Debug.LogError($"UIScaleJuice on {gameObject.name} couldn't find the Mixer! Make sure it's in Assets/Resources/MainMixer");
+           
         }
     }
 

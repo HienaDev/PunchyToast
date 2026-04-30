@@ -100,7 +100,6 @@ public class Settings : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Localization file not found at: " + filePath);
         }
         yield return null;
     }

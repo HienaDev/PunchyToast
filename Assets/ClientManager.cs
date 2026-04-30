@@ -393,7 +393,7 @@ public class ClientManager : MonoBehaviour
             PlayerPrefs.SetInt(starKey, stars);
             PlayerPrefs.SetFloat(timeKey, time);
             PlayerPrefs.Save();
-            Debug.Log($"<color=yellow>New Best! Level {levelConfig.levelNumber}: {stars} Stars in {time:F2}s</color>");
+           
         }
     }
 
@@ -403,7 +403,6 @@ public class ClientManager : MonoBehaviour
         PlayerPrefs.DeleteKey($"Level_{levelNum}_Stars");
         PlayerPrefs.DeleteKey($"Level_{levelNum}_Time");
         PlayerPrefs.Save();
-        Debug.Log($"<color=red>Progress Reset for Level {levelNum}</color>");
     }
 
     private int CalculateStars(float time)
@@ -462,7 +461,6 @@ public class ClientManager : MonoBehaviour
         currentIndex = 0;
         levelFinished = false;
 
-        Debug.Log("Game Simulation Fully Reset");
     }
 
     public Transform GetBestTarget(string currentJamInHand)
