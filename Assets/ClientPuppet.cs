@@ -205,6 +205,10 @@ public class ClientPuppet : MonoBehaviour
         }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+        transform.DOKill();
+>>>>>>> 54083969da6578a0bbe104f73e0a175345f1c90d
 =======
         transform.DOKill();
 >>>>>>> 54083969da6578a0bbe104f73e0a175345f1c90d
