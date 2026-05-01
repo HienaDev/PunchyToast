@@ -24739,10 +24739,17 @@ MonoBehaviour:
   emptyCooldown: 0.8
   instantDoubleSpawnChance: 0.3
   possibleSlapWords:
-  - SLAP
+  - TOSTA
+  - TORRADA
+  - PORRADA
+  - MANTEIGA
+  - MORANGO
+  - CHOCOLATE
+  - SOCO
+  - CHOCO
+  - UVA
   - POW
   - BAM
-  - ZAP
   jamUnlockOrder: 01000000020000000300000004000000
   isRunning: 0
 --- !u!4 &1281635668
