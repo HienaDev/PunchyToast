@@ -70,7 +70,6 @@ public class ClientPuppet : MonoBehaviour
 
     private IEnumerator FollowPath()
     {
-        // Entrance Path
         while (pathIndex < currentPath.Length)
         {
             FaceTargetWithBackwardsAxis(currentPath[pathIndex].position);
@@ -78,12 +77,11 @@ public class ClientPuppet : MonoBehaviour
             pathIndex++;
         }
 
-        // Final move to seat
         FaceTargetWithBackwardsAxis(assignedSeat.position);
+        if (SeatedClientManager.Instance != null) SeatedClientManager.Instance.OpenDoors();
+
         yield return MoveTo(assignedSeat.position);
-
         transform.DORotateQuaternion(assignedSeat.rotation * Quaternion.Euler(0, 180, 0), 0.5f);
-
         OnReachedSeat();
     }
 
@@ -107,7 +105,6 @@ public class ClientPuppet : MonoBehaviour
     private void StartRandomHop()
     {
         if (pivot == null || !isWalking) return;
-
         float randomHeight = Random.Range(minHopHeight, maxHopHeight);
         float randomSpeed = Random.Range(minHopSpeed, maxHopSpeed);
 
@@ -148,15 +145,11 @@ public class ClientPuppet : MonoBehaviour
         Invoke(nameof(LeaveSeat), sessionDuration);
     }
 
-    private void ResetCycleCount()
-    {
-        cyclesUntilPause = (int)Random.Range(sentenceLengthRange.x, sentenceLengthRange.y);
-    }
+    private void ResetCycleCount() { cyclesUntilPause = (int)Random.Range(sentenceLengthRange.x, sentenceLengthRange.y); }
 
     private void RandomizedMouthLoop()
     {
         if (!isTalking || mouthBone == null) return;
-
         if (cyclesUntilPause <= 0)
         {
             float pauseDuration = Random.Range(pauseDurationRange.x, pauseDurationRange.y);
@@ -164,20 +157,13 @@ public class ClientPuppet : MonoBehaviour
             DOVirtual.DelayedCall(pauseDuration, RandomizedMouthLoop);
             return;
         }
-
         cyclesUntilPause--;
-
         float randomDuration = Random.Range(talkSpeedRange.x, talkSpeedRange.y);
         Vector3 targetRot = new Vector3(-mouthMaxOpen, originalMouthRot.y, originalMouthRot.z);
-
-        mouthTween = mouthBone.DOLocalRotate(targetRot, randomDuration)
-            .SetEase(Ease.InOutSine)
-            .OnComplete(() => {
-                float returnDuration = Random.Range(talkSpeedRange.x, talkSpeedRange.y);
-                mouthTween = mouthBone.DOLocalRotate(originalMouthRot, returnDuration)
-                    .SetEase(Ease.InOutSine)
-                    .OnComplete(RandomizedMouthLoop);
-            });
+        mouthTween = mouthBone.DOLocalRotate(targetRot, randomDuration).SetEase(Ease.InOutSine).OnComplete(() => {
+            float returnDuration = Random.Range(talkSpeedRange.x, talkSpeedRange.y);
+            mouthTween = mouthBone.DOLocalRotate(originalMouthRot, returnDuration).SetEase(Ease.InOutSine).OnComplete(RandomizedMouthLoop);
+        });
     }
 
     private void LeaveSeat()
@@ -185,11 +171,8 @@ public class ClientPuppet : MonoBehaviour
         isTalking = false;
         mouthTween?.Kill();
         mouthBone.DOLocalRotate(originalMouthRot, 0.2f);
-
         if (activeProp != null) activeProp.SetActive(false);
-
         SeatedClientManager.Instance.ReleaseSeat(assignedSeat);
-
         isWalking = true;
         StartRandomHop();
         StartCoroutine(ExitRoutine());
@@ -197,7 +180,17 @@ public class ClientPuppet : MonoBehaviour
 
     private IEnumerator ExitRoutine()
     {
-        // Walk through the path in reverse to exit correctly
+        // 1. Walk to the door waiting point first
+        if (SeatedClientManager.Instance != null && SeatedClientManager.Instance.doorWaitPoint != null)
+        {
+            FaceTargetWithBackwardsAxis(SeatedClientManager.Instance.doorWaitPoint.position);
+            yield return MoveTo(SeatedClientManager.Instance.doorWaitPoint.position);
+
+            // 2. Trigger Doors
+            SeatedClientManager.Instance.OpenDoors();
+        }
+
+        // 3. Reverse path
         for (int i = currentPath.Length - 1; i >= 0; i--)
         {
             FaceTargetWithBackwardsAxis(currentPath[i].position);

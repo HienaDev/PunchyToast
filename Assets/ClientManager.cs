@@ -1,10 +1,11 @@
-using UnityEngine;
-using System.Collections.Generic;
+using DG.Tweening;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using UnityEngine;
 using UnityEngine.Audio;
-using DG.Tweening;
+using static UnityEngine.Rendering.STP;
 
 [System.Serializable]
 public class WeightedClient
@@ -73,6 +74,9 @@ public class ClientManager : MonoBehaviour
         Toaster.Instance.SetupToasterSettings(config);
         Toaster.Instance.ResetCombo();
         clientCounterUI.SetActive(true);
+
+        Toaster.Instance.ResetHighestCombo();
+
         CalculateTotalLevelClients();
         UpdateUI();
         ConfigureJamsForLevel();
@@ -384,9 +388,12 @@ public class ClientManager : MonoBehaviour
         // Matches the string format in your LevelButton Initialize method
         string starKey = $"Level_{levelConfig.levelNumber}_Stars";
         string timeKey = $"Level_{levelConfig.levelNumber}_Time";
+        string comboKey = $"Level_{levelConfig.levelNumber}_Combo";
 
         // Use a high default value so any real time is "better" than nothing
         float previousBestTime = PlayerPrefs.GetFloat(timeKey, 999999f);
+
+        int previousBestCombo = PlayerPrefs.GetInt(comboKey, 0);
 
         // Only save if this run is faster than the previous record
         if (time < previousBestTime)
@@ -395,6 +402,12 @@ public class ClientManager : MonoBehaviour
             PlayerPrefs.SetFloat(timeKey, time);
             PlayerPrefs.Save();
            
+        }
+
+        if(previousBestCombo < Toaster.Instance.highestCombo)
+        {
+            PlayerPrefs.SetInt(comboKey, Toaster.Instance.highestCombo);
+            PlayerPrefs.Save();
         }
     }
 

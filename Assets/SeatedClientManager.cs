@@ -1,6 +1,7 @@
-using UnityEngine;
-using System.Collections.Generic;
+using DG.Tweening;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class SeatedClientManager : MonoBehaviour
 {
@@ -23,6 +24,12 @@ public class SeatedClientManager : MonoBehaviour
     public Vector2 sessionDurationRange = new Vector2(10f, 30f);
     public Vector2 mouthRotationXRange = new Vector2(15f, 75f);
     [Range(0f, 1f)] public float talkChance = 0.5f;
+
+    [Header("Door References")]
+    public Transform doorLeft;
+    public Transform doorRight;
+    public Transform doorWaitPoint; // Puppet walks here first when leaving to trigger doors
+    public float doorOpenDuration = 0.5f;
 
     void Awake()
     {
@@ -75,6 +82,25 @@ public class SeatedClientManager : MonoBehaviour
     public void ReleaseSeat(Transform seat)
     {
         if (!availableSeats.Contains(seat)) availableSeats.Add(seat);
+    }
+
+    public void OpenDoors()
+    {
+        doorLeft.DOKill();
+        doorRight.DOKill();
+
+        doorLeft.localEulerAngles = Vector3.zero;
+        doorRight.localEulerAngles = new Vector3(0, 180, 0);
+
+        doorLeft.DOLocalRotate(new Vector3(0, 140, 0), doorOpenDuration).SetEase(Ease.OutBack);
+        doorRight.DOLocalRotate(new Vector3(0, 40, 0), doorOpenDuration).SetEase(Ease.OutBack)
+                 .OnComplete(() => CloseDoors(1.5f));
+    }
+
+    public void CloseDoors(float delay = 0f)
+    {
+        doorLeft.DOLocalRotate(Vector3.zero, 0.4f).SetEase(Ease.InQuad).SetDelay(delay);
+        doorRight.DOLocalRotate(new Vector3(0, 180, 0), 0.4f).SetEase(Ease.InQuad).SetDelay(delay);
     }
 }
 

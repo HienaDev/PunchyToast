@@ -81,6 +81,9 @@ public class Toaster : MonoBehaviour
     [SerializeField] private float comboBounceForce = 1.2f;
     [SerializeField] private float comboShakeStrength = 10f;
 
+    public int currentCombo = 0;
+    public int highestCombo = 0;
+
     private Vector3 originalParentScale;
     private Vector3 originalParentPos;
     private Vector3 originalComboScale;
@@ -104,11 +107,17 @@ public class Toaster : MonoBehaviour
         }
     }
 
-    public int currentCombo = 0;
+    
 
     public void IncrementCombo()
     {
         currentCombo++;
+
+        if(currentCombo > highestCombo)
+        {
+            highestCombo = currentCombo;
+        }
+
         UpdateComboUI(); 
     }
 
@@ -181,6 +190,8 @@ public class Toaster : MonoBehaviour
         activeToasts.RemoveAll(t => t == null || !t.isPunchable);
         return activeToasts.Count > 0;
     }
+
+    public void ResetHighestCombo() => highestCombo = 0;
 
     public void SetupToasterSettings(LevelConfiguration config)
     {

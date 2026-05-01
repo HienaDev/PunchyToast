@@ -10,7 +10,11 @@ public class LevelButton : MonoBehaviour
     [SerializeField] private Sprite fullStar;
     [SerializeField] private Sprite emptyStar;
     [SerializeField] private TextMeshProUGUI levelNumber;
+    [SerializeField] private TextMeshProUGUI levelNumberUnderlay;
     [SerializeField] private TextMeshProUGUI bestTime;
+    [SerializeField] private TextMeshProUGUI bestTimeUnderlay;
+    [SerializeField] private TextMeshProUGUI bestCombo;
+    [SerializeField] private TextMeshProUGUI bestComboUnderlay;
 
     [SerializeField] private Button levelButton;
 
@@ -41,6 +45,7 @@ public class LevelButton : MonoBehaviour
         this.menuManager = menuManager;
 
         levelNumber.text = config.levelNumber.ToString();
+        levelNumberUnderlay.text = config.levelNumber.ToString();
         int starsEarned = PlayerPrefs.GetInt($"Level_{config.levelNumber}_Stars", 0);
         for (int i = 0; i < levelStars.Length; i++)
         {
@@ -54,10 +59,24 @@ public class LevelButton : MonoBehaviour
             int minutes = Mathf.FloorToInt(bestTimeValue / 60f);
             int seconds = Mathf.FloorToInt(bestTimeValue % 60f);
             bestTime.text = $"{minutes:00}m:{seconds:00}s";
+            bestTimeUnderlay.text = $"{minutes:00}m:{seconds:00}s";
         }
         else
         {
             bestTime.text = "--:--";
+            bestTimeUnderlay.text = "--:--";
+        }
+
+        int bestComboValue = PlayerPrefs.GetInt($"Level_{config.levelNumber}_Combo", 0);
+        if (bestComboValue > 0) 
+            {
+            bestCombo.text = "x" + bestComboValue.ToString();
+            bestComboUnderlay.text = "x" + bestComboValue.ToString();
+        }
+        else
+        {
+            bestCombo.text = "";
+            bestComboUnderlay.text = "";
         }
 
 
