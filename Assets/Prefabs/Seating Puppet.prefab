@@ -4821,8 +4821,6 @@ MonoBehaviour:
   - {fileID: 1453634900737967851}
   - {fileID: 1453634900737967851}
   - {fileID: 1453634900737967851}
-  - {fileID: 0}
-  - {fileID: 0}
   - {fileID: 5344807260595099575}
   - {fileID: 5344807260595099575}
   - {fileID: 5344807260595099575}
@@ -4846,7 +4844,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: a6022471f8ebf7a4ca7203ab448266e0, type: 2}
   specialMaterial: {fileID: 2100000, guid: 3d46c0de180d100458543b4227fdf6f9, type: 2}
   specialChance: 0.2
-  randomBaldChance: 0.2
+  randomBaldChance: 0.1
 --- !u!114 &6020927790403119196
 MonoBehaviour:
   m_ObjectHideFlags: 0
