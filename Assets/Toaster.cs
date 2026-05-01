@@ -226,7 +226,7 @@ public class Toaster : MonoBehaviour
         {
             defaultCamera.transform.position = originalCameraPosition;
             defaultCamera.transform.rotation = Quaternion.Euler(originalCameraRotation);
-                defaultCamera.fieldOfView = originalCameraFOV;
+            defaultCamera.fieldOfView = originalCameraFOV;
         }
     }
 

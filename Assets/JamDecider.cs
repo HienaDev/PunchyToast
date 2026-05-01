@@ -40,7 +40,7 @@ public class JamDecider : MonoBehaviour
     [SerializeField] private AudioMixer sfxMixer;
     [SerializeField] private AudioClip[] dipSounds;
 
-    private bool alreadyDipped = false;
+    public bool alreadyDipped = false;
 
     void Awake()
     {
@@ -162,6 +162,14 @@ public class JamDecider : MonoBehaviour
     public string GetCurrentJamName()
     {
         if (activeJams.Count == 0 || currentJamIndex < 0) return "None";
+
+        if(currentJamIndex >= activeJams.Count)
+        {
+            SelectByFlavor(activeJams[0].flavor);
+        }
+
+        
+
         return activeJams[currentJamIndex].flavor.ToString();
     }
 
