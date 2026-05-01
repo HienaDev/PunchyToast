@@ -235,19 +235,21 @@ public class ToastBehavior : MonoBehaviour
         if (Camera.main.WorldToViewportPoint(transform.position).x > 0.5f)
             arm.transform.localScale = Vector3.Scale(arm.transform.localScale, new Vector3(-1, 1, 1));
 
+        bool isLastHit = ClientManager.Instance.IsLastToastOfLevel() && slapsLeft <= 1;
+        if (isLastHit)
+        {
+            Time.timeScale = 0.05f; // Slow down time as punch connects
+            if (Toaster.Instance.cinematicCamera != null)
+            {
+                Toaster.Instance.cinematicCamera.gameObject.SetActive(true);
+                Toaster.Instance.defaultCamera.gameObject.SetActive(false);
+            }
+        }
+
         arm.transform.DOMove(transform.position, armPunchDuration).SetEase(Ease.Linear).OnComplete(() =>
         {
 
-            bool isLastHit = ClientManager.Instance.IsLastToastOfLevel() && slapsLeft <= 1;
-            if (isLastHit)
-            {
-                Time.timeScale = 0.05f; // Slow down time as punch connects
-                if (Toaster.Instance.cinematicCamera != null)
-                {
-                    Toaster.Instance.cinematicCamera.gameObject.SetActive(true);
-                    Toaster.Instance.defaultCamera.gameObject.SetActive(false);
-                }
-            }
+            
 
             StartCoroutine(ImpactSequence(arm, targetTransform, dirToTarget));
 
