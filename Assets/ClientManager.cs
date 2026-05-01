@@ -450,6 +450,8 @@ public class ClientManager : MonoBehaviour
 
         DOTween.KillAll();
 
+        Toaster.Instance.ResetCameraAngle();
+
         // 1. Stop all Spawning Coroutines
         StopAllCoroutines();
 
@@ -504,9 +506,26 @@ public class ClientManager : MonoBehaviour
 
     public Transform GetBestTarget(string currentJamInHand)
     {
-        var matchingKvp = activeClients.FirstOrDefault(kvp => kvp.Value.desiredCondiment == currentJamInHand && !kvp.Value.isSatisfied);
-        if (matchingKvp.Value != null) { matchingKvp.Value.OpenMouth(); return matchingKvp.Value.transform; }
-        if (activeClients.Count > 0) return activeClients.Keys.ElementAt(Random.Range(0, activeClients.Count));
+        // 1. Try to find a perfect match (Correct Jam + Not Satisfied)
+        var matchingKvp = activeClients.FirstOrDefault(kvp =>
+            kvp.Value.desiredCondiment == currentJamInHand && !kvp.Value.isSatisfied);
+
+        if (matchingKvp.Value != null)
+        {
+            matchingKvp.Value.OpenMouth();
+            return matchingKvp.Value.transform;
+        }
+
+        // 2. Default: Find ALL clients that are NOT satisfied yet
+        var unsatisfiedClients = activeClients.Where(kvp => !kvp.Value.isSatisfied).ToList();
+
+        if (unsatisfiedClients.Count > 0)
+        {
+            // Return a random client from the unsatisfied list
+            return unsatisfiedClients[Random.Range(0, unsatisfiedClients.Count)].Key;
+        }
+
+        // 3. Absolute Fallback: If everyone is satisfied or no one is left, pick a random seat
         return seatingPositions[Random.Range(0, seatingPositions.Count)];
     }
 

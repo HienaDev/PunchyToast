@@ -69,6 +69,9 @@ public class ToastBehavior : MonoBehaviour
 
     private Vector3 originalRotation = Vector3.zero;
 
+    public Vector3 originalCameraPosition = Vector3.zero;
+    public Vector3 originalCameraRotation = Vector3.zero;
+
     private void OnCollisionEnter(Collision collision)
     {
         AudioManager.Instance.PlaySound(toastLandingNaturally, sfxMixer, transform.position);
@@ -481,8 +484,8 @@ public class ToastBehavior : MonoBehaviour
 
             // --- CAMERA & EYELID CACHING ---
             Camera mainCam = Camera.main;
-            float originalFOV = mainCam.fieldOfView;
-            Quaternion originalCamRot = mainCam.transform.rotation;
+            float originalFOV = Toaster.Instance.originalCameraFOV;
+            Quaternion originalCamRot = Quaternion.Euler(originalCameraRotation);
 
             // --- FLAVOR OBJECT CACHING ---
             Vector3 originalFlavorPos = Vector3.zero;

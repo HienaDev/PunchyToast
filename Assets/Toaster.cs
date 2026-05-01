@@ -101,6 +101,10 @@ public class Toaster : MonoBehaviour
     public Camera cinematicCamera; // Assign a side-view camera in the Inspector (disabled by default)
     public Camera defaultCamera;
 
+    public Vector3 originalCameraPosition = Vector3.zero;
+    public Vector3 originalCameraRotation = Vector3.zero;
+    public float originalCameraFOV = 60f;
+
     public float GetComboPitch()
     {
         if (currentCombo >= 1)
@@ -147,6 +151,13 @@ public class Toaster : MonoBehaviour
 
 
         UpdateComboUI();
+    }
+
+    private void Start()
+    {
+        originalCameraPosition = defaultCamera.transform.position;
+        originalCameraRotation = defaultCamera.transform.rotation.eulerAngles;
+        originalCameraFOV = defaultCamera.fieldOfView;
     }
 
     void Update()
@@ -206,6 +217,17 @@ public class Toaster : MonoBehaviour
         this.minPreHoverDelay = config.minPreHoverDelay;
         this.maxPreHoverDelay = config.maxPreHoverDelay;
         this.driftFactor = config.driftFactor;
+        ResetCameraAngle();
+    }
+
+    public void ResetCameraAngle()
+    {
+        if (defaultCamera != null)
+        {
+            defaultCamera.transform.position = originalCameraPosition;
+            defaultCamera.transform.rotation = Quaternion.Euler(originalCameraRotation);
+                defaultCamera.fieldOfView = originalCameraFOV;
+        }
     }
 
     public void LaunchToast(string customLetter = "")
@@ -295,6 +317,9 @@ public class Toaster : MonoBehaviour
         behavior.slapSpinDuration = 0.4f;
 
         behavior.punchEffect = punchHitEffect;
+
+        behavior.originalCameraPosition = originalCameraPosition;
+        behavior.originalCameraRotation = originalCameraRotation;
 
         behavior.punchSounds = punchSounds;
         behavior.toastGettingIntoMouth = toastGettingIntoMouth;
