@@ -12,6 +12,13 @@ public class Toaster : MonoBehaviour
     public Transform ejectPoint;
     public static Toaster Instance;
 
+    [Header("Punishment Sequence Timings")]
+    public float impactPauseDuration = 1.0f;     // The "Sticky" pause
+    public float toastSlideDuration = 3.0f;      // Total slide time
+    public float secondaryZoomDelay = 2.0f;      // When the zoom starts during the slide
+    public float initialZoomSpeed = 0.25f;      // Speed of the first zoom
+    public float secondaryZoomSpeed = 0.6f;     // Speed of the second zoom
+
     [Header("Punch Game References")]
     public List<Transform> targets;
     public GameObject armPrefab;
@@ -107,25 +114,25 @@ public class Toaster : MonoBehaviour
         }
     }
 
-    
+
 
     public void IncrementCombo()
     {
         currentCombo++;
 
-        if(currentCombo > highestCombo)
+        if (currentCombo > highestCombo)
         {
             highestCombo = currentCombo;
         }
 
-        UpdateComboUI(); 
+        UpdateComboUI();
     }
 
     public void ResetCombo()
     {
         currentCombo = 0;
         comboTextParent.gameObject.SetActive(false);
-        UpdateComboUI(); 
+        UpdateComboUI();
     }
 
     private void Awake()
@@ -137,7 +144,7 @@ public class Toaster : MonoBehaviour
             originalParentScale = comboTextParent.localScale;
             originalParentPos = comboTextParent.localPosition;
         }
-           
+
 
         UpdateComboUI();
     }
@@ -262,6 +269,13 @@ public class Toaster : MonoBehaviour
             }
         }
 
+
+        behavior.impactPauseDuration = impactPauseDuration;
+        behavior.toastSlideDuration = toastSlideDuration;
+        behavior.secondaryZoomDelay = secondaryZoomDelay;
+        behavior.initialZoomSpeed = initialZoomSpeed;
+        behavior.secondaryZoomSpeed = secondaryZoomSpeed;
+
         behavior.potentialTargets = targets;
         behavior.armPrefab = armPrefab;
         behavior.flightDuration = toastFlightDuration;
@@ -309,7 +323,7 @@ public class Toaster : MonoBehaviour
             float randomChance = Random.Range(0f, 1f);
             if (randomChance <= EndlessModeManager.Instance.GetCurrentSimultaneousChance())
             {
-                if(ClientManager.Instance.notSatisfiedClientCount > activeToasts.Count)
+                if (ClientManager.Instance.notSatisfiedClientCount > activeToasts.Count)
                     LaunchToast();
             }
         }

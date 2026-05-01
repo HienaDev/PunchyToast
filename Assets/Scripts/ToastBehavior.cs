@@ -14,6 +14,13 @@ public class ToastBehavior : MonoBehaviour
     [HideInInspector] public bool debugAlwaysL;
     [HideInInspector] public float armSpawnOffset, armPunchDuration, targetFlightForce;
 
+    [Header("Punishment Sequence Timings")]
+    public float impactPauseDuration = 1.0f;     // The "Sticky" pause
+    public float toastSlideDuration = 3.0f;      // Total slide time
+    public float secondaryZoomDelay = 2.0f;      // When the zoom starts during the slide
+    public float initialZoomSpeed = 0.25f;      // Speed of the first zoom
+    public float secondaryZoomSpeed = 0.6f;     // Speed of the second zoom
+
     [Header("Slap Settings")]
     public int slapsLeft = 0;           // Set this in the inspector for "tough" toasts
     public float slapSpinDuration = 0.4f;
@@ -457,10 +464,7 @@ public class ToastBehavior : MonoBehaviour
             if (letterText != null) letterText.enabled = false;
 
             Toaster.Instance.ResetCombo();
-
             MusicManager.Instance.RecordScratchStop(4f);
-
-
 
             Client clientToBonk = ClientManager.Instance.GetClientInSeat(target);
             SphereCollider headCollider = clientToBonk != null ? clientToBonk.GetComponentInChildren<SphereCollider>() : null;
@@ -507,39 +511,38 @@ public class ToastBehavior : MonoBehaviour
                     // Move the flavor UI to the "Wrong" position
                     if (clientToBonk.flavorObject != null && clientToBonk.positionForWrongFlavor != null)
                     {
-                        clientToBonk.flavorObject.transform.DOMove(clientToBonk.positionForWrongFlavor.position, 0.25f).SetEase(Ease.OutBack);
-                        clientToBonk.flavorObject.transform.DORotate(clientToBonk.positionForWrongFlavor.eulerAngles, 0.25f).SetEase(Ease.OutBack);
-                        clientToBonk.flavorObject.transform.DOScale(clientToBonk.positionForWrongFlavor.localScale, 0.25f).SetEase(Ease.OutBack);
+                        clientToBonk.flavorObject.transform.DOMove(clientToBonk.positionForWrongFlavor.position, initialZoomSpeed).SetEase(Ease.OutBack);
+                        clientToBonk.flavorObject.transform.DORotate(clientToBonk.positionForWrongFlavor.eulerAngles, initialZoomSpeed).SetEase(Ease.OutBack);
+                        clientToBonk.flavorObject.transform.DOScale(clientToBonk.positionForWrongFlavor.localScale, initialZoomSpeed).SetEase(Ease.OutBack);
                     }
                 }
 
                 // --- CINEMATIC CAMERA: Zoom + Kickback Shake ---
-                mainCam.DOFieldOfView(zoomedFOV, 0.25f).SetEase(Ease.OutExpo);
-                mainCam.transform.DOLookAt(impactPoint, 0.25f).SetEase(Ease.OutExpo);
+                mainCam.DOFieldOfView(zoomedFOV, initialZoomSpeed).SetEase(Ease.OutExpo);
+                mainCam.transform.DOLookAt(impactPoint, initialZoomSpeed).SetEase(Ease.OutExpo);
                 mainCam.transform.DOShakePosition(0.3f, 0.05f, 20);
             });
 
             // 3. The Sticky Pause
-            splatSeq.AppendInterval(1f);
+            splatSeq.AppendInterval(impactPauseDuration);
 
             // 4. The Slow Slide
             float slideDistance = headCollider != null ? headCollider.radius * 3f : 2f;
-            splatSeq.Append(transform.DOMoveY(impactPoint.y - slideDistance, 3.0f).SetEase(Ease.InSine));
-            splatSeq.Join(transform.DORotate(new Vector3(60, transform.eulerAngles.y, 0), 3.0f).SetEase(Ease.InSine));
+            splatSeq.Append(transform.DOMoveY(impactPoint.y - slideDistance, toastSlideDuration).SetEase(Ease.InSine));
+            splatSeq.Join(transform.DORotate(new Vector3(60, transform.eulerAngles.y, 0), toastSlideDuration).SetEase(Ease.InSine));
 
-            splatSeq.InsertCallback(2f, () => {
+            // 5. The Secondary Zoom
+            // Fixed: We calculate the position based on the PREVIOUS steps (Flight + Callback + Interval)
+            float sequenceTimeBeforeSlide = flightDuration + impactPauseDuration;
+            splatSeq.InsertCallback(sequenceTimeBeforeSlide + secondaryZoomDelay, () => {
                 if (clientToBonk != null && clientToBonk.flavorWantedUI != null)
                 {
-                    mainCam.DOFieldOfView(12f, 0.6f).SetEase(Ease.OutSine);
-                    mainCam.transform.DOLookAt(clientToBonk.flavorWantedUI.position, 0.25f).SetEase(Ease.OutSine);
-                    
-                    
-                    
-                    //mainCam.transform.DOShakePosition(0.4f, 0.02f, 10);
+                    mainCam.DOFieldOfView(12f, secondaryZoomSpeed).SetEase(Ease.OutSine);
+                    mainCam.transform.DOLookAt(clientToBonk.flavorWantedUI.position, initialZoomSpeed).SetEase(Ease.OutSine);
                 }
             });
 
-            // 5. Cleanup & Return
+            // 6. Cleanup & Return
             splatSeq.OnComplete(() => {
                 if (clientToBonk != null)
                 {
@@ -561,7 +564,7 @@ public class ToastBehavior : MonoBehaviour
 
                 if (EndlessModeManager.Instance != null)
                 {
-                    if(EndlessModeManager.Instance.isRunning)
+                    if (EndlessModeManager.Instance.isRunning)
                         EndlessModeManager.Instance.AddALoss();
                 }
 
