@@ -28,7 +28,7 @@ public class ToastBehavior : MonoBehaviour
     public float impactFreezeTime = 0.05f;
     public float shakeIntensity = 0.01f;
     public int shakeVibrato = 30;
-    public float pushForce = 0.1f;
+    public float pushForce = 0.05f;
     public float armRecoilDistance = 2f;
 
     private Rigidbody rb;
@@ -285,7 +285,11 @@ public class ToastBehavior : MonoBehaviour
         ApplyJamSplat();
 
         // Calculate the common destination offset
-        Vector3 moveOffset = dirToTarget * pushForce;
+        // Flatten the direction vector: remove Z and re-normalize it
+        Vector3 flattenedDir = new Vector3(dirToTarget.x, dirToTarget.y, 0).normalized;
+
+        // Use the flattened direction for the movement offset
+        Vector3 moveOffset = flattenedDir * pushForce;
 
         // 2. Fire all three Tweens at once. 
         // Using the same duration (impactFreezeTime) and Ease (Linear) keeps them locked together.
