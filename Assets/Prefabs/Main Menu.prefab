@@ -266,7 +266,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4568544150206518629}
+      - m_Target: {fileID: 3277586625194251025}
         m_TargetAssemblyTypeName: MaterialColorManager, Assembly-CSharp
         m_MethodName: ChangeColorAutomatically
         m_Mode: 1
@@ -831,7 +831,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4568544150206518629}
+      - m_Target: {fileID: 3277586625194251025}
         m_TargetAssemblyTypeName: MaterialColorManager, Assembly-CSharp
         m_MethodName: ChangeColorAutomatically
         m_Mode: 1
@@ -1282,7 +1282,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4568544150206518629}
+      - m_Target: {fileID: 3277586625194251025}
         m_TargetAssemblyTypeName: MaterialColorManager, Assembly-CSharp
         m_MethodName: ChangeColorAutomatically
         m_Mode: 1
@@ -2297,7 +2297,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4568544150206518629}
+      - m_Target: {fileID: 3277586625194251025}
         m_TargetAssemblyTypeName: MaterialColorManager, Assembly-CSharp
         m_MethodName: ChangeColorAutomatically
         m_Mode: 1
@@ -3789,7 +3789,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4568544150206518629}
+      - m_Target: {fileID: 3277586625194251025}
         m_TargetAssemblyTypeName: MaterialColorManager, Assembly-CSharp
         m_MethodName: ChangeColorAutomatically
         m_Mode: 1
@@ -4025,6 +4025,7 @@ GameObject:
   - component: {fileID: 1299633938625757214}
   - component: {fileID: 4087738602382206081}
   - component: {fileID: 4748218777368739546}
+  - component: {fileID: 3277586625194251025}
   m_Layer: 5
   m_Name: Main Menu
   m_TagString: Untagged
@@ -4129,6 +4130,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd7fe04a1a57aa94eb31ea22aeedfae1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3277586625194251025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2161788455907823095}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4ecf3576ce1a784eac470a62e6cb7ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetMaterial: {fileID: 2100000, guid: 34ea6a3827f0796408561c48fa2cfeee, type: 2}
+  shaderColorPropertyName: _BaseColor
 --- !u!1 &2406715829049341925
 GameObject:
   m_ObjectHideFlags: 0
@@ -4535,7 +4550,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4568544150206518629}
+      - m_Target: {fileID: 3277586625194251025}
         m_TargetAssemblyTypeName: MaterialColorManager, Assembly-CSharp
         m_MethodName: ChangeColorAutomatically
         m_Mode: 1
@@ -5812,7 +5827,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4568544150206518629}
+      - m_Target: {fileID: 3277586625194251025}
         m_TargetAssemblyTypeName: MaterialColorManager, Assembly-CSharp
         m_MethodName: ChangeColorAutomatically
         m_Mode: 1
@@ -6005,7 +6020,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4568544150206518629}
+      - m_Target: {fileID: 3277586625194251025}
         m_TargetAssemblyTypeName: MaterialColorManager, Assembly-CSharp
         m_MethodName: ChangeColorAutomatically
         m_Mode: 1
@@ -6445,7 +6460,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4568544150206518629}
+      - m_Target: {fileID: 3277586625194251025}
         m_TargetAssemblyTypeName: MaterialColorManager, Assembly-CSharp
         m_MethodName: ChangeColorAutomatically
         m_Mode: 1
@@ -8981,7 +8996,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4568544150206518629}
+      - m_Target: {fileID: 3277586625194251025}
         m_TargetAssemblyTypeName: MaterialColorManager, Assembly-CSharp
         m_MethodName: ChangeColorAutomatically
         m_Mode: 1
@@ -9324,7 +9339,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4568544150206518629}
+      - m_Target: {fileID: 3277586625194251025}
         m_TargetAssemblyTypeName: MaterialColorManager, Assembly-CSharp
         m_MethodName: ChangeColorAutomatically
         m_Mode: 1
@@ -12199,7 +12214,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4568544150206518629}
+      - m_Target: {fileID: 3277586625194251025}
         m_TargetAssemblyTypeName: MaterialColorManager, Assembly-CSharp
         m_MethodName: ChangeColorAutomatically
         m_Mode: 1
@@ -12467,7 +12482,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4568544150206518629}
+      - m_Target: {fileID: 3277586625194251025}
         m_TargetAssemblyTypeName: MaterialColorManager, Assembly-CSharp
         m_MethodName: ChangeColorAutomatically
         m_Mode: 1
@@ -13115,7 +13130,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4568544150206518629}
+      - m_Target: {fileID: 3277586625194251025}
         m_TargetAssemblyTypeName: MaterialColorManager, Assembly-CSharp
         m_MethodName: ChangeColorAutomatically
         m_Mode: 1
@@ -13197,7 +13212,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3976001797439325887}
-  - component: {fileID: 4568544150206518629}
   m_Layer: 5
   m_Name: Arm Customization
   m_TagString: Untagged
@@ -13242,20 +13256,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &4568544150206518629
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9180683754703957197}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4ecf3576ce1a784eac470a62e6cb7ae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  targetMaterial: {fileID: 2100000, guid: 34ea6a3827f0796408561c48fa2cfeee, type: 2}
-  shaderColorPropertyName: _BaseColor
 --- !u!1 &9198036020425471865
 GameObject:
   m_ObjectHideFlags: 0
