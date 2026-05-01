@@ -57,6 +57,7 @@ public class PauseManager : MonoBehaviour
         {
             mainMenu.SetActive(true);
             menuPuppet.SetActive(true);
+            EndlessModeManager.Instance.HideUI();
         }
 
             // 5. Cursor management

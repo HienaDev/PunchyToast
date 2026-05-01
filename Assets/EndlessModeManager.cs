@@ -1,5 +1,9 @@
-﻿using UnityEngine;
+﻿using System.Collections; // Needed for Coroutines
 using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+using UnityEngine.Audio;
+using DG.Tweening;
 
 public class EndlessModeManager : MonoBehaviour
 {
@@ -8,6 +12,167 @@ public class EndlessModeManager : MonoBehaviour
     [Header("Easy Mode")]
     public bool easyMode = false;
     public float easyModeHoverTime = 10f;
+
+    public int lossesAllowed = 5;
+    public int lossesThisSession = 0;
+
+    public int clientsSatisfiedThisSession = 0;
+    public void AddASatisfiedClient()
+    {
+        clientsSatisfiedThisSession++;
+        UpdateClientUI();
+    }
+
+    public void UpdateClientUI() => clientCounterText.text = $"{clientsSatisfiedThisSession}";
+
+    [SerializeField] private AudioClip[] lossSounds;
+    [SerializeField] private AudioMixer sfxMixer;
+
+    [Header("GameOverUI")]
+    public GameObject gameOverUI;
+    public TextMeshProUGUI clientsSatisfied;
+    public TextMeshProUGUI clientsSatisfiedUnderlay;
+    public TextMeshProUGUI timeSurvived;
+    public TextMeshProUGUI timeSurvivedUnderlay;
+    public TextMeshProUGUI highestCombo;
+    public TextMeshProUGUI highestComboUnderlay;
+
+    private Dictionary<Transform, Vector3> originalScales = new Dictionary<Transform, Vector3>();
+
+    [Header("End Screen Sequence")]
+    [SerializeField] private AudioClip tickSound;
+    [SerializeField] private float timeBetweenTicks = 0.05f;
+    [SerializeField] private float pitchIncreasePerTick = 0.02f;
+    [SerializeField] private float maxPitch = 2.0f;
+
+    private float timeSurvivedThisSession = 0f;
+
+    [SerializeField] private GameObject clientCounterUI;
+    [SerializeField] private TextMeshProUGUI clientCounterText;
+    [SerializeField] private GameObject comboCounterUI;
+
+    [SerializeField] private GameObject[] mistakesCounter;
+
+    public void ResetMistakeCounter()    {
+        lossesThisSession = 0;
+        foreach (GameObject obj in mistakesCounter)
+            obj.SetActive(false);
+
+        clientCounterText.text = "0";
+
+        timeSurvivedThisSession = 0f;
+        clientsSatisfiedThisSession = 0;
+    }
+
+    public void AddALoss()
+    {
+        lossesThisSession++;
+
+        AudioManager.Instance.PlaySound(lossSounds, sfxMixer);
+
+        mistakesCounter[lossesThisSession - 1].SetActive(true);
+
+        if (lossesThisSession >= lossesAllowed)
+        {
+            // Game over logic here. For now, just stop spawning.
+            StopEndlessMode();
+            ClientManager.Instance.FullResetGame();
+            TriggerEndScreen();
+        }
+    }
+
+    public void TriggerEndScreen()
+    {
+        gameOverUI.SetActive(true);
+        // Start the rolling sequence instead of setting values instantly
+        StartCoroutine(RollEndScreenValues());
+    }
+
+    private IEnumerator RollEndScreenValues()
+    {
+        // 1. Initialize UI: Set text to zero and scale to 0
+        ResetUIElement(clientsSatisfied.transform.parent);
+        ResetUIElement(highestCombo.transform.parent);
+        ResetUIElement(timeSurvived.transform.parent);
+
+        clientsSatisfied.text = ": 0";
+        clientsSatisfiedUnderlay.text = ": 0";
+        highestCombo.text = ": 0";
+        highestComboUnderlay.text = ": 0";
+        timeSurvived.text = ": 00m:00s";
+        timeSurvivedUnderlay.text = ": 00m:00s";
+
+        float currentPitch = 1.0f;
+
+        // --- PART C: Roll Time Survived ---
+        yield return AnimateEntry(timeSurvived.transform.parent);
+        int totalSecs = Mathf.FloorToInt(timeSurvivedThisSession);
+        for (int i = 0; i <= totalSecs; i++)
+        {
+            int mins = i / 60;
+            int secs = i % 60;
+            UpdateText(timeSurvived, timeSurvivedUnderlay, $": {mins:00}m:{secs:00}s");
+
+            PlayTick(ref currentPitch);
+            float dynamicWait = totalSecs > 60 ? timeBetweenTicks * 0.3f : timeBetweenTicks;
+            yield return new WaitForSeconds(dynamicWait);
+        }
+
+        currentPitch = 1.0f;
+
+        // --- PART A: Roll Clients Satisfied ---
+        yield return AnimateEntry(clientsSatisfied.transform.parent);
+        for (int i = 0; i <= clientsSatisfiedThisSession; i++)
+        {
+            UpdateText(clientsSatisfied, clientsSatisfiedUnderlay, $": {i}");
+            PlayTick(ref currentPitch);
+            yield return new WaitForSeconds(timeBetweenTicks);
+        }
+
+        currentPitch = 1.0f;
+
+        // --- PART B: Roll Highest Combo ---
+        yield return AnimateEntry(highestCombo.transform.parent);
+        int targetCombo = Toaster.Instance.highestCombo;
+        for (int i = 0; i <= targetCombo; i++)
+        {
+            UpdateText(highestCombo, highestComboUnderlay, $": {i}");
+            PlayTick(ref currentPitch);
+            yield return new WaitForSeconds(timeBetweenTicks);
+        }
+
+   
+
+
+    }
+
+    private void ResetUIElement(Transform t)
+    {
+        if (t != null) t.localScale = Vector3.zero;
+    }
+
+    private IEnumerator AnimateEntry(Transform t)
+    {
+        if (t != null && originalScales.ContainsKey(t))
+        {
+            // Scale up to the original Inspector value
+            t.DOScale(originalScales[t], 0.4f).SetEase(Ease.OutBack);
+            yield return new WaitForSeconds(0.2f);
+        }
+    }
+
+    private void UpdateText(TextMeshProUGUI main, TextMeshProUGUI underlay, string text)
+    {
+        main.text = text;
+        underlay.text = text;
+    }
+
+    private void PlayTick(ref float pitch)
+    {
+        if (tickSound == null) return;
+        AudioManager.Instance.PlaySoundFixedPitch(tickSound, pitch, sfxMixer);
+        pitch = Mathf.Min(pitch + pitchIncreasePerTick, maxPitch);
+    }
 
     [Header("Difficulty Thresholds (clients spawned)")]
     public int tier2At = 5;
@@ -51,11 +216,38 @@ public class EndlessModeManager : MonoBehaviour
     // not on startup (where we want to spawn immediately)
     private bool hasEverSpawned = false;
 
-    void Awake() { if (Instance == null) Instance = this; }
+    void Awake()
+    {
+        if (Instance == null) Instance = this;
+        CaptureScale(clientsSatisfied.transform.parent);
+        CaptureScale(highestCombo.transform.parent);
+        CaptureScale(timeSurvived.transform.parent);
+    }
+
+    private void CaptureScale(Transform t)
+    {
+        if (t != null && !originalScales.ContainsKey(t))
+            originalScales[t] = t.localScale;
+    }
+
+    public void HideUI()
+    {
+        clientCounterUI.SetActive(false);
+        comboCounterUI.SetActive(false);
+    }
 
     public void StartEndlessMode()
     {
+        clientCounterUI.SetActive(true);
+        comboCounterUI.SetActive(true);
+
+        ResetMistakeCounter();
+
+        Toaster.Instance.ResetCombo();
+        Toaster.Instance.ResetHighestCombo();
+
         isRunning = true;
+        timeSurvivedThisSession = 0f;
         clientsSpawned = 0;
         hasEverSpawned = false;
 
@@ -72,6 +264,8 @@ public class EndlessModeManager : MonoBehaviour
     void Update()
     {
         if (!isRunning) return;
+
+        timeSurvivedThisSession += Time.deltaTime;
 
         if (ClientManager.Instance.areThereActiveClients)
             currentCooldown = normalCooldown;

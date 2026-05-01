@@ -555,6 +555,12 @@ public class ToastBehavior : MonoBehaviour
                 mainCam.DOFieldOfView(originalFOV, 0.6f).SetEase(Ease.InOutBack);
                 mainCam.transform.DORotateQuaternion(originalCamRot, 0.6f).SetEase(Ease.InOutBack);
 
+                if (EndlessModeManager.Instance != null)
+                {
+                    if(EndlessModeManager.Instance.isRunning)
+                        EndlessModeManager.Instance.AddALoss();
+                }
+
                 Destroy(gameObject);
             });
 
@@ -602,6 +608,12 @@ public class ToastBehavior : MonoBehaviour
             Toaster.Instance.ResetCombo();
             letterText.enabled = false;
             GetComponentInChildren<TAG_Slap>().GetComponent<Image>().enabled = false;
+
+            if(EndlessModeManager.Instance != null)
+            {
+                if (EndlessModeManager.Instance.isRunning)
+                    EndlessModeManager.Instance.AddALoss();
+            }
         }
     }
 

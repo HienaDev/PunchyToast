@@ -55,6 +55,7 @@ public class ClientManager : MonoBehaviour
 
     [SerializeField] private LevelComplete levelCompleteUI;
     [SerializeField] private GameObject clientCounterUI;
+    [SerializeField] private GameObject comboCounterUI;
 
     [SerializeField] private Sprite butterIcon;
     [SerializeField] private Sprite strawberryIcon;
@@ -74,6 +75,7 @@ public class ClientManager : MonoBehaviour
         Toaster.Instance.SetupToasterSettings(config);
         Toaster.Instance.ResetCombo();
         clientCounterUI.SetActive(true);
+        comboCounterUI.SetActive(true);
 
         Toaster.Instance.ResetHighestCombo();
 
@@ -97,6 +99,7 @@ public class ClientManager : MonoBehaviour
 
     private void UpdateUI()
     {
+
         if (maxClientsText != null) maxClientsText.text = totalClientsInLevel.ToString();
         if (satisfiedClientsText != null) satisfiedClientsText.text = totalClientsSatisfied.ToString();
     }
@@ -354,6 +357,10 @@ public class ClientManager : MonoBehaviour
     {
         clientsFinishedInWave++;
         totalClientsSatisfied++;
+
+        if(EndlessModeManager.Instance.isRunning)
+            EndlessModeManager.Instance.AddASatisfiedClient();
+
         UpdateUI();
 
         // Only do wave progression if we're in a normal level
@@ -381,6 +388,7 @@ public class ClientManager : MonoBehaviour
         SaveProgress(stars, totalTime);
 
         clientCounterUI.SetActive(false);
+        comboCounterUI.SetActive(false);
     }
 
     private void SaveProgress(int stars, float time)
