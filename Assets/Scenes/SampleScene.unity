@@ -2950,8 +2950,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4285819722
+  m_fontColor: {r: 0.2901961, g: 0.41960785, b: 0.45490196, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -5835,6 +5835,9 @@ MonoBehaviour:
   punchHitEffect: {fileID: 3028825562507657342, guid: a455eb854fb86f84588377d0982dd654, type: 3}
   cinematicCamera: {fileID: 1949594050}
   defaultCamera: {fileID: 330585545}
+  originalCameraPosition: {x: 0, y: 0, z: 0}
+  originalCameraRotation: {x: 0, y: 0, z: 0}
+  originalCameraFOV: 60
 --- !u!65 &430270192
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -10052,8 +10055,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4285819722
+  m_fontColor: {r: 0.2901961, g: 0.41960785, b: 0.45490196, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -15133,8 +15136,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4285819722
+  m_fontColor: {r: 0.2901961, g: 0.41960785, b: 0.45490196, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -24155,8 +24158,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4285819722
+  m_fontColor: {r: 0.2901961, g: 0.41960785, b: 0.45490196, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -41533,6 +41536,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: ce2f30ad0c6c4354b8b2ab98e3be9a65, type: 3}
   - {fileID: 8300000, guid: 816d42522c474154bbe46b608d5b04f2, type: 3}
   - {fileID: 8300000, guid: a649b6b555576534cb31993420915d03, type: 3}
+  alreadyDipped: 0
 --- !u!1 &2029612508
 GameObject:
   m_ObjectHideFlags: 0
