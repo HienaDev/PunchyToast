@@ -16,7 +16,7 @@ MonoBehaviour:
   isBossFight: 0
   bossPrefab: {fileID: 0}
   bossToastsRequired: 10
-  hoverTime: 10
+  hoverTime: 1.5
   minPreHoverDelay: 0
   maxPreHoverDelay: 0.1
   driftFactor: 0.05
@@ -40,30 +40,18 @@ MonoBehaviour:
     - jamFlavor: 1
       customLetter: 
       simultaneousToast: 1
-      toastsNeeded: 2
+      toastsNeeded: 0
       isSlappable: 1
       slapString: TOSTA
     - jamFlavor: 1
       customLetter: 
       simultaneousToast: 1
-      toastsNeeded: 2
+      toastsNeeded: 0
       isSlappable: 1
-      slapString: TOSTA
-    - jamFlavor: 1
-      customLetter: 
-      simultaneousToast: 1
-      toastsNeeded: 2
-      isSlappable: 1
-      slapString: TOSTA
-    - jamFlavor: 1
-      customLetter: 
-      simultaneousToast: 1
-      toastsNeeded: 2
-      isSlappable: 1
-      slapString: TOSTA
+      slapString: TORRADA
     - jamFlavor: 1
       customLetter: 
       simultaneousToast: 0
-      toastsNeeded: 2
+      toastsNeeded: 0
       isSlappable: 1
-      slapString: TOSTA
+      slapString: PORRADA

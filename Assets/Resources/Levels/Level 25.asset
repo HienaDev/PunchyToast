@@ -1,0 +1,102 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cebe2a894356d6742864d0168a2546e7, type: 3}
+  m_Name: Level 25
+  m_EditorClassIdentifier: 
+  levelNumber: 25
+  isBossFight: 1
+  bossPrefab: {fileID: 8878267603986006268, guid: 713dda271961541408eab04007d3a72a, type: 3}
+  bossToastsRequired: 50
+  hoverTime: 15
+  minPreHoverDelay: 0
+  maxPreHoverDelay: 0.1
+  driftFactor: 0.2
+  fiveStarTime: 30
+  fourStarTime: 45
+  threeStarTime: 60
+  twoStarTime: 90
+  waves:
+  - allowBottomRow: 0
+    allowTopRow: 1
+    clientsInWave:
+    - jamFlavor: 1
+      customLetter: T
+      simultaneousToast: 0
+      toastsNeeded: 1
+      isSlappable: 0
+      slapString: TOSTA
+    - jamFlavor: 1
+      customLetter: O
+      simultaneousToast: 0
+      toastsNeeded: 1
+      isSlappable: 1
+      slapString: TOSTA
+    - jamFlavor: 1
+      customLetter: T
+      simultaneousToast: 1
+      toastsNeeded: 1
+      isSlappable: 0
+      slapString: TOSTA
+    - jamFlavor: 1
+      customLetter: O
+      simultaneousToast: 1
+      toastsNeeded: 1
+      isSlappable: 0
+      slapString: TOSTA
+    - jamFlavor: 1
+      customLetter: S
+      simultaneousToast: 1
+      toastsNeeded: 1
+      isSlappable: 0
+      slapString: TOSTA
+    - jamFlavor: 1
+      customLetter: T
+      simultaneousToast: 1
+      toastsNeeded: 1
+      isSlappable: 0
+      slapString: TOSTA
+    - jamFlavor: 1
+      customLetter: A
+      simultaneousToast: 0
+      toastsNeeded: 1
+      isSlappable: 0
+      slapString: TOSTA
+    - jamFlavor: 1
+      customLetter: T
+      simultaneousToast: 1
+      toastsNeeded: 1
+      isSlappable: 0
+      slapString: TOSTA
+    - jamFlavor: 1
+      customLetter: O
+      simultaneousToast: 1
+      toastsNeeded: 1
+      isSlappable: 0
+      slapString: TOSTA
+    - jamFlavor: 1
+      customLetter: S
+      simultaneousToast: 1
+      toastsNeeded: 1
+      isSlappable: 0
+      slapString: TOSTA
+    - jamFlavor: 1
+      customLetter: T
+      simultaneousToast: 1
+      toastsNeeded: 1
+      isSlappable: 0
+      slapString: TOSTA
+    - jamFlavor: 1
+      customLetter: A
+      simultaneousToast: 0
+      toastsNeeded: 1
+      isSlappable: 0
+      slapString: TOSTA

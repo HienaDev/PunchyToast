@@ -216,7 +216,7 @@ public class ToastBehavior : MonoBehaviour
         {
             ClientManager.Instance.IncreaseLetterIndex();
             currentFlightTargetClient.Satisfy();
-            if (currentFlightTargetClient.isSatisfied)
+            if (currentFlightTargetClient.isSatisfied || ClientManager.Instance.isBossFight)
                 ClientManager.Instance.RemoveIndex(myLetterIndex);
 
             targetTransform = currentFlightTargetClient.TargetForToast;
