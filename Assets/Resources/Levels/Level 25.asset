@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelNumber: 25
   isBossFight: 1
-  bossPrefab: {fileID: 8878267603986006268, guid: 713dda271961541408eab04007d3a72a, type: 3}
+  bossPrefab: {fileID: 6840150272245551586, guid: 87db7d9af97762e429a97ac496eb4e29, type: 3}
   bossToastsRequired: 50
-  hoverTime: 15
+  hoverTime: 1.5
   minPreHoverDelay: 0
   maxPreHoverDelay: 0.1
   driftFactor: 0.2

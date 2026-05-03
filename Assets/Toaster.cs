@@ -227,10 +227,14 @@ public class Toaster : MonoBehaviour
             defaultCamera.transform.position = originalCameraPosition;
             defaultCamera.transform.rotation = Quaternion.Euler(originalCameraRotation);
             defaultCamera.fieldOfView = originalCameraFOV;
+
+            defaultCamera.gameObject.SetActive(true);
+            if (cinematicCamera != null)
+                cinematicCamera.gameObject.SetActive(false);
         }
     }
 
-    public void LaunchToast(string customLetter = "")
+    public void LaunchToast(string customLetter = "", bool summonFromSimul = false)
     {
         if (!ClientManager.Instance.areThereClients) return;
 
@@ -314,6 +318,8 @@ public class Toaster : MonoBehaviour
         behavior.targetFlightForce = targetFlightForce;
         behavior.armShrinkDuration = 0.6f;
 
+        behavior.summonedFromSimul = summonFromSimul;
+
         behavior.sfxMixer = sfxMixer;
 
         behavior.slapSpinDuration = 0.4f;
@@ -336,7 +342,7 @@ public class Toaster : MonoBehaviour
         if (isSimul)
         {
             ClientManager.Instance.PrepareNextLetterForSimultaneous();
-            LaunchToast();
+            LaunchToast(summonFromSimul: true);
         }
         else
         {

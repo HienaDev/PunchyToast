@@ -72,6 +72,8 @@ public class ToastBehavior : MonoBehaviour
     public Vector3 originalCameraPosition = Vector3.zero;
     public Vector3 originalCameraRotation = Vector3.zero;
 
+    public bool summonedFromSimul = false;
+
     private void OnCollisionEnter(Collision collision)
     {
         AudioManager.Instance.PlaySound(toastLandingNaturally, sfxMixer, transform.position);
@@ -206,6 +208,9 @@ public class ToastBehavior : MonoBehaviour
         hasBeenHit = true;
         slapsLeft--;
 
+        // Add a callback timer to reset hasbeenhit after a short delay if there are slaps left
+
+
 
 
         string currentJam = JamDecider.Instance.GetCurrentJamName();
@@ -217,6 +222,7 @@ public class ToastBehavior : MonoBehaviour
 
         if (currentFlightTargetClient != null && slapsLeft <= 0)
         {
+            if(!summonedFromSimul)
             ClientManager.Instance.IncreaseLetterIndex();
             currentFlightTargetClient.Satisfy();
             if (currentFlightTargetClient.isSatisfied || ClientManager.Instance.isBossFight)
@@ -296,6 +302,8 @@ public class ToastBehavior : MonoBehaviour
 
         // 1. Instantiate punch effect
         GameObject punchEffectInstance = Instantiate(punchEffect, transform.position, Quaternion.identity);
+
+
 
         ApplyJamSplat();
 
@@ -610,7 +618,12 @@ public class ToastBehavior : MonoBehaviour
         rb.constraints = RigidbodyConstraints.None;
         Toaster.Instance.ResetCombo();
         letterText.enabled = false;
-        GetComponentInChildren<TAG_Slap>().GetComponent<Image>().enabled = false;   
+        GetComponentInChildren<TAG_Slap>().GetComponent<Image>().enabled = false;
+
+        if (summonedFromSimul)
+        {
+            ClientManager.Instance.HandleSimultaneousFailure();
+        }
     }
 
     IEnumerator GracePeriodTimer()
@@ -624,7 +637,12 @@ public class ToastBehavior : MonoBehaviour
             letterText.enabled = false;
             GetComponentInChildren<TAG_Slap>().GetComponent<Image>().enabled = false;
 
-            if(EndlessModeManager.Instance != null)
+            if(summonedFromSimul)
+            {
+                ClientManager.Instance.HandleSimultaneousFailure();
+            }
+
+            if (EndlessModeManager.Instance != null)
             {
                 if (EndlessModeManager.Instance.isRunning)
                     EndlessModeManager.Instance.AddALoss();
