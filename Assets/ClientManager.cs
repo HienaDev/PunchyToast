@@ -50,7 +50,7 @@ public class ClientManager : MonoBehaviour
     private float levelStartTime;
     private bool levelFinished = false;
 
-    [SerializeField] private Transform bossPosition;
+    private List<JamFlavor> jamFlavorsInCurrentLevel = new List<JamFlavor>();
 
     private List<string> slapWords = new List<string>();
 
@@ -70,6 +70,7 @@ public class ClientManager : MonoBehaviour
     [SerializeField] private AudioClip[] levelCompleteSound;
 
     public bool isBossFight => levelConfig != null && levelConfig.isBossFight;
+    private Client bossClient;
 
     void Awake() { if (Instance == null) Instance = this; }
 
@@ -350,6 +351,7 @@ public class ClientManager : MonoBehaviour
                         {
                             currentWord += c.customLetter;
                         }
+                        jamFlavorsInCurrentLevel.Add(c.jamFlavor);
                         availableIndexes.Add(currentWord.Length - 1);
                     }
 
@@ -380,7 +382,12 @@ public class ClientManager : MonoBehaviour
 
         Client clientScript = newClientObj.GetComponent<Client>();
 
-        if(data.toastsNeeded > 1)
+        if (isBossFight)
+        {
+            bossClient = clientScript;
+        }
+
+        if (data.toastsNeeded > 1)
         {
             clientScript.toastsToSatisfy = data.toastsNeeded;
             if(clientScript.bossBar != null)
@@ -629,6 +636,31 @@ public class ClientManager : MonoBehaviour
 
     public Transform GetBestTarget(string currentJamInHand)
     {
+        // --- BOSS FIGHT LOGIC ---
+        if (isBossFight && levelConfig != null && bossClient != null)
+        {
+            var wave = levelConfig.waves[currentWaveIndex];
+            int dataIndex = Mathf.Clamp(currentIndex, 0, wave.clientsInWave.Count - 1);
+
+            // Determine the required jam for the specific toast within the current wave
+            JamFlavor requiredFlavor = wave.clientsInWave[dataIndex].jamFlavor;
+            string requiredJamString = requiredFlavor.ToString();
+
+            // If it's a boss fight, we only care if the jam in hand matches the 
+            // jam required by the current wave/index configuration
+            if (currentJamInHand == requiredJamString)
+            {
+                bossClient.OpenMouth();
+                return bossClient.transform;
+            }
+            else
+            {
+                // In a boss fight, if the jam is wrong, it's not a "best target"
+                return seatingPositions[0]; // The boss always seats at this position
+            }
+        }
+
+        // --- STANDARD LOGIC (ONLY RUNS IF NOT BOSS) ---
         // 1. Try to find a perfect match (Correct Jam + Not Satisfied)
         var matchingKvp = activeClients.FirstOrDefault(kvp =>
             kvp.Value.desiredCondiment == currentJamInHand && !kvp.Value.isSatisfied);
@@ -671,6 +703,40 @@ public class ClientManager : MonoBehaviour
         {
             Debug.Log("All clients cleared after last wave! Finishing level...");
             StartCoroutine(FinishLevelRoutine());
+        }
+    }
+
+    public JamFlavor GetCurrentBossRequiredJam()
+    {
+        if (levelConfig == null || !isBossFight)
+        {
+            return JamFlavor.None;
+        }
+
+        // Identify the current wave
+        if (currentWaveIndex < levelConfig.waves.Count)
+        {
+            var wave = levelConfig.waves[currentWaveIndex];
+
+            // Identify the current client data within that wave
+            // We use currentIndex which is updated by IncreaseLetterIndex()
+            int dataIndex = Mathf.Clamp(currentIndex, 0, wave.clientsInWave.Count - 1);
+
+            return wave.clientsInWave[dataIndex].jamFlavor;
+        }
+
+        return JamFlavor.None;
+    }
+
+    public Sprite GetSpriteFromJam(JamFlavor jamFlavor)
+    {
+        switch (jamFlavor)
+        {
+            case JamFlavor.Butter: return butterIcon;
+            case JamFlavor.StrawberryJam: return strawberryIcon;
+            case JamFlavor.GrapeJam: return grapeIcon;
+            case JamFlavor.PeanutButter: return chocolateIcon;
+            default: return null;
         }
     }
 

@@ -303,6 +303,11 @@ public class Client : MonoBehaviour
         EnterScene();
     }
 
+    public void SetWantSprite(Sprite wantedJam)
+        {
+        wantIcon.sprite = wantedJam;
+    }
+
     private void EnterScene()
     {
 
@@ -412,6 +417,9 @@ public class Client : MonoBehaviour
             isSatisfied = true;
             isSat = false;
         }
+
+        if(ClientManager.Instance.isBossFight)
+            SetWantSprite(ClientManager.Instance.GetSpriteFromJam(ClientManager.Instance.GetCurrentBossRequiredJam()));
     }
 
     private void StartBlinking()
