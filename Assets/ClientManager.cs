@@ -46,6 +46,7 @@ public class ClientManager : MonoBehaviour
     private string currentWord = "";
     private List<int> availableIndexes = new List<int>();
     private int currentIndex = 0;
+    private int toastsNeededInCurrentLetter = 0;
     private float levelStartTime;
     private bool levelFinished = false;
 
@@ -247,7 +248,20 @@ public class ClientManager : MonoBehaviour
     public void IncreaseLetterIndex()
     {
         Debug.Log($"Increasing letter index. Current: {currentIndex}, Word Length: {currentWord.Length}");
-        currentIndex++;
+        toastsNeededInCurrentLetter++;
+
+        var wave = levelConfig.waves[currentWaveIndex];
+
+        int dataIndex = Mathf.Clamp(currentIndex, 0, wave.clientsInWave.Count - 1);
+        
+        
+
+        if(toastsNeededInCurrentLetter >= wave.clientsInWave[dataIndex].toastsNeeded)
+        {
+                       toastsNeededInCurrentLetter = 0;
+            currentIndex++;
+        }
+        
     }
 
 
