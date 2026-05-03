@@ -49,6 +49,8 @@ public class ClientManager : MonoBehaviour
     private float levelStartTime;
     private bool levelFinished = false;
 
+    [SerializeField] private Transform bossPosition;
+
     private List<string> slapWords = new List<string>();
 
     // Add this field alongside currentWord, availableIndexes, slapWords:
@@ -96,9 +98,20 @@ public class ClientManager : MonoBehaviour
         currentIndex++;
     }
 
+    public void HandleSimultaneousFailure()
+    {
+        currentIndex--;
+    }
+
     private void CalculateTotalLevelClients()
     {
-        totalClientsInLevel = levelConfig.waves.Sum(w => w.clientsInWave.Count);
+        if(isBossFight)
+        {
+            // In a boss fight, we consider all clients across all waves as part of the level total, since they spawn together
+            totalClientsInLevel = 1;
+        }
+        else
+            totalClientsInLevel = levelConfig.waves.Sum(w => w.clientsInWave.Count);
     }
 
     private void UpdateUI()
@@ -132,9 +145,12 @@ public class ClientManager : MonoBehaviour
 
         // Normal mode: existing code unchanged
         if (currentWaveIndex >= levelConfig.waves.Count) return false;
+
         var wave = levelConfig.waves[currentWaveIndex];
 
         int dataIndex = Mathf.Clamp(currentIndex, 0, wave.clientsInWave.Count - 1);
+
+        Debug.Log($"Checking simultaneous status for index {currentIndex} (data index {dataIndex}) in wave {currentWaveIndex}. Simultaneous: {wave.clientsInWave[dataIndex].simultaneousToast}");
 
         return wave.clientsInWave[dataIndex].simultaneousToast;
     }
@@ -227,7 +243,11 @@ public class ClientManager : MonoBehaviour
     public string GetCurrentWord()
         => currentWord;
 
-    public void IncreaseLetterIndex() => currentIndex++;
+    public void IncreaseLetterIndex()
+    {
+        Debug.Log($"Increasing letter index. Current: {currentIndex}, Word Length: {currentWord.Length}");
+        currentIndex++;
+    }
 
 
     public int GetSimultaneousBurstCount()
@@ -299,16 +319,26 @@ public class ClientManager : MonoBehaviour
             {
                 foreach(var c in w.clientsInWave)
                 {
-                    if(c.isSlappable)
+                    int amountToAdd = 1;
+
+                    if (c.toastsNeeded >= 1)
+                        amountToAdd = c.toastsNeeded;
+
+                    for(int i = 0; i < amountToAdd; i++)
                     {
-                        slapWords.Add(c.slapString);
-                        currentWord += (slapWords.Count - 1).ToString();
+                        if (c.isSlappable)
+                        {
+                            slapWords.Add(c.slapString);
+                            currentWord += (slapWords.Count - 1).ToString();
+                        }
+                        else
+                        {
+                            currentWord += c.customLetter;
+                        }
+                        availableIndexes.Add(currentWord.Length - 1);
                     }
-                    else
-                    {
-                        currentWord += c.customLetter;
-                    }
-                    availableIndexes.Add(currentWord.Length - 1);
+
+                    
                 }
 
             }
@@ -319,7 +349,17 @@ public class ClientManager : MonoBehaviour
 
         Transform chosenSeat = availableSeats[Random.Range(0, availableSeats.Count)];
 
+        if(isBossFight)
+        {
+            chosenSeat = seatingPositions[0];
+        }
+
         GameObject chosenPrefab = GetWeightedRandomPrefab();
+
+        if(isBossFight)
+        {
+            chosenPrefab = levelConfig.bossPrefab != null ? levelConfig.bossPrefab : chosenPrefab;
+        }
 
         GameObject newClientObj = Instantiate(chosenPrefab, chosenSeat.position, chosenSeat.rotation);
 
@@ -344,7 +384,10 @@ public class ClientManager : MonoBehaviour
                     Debug.Log($"Checking client with flavor {c.jamFlavor} and toasts needed {c.toastsNeeded}");
                     if (c.jamFlavor != JamFlavor.None)
                     {
-                        totalToastsNeeded++;
+                        if(c.toastsNeeded > 1)
+                            totalToastsNeeded += c.toastsNeeded;
+                        else
+                            totalToastsNeeded++;
                     }
                 }
             }
@@ -595,12 +638,22 @@ public class ClientManager : MonoBehaviour
 
     public void ClearSeat(Transform seat)
     {
+
+        Debug.Log($"Clearing seat at position {seat.position}. Active clients before clear: {activeClients.Count}");
+
+        if (isBossFight)
+            currentWaveIndex++;
+
+        // Debug the if logic to see whats happening when we clear a seat after the last wave
+        Debug.Log($"Checking conditions for finishing level: levelConfig is null? {levelConfig == null}, currentWaveIndex: {currentWaveIndex}, levelConfig.waves.Count: {(levelConfig != null ? levelConfig.waves.Count : "N/A")}, activeClients.Count: {activeClients.Count}, levelFinished: {levelFinished}");
+
         if (activeClients.Remove(seat)
-            && levelConfig != null  // <-- add this null check
+            && levelConfig != null 
             && currentWaveIndex >= levelConfig.waves.Count
             && activeClients.Count == 0
             && !levelFinished)
         {
+            Debug.Log("All clients cleared after last wave! Finishing level...");
             StartCoroutine(FinishLevelRoutine());
         }
     }
@@ -612,6 +665,8 @@ public class ClientManager : MonoBehaviour
         bool isLastWave = currentWaveIndex == levelConfig.waves.Count - 1;
         // Check if only one client remains in availableIndexes (the one currently in the air)
         bool isLastClient = availableIndexes.Count <= 0;
+
+        Debug.Log($"Checking if last toast of level: isLastWave={isLastWave}, isLastClient={isLastClient}, currentWaveIndex={currentWaveIndex}, totalWaves={levelConfig.waves.Count}, availableIndexesCount={availableIndexes.Count}");
 
         return isLastWave && isLastClient;
     }
