@@ -26,7 +26,7 @@ MonoBehaviour:
   twoStarTime: 90
   waves:
   - allowBottomRow: 1
-    allowTopRow: 0
+    allowTopRow: 1
     clientsInWave:
     - jamFlavor: 1
       customLetter: J
@@ -43,33 +43,69 @@ MonoBehaviour:
   - allowBottomRow: 1
     allowTopRow: 1
     clientsInWave:
-    - jamFlavor: 0
+    - jamFlavor: 2
       customLetter: T
-      simultaneousToast: 0
+      simultaneousToast: 1
       toastsNeeded: 0
       isSlappable: 0
       slapString: 
-    - jamFlavor: 0
+    - jamFlavor: 3
       customLetter: E
-      simultaneousToast: 0
+      simultaneousToast: 1
       toastsNeeded: 0
       isSlappable: 0
       slapString: 
-    - jamFlavor: 0
+    - jamFlavor: 3
       customLetter: M
-      simultaneousToast: 0
+      simultaneousToast: 1
       toastsNeeded: 0
       isSlappable: 0
       slapString: 
-    - jamFlavor: 0
+    - jamFlavor: 3
       customLetter: O
-      simultaneousToast: 0
+      simultaneousToast: 1
       toastsNeeded: 0
       isSlappable: 0
       slapString: 
-    - jamFlavor: 0
+    - jamFlavor: 1
       customLetter: S
       simultaneousToast: 0
       toastsNeeded: 0
       isSlappable: 0
       slapString: 
+  - allowBottomRow: 1
+    allowTopRow: 1
+    clientsInWave:
+    - jamFlavor: 1
+      customLetter: 
+      simultaneousToast: 0
+      toastsNeeded: 0
+      isSlappable: 1
+      slapString: MANTEIGA
+  - allowBottomRow: 1
+    allowTopRow: 1
+    clientsInWave:
+    - jamFlavor: 2
+      customLetter: 
+      simultaneousToast: 0
+      toastsNeeded: 0
+      isSlappable: 1
+      slapString: MORANGO
+  - allowBottomRow: 1
+    allowTopRow: 1
+    clientsInWave:
+    - jamFlavor: 1
+      customLetter: E
+      simultaneousToast: 0
+      toastsNeeded: 0
+      isSlappable: 0
+      slapString: 
+  - allowBottomRow: 1
+    allowTopRow: 1
+    clientsInWave:
+    - jamFlavor: 3
+      customLetter: 
+      simultaneousToast: 0
+      toastsNeeded: 0
+      isSlappable: 1
+      slapString: UVA
