@@ -857,6 +857,7 @@ GameObject:
   - component: {fileID: 5518234445399378249}
   - component: {fileID: 5228318469548241017}
   - component: {fileID: 1716733584679932715}
+  - component: {fileID: 4551610752518313313}
   m_Layer: 5
   m_Name: Last Played Background
   m_TagString: Untagged
@@ -983,6 +984,28 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &4551610752518313313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3370068198828951413}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e3f501005e78904685b847f46dbd02e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initialRandom: 1
+  hoverHeight: 0.05
+  hoverSpeed: 1
+  hoverVariance: 0
+  scaleMultiplier: 1.1
+  scaleSpeed: 1
+  scaleVariance: 0
+  transitionDuration: 0.4
+  introEase: 27
+  outroEase: 26
 --- !u!1 &3516902396352637167
 GameObject:
   m_ObjectHideFlags: 0

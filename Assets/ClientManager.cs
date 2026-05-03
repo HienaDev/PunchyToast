@@ -367,6 +367,7 @@ public class ClientManager : MonoBehaviour
         if (levelConfig != null && currentWaveIndex < levelConfig.waves.Count &&
             clientsFinishedInWave >= levelConfig.waves[currentWaveIndex].clientsInWave.Count)
         {
+            Debug.Log($"Wave {currentWaveIndex + 1} completed! Moving to next wave.");
             currentWaveIndex++;
             StartCoroutine(SpawnWave(currentWaveIndex));
         }

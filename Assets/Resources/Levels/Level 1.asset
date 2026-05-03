@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: Level 1
   m_EditorClassIdentifier: 
   levelNumber: 1
+  isBossFight: 0
+  bossPrefab: {fileID: 0}
+  bossToastsRequired: 10
   hoverTime: 10
   minPreHoverDelay: 0
   maxPreHoverDelay: 0.1
@@ -28,27 +31,42 @@ MonoBehaviour:
     - jamFlavor: 1
       customLetter: T
       simultaneousToast: 0
+      toastsNeeded: 0
+      isSlappable: 0
+      slapString: 
   - allowBottomRow: 1
     allowTopRow: 0
     clientsInWave:
     - jamFlavor: 1
       customLetter: o
       simultaneousToast: 0
+      toastsNeeded: 0
+      isSlappable: 0
+      slapString: 
   - allowBottomRow: 1
     allowTopRow: 0
     clientsInWave:
     - jamFlavor: 1
       customLetter: s
       simultaneousToast: 0
+      toastsNeeded: 0
+      isSlappable: 0
+      slapString: 
   - allowBottomRow: 1
     allowTopRow: 0
     clientsInWave:
     - jamFlavor: 1
       customLetter: T
       simultaneousToast: 0
+      toastsNeeded: 0
+      isSlappable: 0
+      slapString: 
   - allowBottomRow: 1
     allowTopRow: 0
     clientsInWave:
     - jamFlavor: 1
       customLetter: a
       simultaneousToast: 0
+      toastsNeeded: 0
+      isSlappable: 0
+      slapString: 
