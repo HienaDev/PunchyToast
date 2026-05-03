@@ -238,6 +238,8 @@ public class Toaster : MonoBehaviour
         float currentXSpread;
         bool isSimul = ClientManager.Instance.GetSimultaneousStatusForNextToast();
 
+        Debug.Log($"Launching toast. Simultaneous: {isSimul}, Current Simultaneous Count: {simultaneousCount}, Current Simultaneous Index: {simultaneousIndex}");
+
         if (isSimul || simultaneousCount > 0)
         {
             // If this is the start of a burst, find out how many are coming

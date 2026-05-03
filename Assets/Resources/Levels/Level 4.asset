@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: Level 4
   m_EditorClassIdentifier: 
   levelNumber: 4
+  isBossFight: 0
+  bossPrefab: {fileID: 0}
+  bossToastsRequired: 10
   hoverTime: 3
   minPreHoverDelay: 0
   maxPreHoverDelay: 0.2
@@ -29,18 +32,26 @@ MonoBehaviour:
       customLetter: s
       simultaneousToast: 0
       toastsNeeded: 0
+      isSlappable: 0
+      slapString: 
     - jamFlavor: 1
       customLetter: o
       simultaneousToast: 0
       toastsNeeded: 0
+      isSlappable: 0
+      slapString: 
     - jamFlavor: 1
       customLetter: c
       simultaneousToast: 0
       toastsNeeded: 0
+      isSlappable: 0
+      slapString: 
     - jamFlavor: 1
       customLetter: o
       simultaneousToast: 0
       toastsNeeded: 0
+      isSlappable: 0
+      slapString: 
   - allowBottomRow: 1
     allowTopRow: 1
     clientsInWave:
@@ -48,18 +59,26 @@ MonoBehaviour:
       customLetter: b
       simultaneousToast: 0
       toastsNeeded: 0
+      isSlappable: 0
+      slapString: 
     - jamFlavor: 1
       customLetter: a
       simultaneousToast: 0
       toastsNeeded: 0
+      isSlappable: 0
+      slapString: 
     - jamFlavor: 1
       customLetter: t
       simultaneousToast: 0
       toastsNeeded: 0
+      isSlappable: 0
+      slapString: 
     - jamFlavor: 1
       customLetter: e
       simultaneousToast: 0
       toastsNeeded: 0
+      isSlappable: 0
+      slapString: 
   - allowBottomRow: 1
     allowTopRow: 1
     clientsInWave:
@@ -67,18 +86,26 @@ MonoBehaviour:
       customLetter: s
       simultaneousToast: 0
       toastsNeeded: 0
+      isSlappable: 0
+      slapString: 
     - jamFlavor: 1
       customLetter: o
       simultaneousToast: 0
       toastsNeeded: 0
+      isSlappable: 0
+      slapString: 
     - jamFlavor: 1
       customLetter: c
       simultaneousToast: 0
       toastsNeeded: 0
+      isSlappable: 0
+      slapString: 
     - jamFlavor: 1
       customLetter: o
       simultaneousToast: 0
       toastsNeeded: 0
+      isSlappable: 0
+      slapString: 
   - allowBottomRow: 1
     allowTopRow: 1
     clientsInWave:
@@ -86,18 +113,26 @@ MonoBehaviour:
       customLetter: v
       simultaneousToast: 0
       toastsNeeded: 0
+      isSlappable: 0
+      slapString: 
     - jamFlavor: 1
       customLetter: i
       simultaneousToast: 0
       toastsNeeded: 0
+      isSlappable: 0
+      slapString: 
     - jamFlavor: 1
       customLetter: r
       simultaneousToast: 0
       toastsNeeded: 0
+      isSlappable: 0
+      slapString: 
     - jamFlavor: 1
       customLetter: a
       simultaneousToast: 0
       toastsNeeded: 0
+      isSlappable: 0
+      slapString: 
   - allowBottomRow: 1
     allowTopRow: 1
     clientsInWave:
@@ -105,18 +140,26 @@ MonoBehaviour:
       customLetter: s
       simultaneousToast: 0
       toastsNeeded: 0
+      isSlappable: 0
+      slapString: 
     - jamFlavor: 1
       customLetter: o
       simultaneousToast: 0
       toastsNeeded: 0
+      isSlappable: 0
+      slapString: 
     - jamFlavor: 1
       customLetter: c
       simultaneousToast: 0
       toastsNeeded: 0
+      isSlappable: 0
+      slapString: 
     - jamFlavor: 1
       customLetter: o
       simultaneousToast: 0
       toastsNeeded: 0
+      isSlappable: 0
+      slapString: 
   - allowBottomRow: 1
     allowTopRow: 1
     clientsInWave:
@@ -124,18 +167,26 @@ MonoBehaviour:
       customLetter: b
       simultaneousToast: 0
       toastsNeeded: 0
+      isSlappable: 0
+      slapString: 
     - jamFlavor: 1
       customLetter: a
       simultaneousToast: 0
       toastsNeeded: 0
+      isSlappable: 0
+      slapString: 
     - jamFlavor: 1
       customLetter: t
       simultaneousToast: 0
       toastsNeeded: 0
+      isSlappable: 0
+      slapString: 
     - jamFlavor: 1
       customLetter: e
       simultaneousToast: 0
       toastsNeeded: 0
+      isSlappable: 0
+      slapString: 
   - allowBottomRow: 1
     allowTopRow: 1
     clientsInWave:
@@ -143,19 +194,29 @@ MonoBehaviour:
       customLetter: e
       simultaneousToast: 0
       toastsNeeded: 0
+      isSlappable: 0
+      slapString: 
     - jamFlavor: 1
       customLetter: v
       simultaneousToast: 0
       toastsNeeded: 0
+      isSlappable: 0
+      slapString: 
     - jamFlavor: 1
       customLetter: i
       simultaneousToast: 0
       toastsNeeded: 0
+      isSlappable: 0
+      slapString: 
     - jamFlavor: 1
       customLetter: r
       simultaneousToast: 0
       toastsNeeded: 0
+      isSlappable: 0
+      slapString: 
     - jamFlavor: 1
       customLetter: a
       simultaneousToast: 0
       toastsNeeded: 0
+      isSlappable: 0
+      slapString: 

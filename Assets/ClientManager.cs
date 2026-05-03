@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
 using static UnityEngine.Rendering.STP;
@@ -64,6 +65,9 @@ public class ClientManager : MonoBehaviour
 
     [SerializeField] private AudioMixer sfxMixer;
     [SerializeField] private AudioClip[] levelCompleteSound;
+
+    public bool isBossFight => levelConfig != null && levelConfig.isBossFight;
+
     void Awake() { if (Instance == null) Instance = this; }
 
     public void StartLevel(LevelConfiguration config)
@@ -125,10 +129,13 @@ public class ClientManager : MonoBehaviour
                 return simultaneousFlags[currentIndex];
             return false;
         }
+
         // Normal mode: existing code unchanged
         if (currentWaveIndex >= levelConfig.waves.Count) return false;
         var wave = levelConfig.waves[currentWaveIndex];
+
         int dataIndex = Mathf.Clamp(currentIndex, 0, wave.clientsInWave.Count - 1);
+
         return wave.clientsInWave[dataIndex].simultaneousToast;
     }
 
@@ -154,8 +161,14 @@ public class ClientManager : MonoBehaviour
         foreach (var clientData in wave.clientsInWave)
         {
             while (activeClients.Count >= seatingPositions.Count) yield return null;
-            SpawnClient(clientData, wave); // Pass wave data here
-            yield return new WaitForSeconds(0.1f);
+
+            if(!isBossFight)
+                SpawnClient(clientData, wave); // Pass wave data here
+            else if (activeClientCount == 0)
+            {
+                SpawnClient(clientData, wave);
+            }
+                yield return new WaitForSeconds(0.1f);
         }
     }
 
@@ -231,12 +244,13 @@ public class ClientManager : MonoBehaviour
             }
             return count;
         }
+
         // Normal mode: existing code unchanged
         if (currentWaveIndex >= levelConfig.waves.Count) return 1;
         var wave = levelConfig.waves[currentWaveIndex];
         int cnt = 1;
         int ci = currentIndex;
-        while (ci < wave.clientsInWave.Count && wave.clientsInWave[ci].simultaneousToast)
+        while ((ci < wave.clientsInWave.Count || isBossFight) && wave.clientsInWave[ci].simultaneousToast)
         {
             cnt++;
             ci++;
@@ -265,17 +279,42 @@ public class ClientManager : MonoBehaviour
 
         if (availableSeats.Count == 0) return;
 
-        if(data.isSlappable)
+        if(!isBossFight)
         {
-            slapWords.Add(data.slapString);
-            currentWord += (slapWords.Count - 1).ToString();
+            if (data.isSlappable)
+            {
+                slapWords.Add(data.slapString);
+                currentWord += (slapWords.Count - 1).ToString();
+            }
+            else
+            {
+                currentWord += data.customLetter;
+            }
+            availableIndexes.Add(currentWord.Length - 1);
         }
         else
         {
-            currentWord += data.customLetter;
+            // In a boss fight we have a single client, so we have to parse every wave and every client to build the full word and slap words list for the boss client
+            foreach(var w in levelConfig.waves)
+            {
+                foreach(var c in w.clientsInWave)
+                {
+                    if(c.isSlappable)
+                    {
+                        slapWords.Add(c.slapString);
+                        currentWord += (slapWords.Count - 1).ToString();
+                    }
+                    else
+                    {
+                        currentWord += c.customLetter;
+                    }
+                    availableIndexes.Add(currentWord.Length - 1);
+                }
+
+            }
         }
 
-        availableIndexes.Add(currentWord.Length - 1);
+        
 
 
         Transform chosenSeat = availableSeats[Random.Range(0, availableSeats.Count)];
@@ -294,7 +333,31 @@ public class ClientManager : MonoBehaviour
                 clientScript.bossBar.gameObject.SetActive(true);
             }
         }
-            
+        else if(isBossFight)
+        {
+            // Go through every wave and each client in wave and sum all toasts needed for boss clients, then set that as the toastsToSatisfy for the boss bar
+            int totalToastsNeeded = 0;
+            foreach(var w in levelConfig.waves)
+            {
+                foreach(var c in w.clientsInWave)
+                {
+                    Debug.Log($"Checking client with flavor {c.jamFlavor} and toasts needed {c.toastsNeeded}");
+                    if (c.jamFlavor != JamFlavor.None)
+                    {
+                        totalToastsNeeded++;
+                    }
+                }
+            }
+            clientScript.toastsToSatisfy = totalToastsNeeded;
+
+            Debug.Log($"Boss client spawned with {clientScript.toastsToSatisfy} toasts needed. Boss bar should reflect this.");
+
+            if (clientScript.bossBar != null)
+            {
+                clientScript.bossBar.gameObject.SetActive(true);
+            }
+        }
+
 
         Sprite chosenSprite;
 
@@ -364,8 +427,8 @@ public class ClientManager : MonoBehaviour
         UpdateUI();
 
         // Only do wave progression if we're in a normal level
-        if (levelConfig != null && currentWaveIndex < levelConfig.waves.Count &&
-            clientsFinishedInWave >= levelConfig.waves[currentWaveIndex].clientsInWave.Count)
+        if ((levelConfig != null && currentWaveIndex < levelConfig.waves.Count &&
+            clientsFinishedInWave >= levelConfig.waves[currentWaveIndex].clientsInWave.Count))
         {
             Debug.Log($"Wave {currentWaveIndex + 1} completed! Moving to next wave.");
             currentWaveIndex++;
