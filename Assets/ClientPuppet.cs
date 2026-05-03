@@ -81,7 +81,7 @@ public class ClientPuppet : MonoBehaviour
         if (SeatedClientManager.Instance != null) SeatedClientManager.Instance.OpenDoors();
 
         yield return MoveTo(assignedSeat.position);
-        transform.DORotateQuaternion(assignedSeat.rotation * Quaternion.Euler(0, 180, 0), 0.5f);
+        transform.DORotateQuaternion(assignedSeat.rotation * Quaternion.Euler(0, 180, 0), 0.5f).SetId("NPCPuppets");
         OnReachedSeat();
     }
 
@@ -91,7 +91,7 @@ public class ClientPuppet : MonoBehaviour
         if (direction != Vector3.zero)
         {
             Quaternion lookRot = Quaternion.LookRotation(direction) * Quaternion.Euler(0, 180, 0);
-            transform.DORotateQuaternion(lookRot, 0.3f);
+            transform.DORotateQuaternion(lookRot, 0.3f).SetId("NPCPuppets");
         }
     }
 
@@ -99,7 +99,7 @@ public class ClientPuppet : MonoBehaviour
     {
         float dist = Vector3.Distance(transform.position, target);
         float duration = dist / moveSpeed;
-        yield return transform.DOMove(target, duration).SetEase(Ease.Linear).WaitForCompletion();
+        yield return transform.DOMove(target, duration).SetId("NPCPuppets").SetEase(Ease.Linear).WaitForCompletion();
     }
 
     private void StartRandomHop()
@@ -109,10 +109,12 @@ public class ClientPuppet : MonoBehaviour
         float randomSpeed = Random.Range(minHopSpeed, maxHopSpeed);
 
         hopTween = pivot.DOLocalMoveY(pivotInitialLocalPos.y + randomHeight, randomSpeed)
+            .SetId("NPCPuppets")
             .SetEase(Ease.OutQuad)
             .OnComplete(() =>
             {
                 pivot.DOLocalMoveY(pivotInitialLocalPos.y, randomSpeed)
+                    .SetId("NPCPuppets")
                     .SetEase(Ease.InQuad)
                     .OnComplete(StartRandomHop);
             });
@@ -123,7 +125,7 @@ public class ClientPuppet : MonoBehaviour
         isWalking = false;
         isSeated = true;
         hopTween?.Kill();
-        pivot.DOLocalMove(pivotInitialLocalPos, 0.2f);
+        pivot.DOLocalMove(pivotInitialLocalPos, 0.2f).SetId("NPCPuppets");
 
         if (Random.value < 0.5f && internalProps.Count > 0)
         {
@@ -154,15 +156,15 @@ public class ClientPuppet : MonoBehaviour
         {
             float pauseDuration = Random.Range(pauseDurationRange.x, pauseDurationRange.y);
             ResetCycleCount();
-            DOVirtual.DelayedCall(pauseDuration, RandomizedMouthLoop);
+            DOVirtual.DelayedCall(pauseDuration, RandomizedMouthLoop).SetId("NPCPuppets");
             return;
         }
         cyclesUntilPause--;
         float randomDuration = Random.Range(talkSpeedRange.x, talkSpeedRange.y);
         Vector3 targetRot = new Vector3(-mouthMaxOpen, originalMouthRot.y, originalMouthRot.z);
-        mouthTween = mouthBone.DOLocalRotate(targetRot, randomDuration).SetEase(Ease.InOutSine).OnComplete(() => {
+        mouthTween = mouthBone.DOLocalRotate(targetRot, randomDuration).SetId("NPCPuppets").SetEase(Ease.InOutSine).OnComplete(() => {
             float returnDuration = Random.Range(talkSpeedRange.x, talkSpeedRange.y);
-            mouthTween = mouthBone.DOLocalRotate(originalMouthRot, returnDuration).SetEase(Ease.InOutSine).OnComplete(RandomizedMouthLoop);
+            mouthTween = mouthBone.DOLocalRotate(originalMouthRot, returnDuration).SetId("NPCPuppets").SetEase(Ease.InOutSine).OnComplete(RandomizedMouthLoop);
         });
     }
 
@@ -170,7 +172,7 @@ public class ClientPuppet : MonoBehaviour
     {
         isTalking = false;
         mouthTween?.Kill();
-        mouthBone.DOLocalRotate(originalMouthRot, 0.2f);
+        mouthBone.DOLocalRotate(originalMouthRot, 0.2f).SetId("NPCPuppets");
         if (activeProp != null) activeProp.SetActive(false);
         SeatedClientManager.Instance.ReleaseSeat(assignedSeat);
         isWalking = true;
@@ -180,17 +182,13 @@ public class ClientPuppet : MonoBehaviour
 
     private IEnumerator ExitRoutine()
     {
-        // 1. Walk to the door waiting point first
         if (SeatedClientManager.Instance != null && SeatedClientManager.Instance.doorWaitPoint != null)
         {
             FaceTargetWithBackwardsAxis(SeatedClientManager.Instance.doorWaitPoint.position);
             yield return MoveTo(SeatedClientManager.Instance.doorWaitPoint.position);
-
-            // 2. Trigger Doors
             SeatedClientManager.Instance.OpenDoors();
         }
 
-        // 3. Reverse path
         for (int i = currentPath.Length - 1; i >= 0; i--)
         {
             FaceTargetWithBackwardsAxis(currentPath[i].position);

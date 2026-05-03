@@ -555,7 +555,8 @@ public class ClientManager : MonoBehaviour
     public void FullResetGame()
     {
 
-        DOTween.KillAll();
+        // Kills every active tween in the game UNLESS it has the ID "NPCPuppets"
+        DOTween.KillAll(false, "NPCPuppets");
 
         Toaster.Instance.ResetCameraAngle();
 
