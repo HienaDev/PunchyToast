@@ -100,6 +100,7 @@ public class ClientManager : MonoBehaviour
 
     public void HandleSimultaneousFailure()
     {
+        Debug.Log("Simultaneous toast failed! Rolling back to previous letter index.");
         currentIndex--;
     }
 

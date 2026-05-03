@@ -609,6 +609,7 @@ public class ToastBehavior : MonoBehaviour
 
     void ForceReleaseToast()
     {
+        hasBeenHit = true;
         isHovering = false;
         if (bobTween != null) bobTween.Kill();
         rb.useGravity = true;
