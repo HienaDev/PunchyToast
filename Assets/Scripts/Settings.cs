@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public static class LocalizationEvents
 {
@@ -89,20 +90,29 @@ public class Settings : MonoBehaviour
         }
     }
 
+
+
     IEnumerator LoadCSV()
     {
         string filePath = Path.Combine(Application.streamingAssetsPath, csvFileName);
 
-        if (File.Exists(filePath))
+        // WebGL requires a web request to access StreamingAssets
+        using (UnityWebRequest www = UnityWebRequest.Get(filePath))
         {
-            csvContent = File.ReadAllText(filePath);
-            ParseDict();
+            yield return www.SendWebRequest();
+
+            if (www.result == UnityWebRequest.Result.Success)
+            {
+                csvContent = www.downloadHandler.text;
+                ParseDict();
+            }
+            else
+            {
+                Debug.LogError($"Failed to load localization CSV at {filePath}: {www.error}");
+            }
         }
-        else
-        {
-        }
-        yield return null;
     }
+
 
     private void ParseDict()
     {
