@@ -41509,18 +41509,22 @@ MonoBehaviour:
     flavor: 1
     jamColor: {r: 0.9622642, g: 0.8537994, b: 0.441189, a: 1}
     dippingStation: {fileID: 920920115}
+    numberSprite: {fileID: 1994014999}
   - name: Strawberry Jam
     flavor: 2
     jamColor: {r: 0.90943396, g: 0.2505734, b: 0.23851186, a: 1}
     dippingStation: {fileID: 1750194027}
+    numberSprite: {fileID: 1902406892}
   - name: Grape Jam
     flavor: 3
     jamColor: {r: 0.44907826, g: 0.15690637, b: 0.8113208, a: 1}
     dippingStation: {fileID: 310496508}
+    numberSprite: {fileID: 755662090}
   - name: Peanut Butter
     flavor: 4
     jamColor: {r: 0.38679248, g: 0.2604401, b: 0.13683696, a: 1}
     dippingStation: {fileID: 295178436}
+    numberSprite: {fileID: 773453145}
   activeJams: []
   dipDepth: 0.1
   dipDuration: 0.15
