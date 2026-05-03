@@ -114,6 +114,9 @@ public class ToastBehavior : MonoBehaviour
             }
             else assignedLetter = (char)('A' + Random.Range(0, 26));
 
+            // Debug index and assigned letter
+            Debug.Log($"Assigned Letter: {assignedLetter} at index {assignedIndex}");
+
             assignedLetter = char.ToUpper(assignedLetter);
             assignedKey = (KeyCode)System.Enum.Parse(typeof(KeyCode), assignedLetter.ToString());
         }

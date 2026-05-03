@@ -100,3 +100,15 @@ MonoBehaviour:
       toastsNeeded: 1
       isSlappable: 0
       slapString: TOSTA
+    - jamFlavor: 1
+      customLetter: A
+      simultaneousToast: 0
+      toastsNeeded: 1
+      isSlappable: 0
+      slapString: TOSTA
+    - jamFlavor: 1
+      customLetter: A
+      simultaneousToast: 0
+      toastsNeeded: 1
+      isSlappable: 0
+      slapString: TOSTA

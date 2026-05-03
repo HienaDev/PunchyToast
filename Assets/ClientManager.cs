@@ -290,10 +290,8 @@ public class ClientManager : MonoBehaviour
             {
                 currentWord += data.customLetter;
             }
-            
+            availableIndexes.Add(currentWord.Length - 1);
         }
-            
-
         else
         {
             // In a boss fight we have a single client, so we have to parse every wave and every client to build the full word and slap words list for the boss client

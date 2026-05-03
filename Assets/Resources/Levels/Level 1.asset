@@ -38,7 +38,7 @@ MonoBehaviour:
     allowTopRow: 0
     clientsInWave:
     - jamFlavor: 1
-      customLetter: o
+      customLetter: O
       simultaneousToast: 0
       toastsNeeded: 0
       isSlappable: 0

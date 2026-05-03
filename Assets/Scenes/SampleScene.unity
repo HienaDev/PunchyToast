@@ -41515,11 +41515,11 @@ MonoBehaviour:
     dippingStation: {fileID: 1750194027}
   - name: Grape Jam
     flavor: 3
-    jamColor: {r: 0.5999999, g: 0.048679188, b: 0.4750821, a: 1}
+    jamColor: {r: 0.44907826, g: 0.15690637, b: 0.8113208, a: 1}
     dippingStation: {fileID: 310496508}
   - name: Peanut Butter
     flavor: 4
-    jamColor: {r: 0.83396226, g: 0.59598976, b: 0, a: 1}
+    jamColor: {r: 0.38679248, g: 0.2604401, b: 0.13683696, a: 1}
     dippingStation: {fileID: 295178436}
   activeJams: []
   dipDepth: 0.1
