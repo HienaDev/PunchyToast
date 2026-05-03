@@ -72,6 +72,9 @@ public class ToastBehavior : MonoBehaviour
     public Vector3 originalCameraPosition = Vector3.zero;
     public Vector3 originalCameraRotation = Vector3.zero;
 
+    public Vector3 cinematicCameraPosition = Vector3.zero;
+    public Vector3 cinematicCameraRotation = Vector3.zero;
+
     public bool summonedFromSimul = false;
 
     private void OnCollisionEnter(Collision collision)

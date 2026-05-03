@@ -105,6 +105,10 @@ public class Toaster : MonoBehaviour
     public Vector3 originalCameraRotation = Vector3.zero;
     public float originalCameraFOV = 60f;
 
+    public Vector3 cinematicCameraPosition = Vector3.zero;
+    public Vector3 cinematicCameraRotation = Vector3.zero;
+    public float cinematicCameraFOV = 60f;
+
     public float GetComboPitch()
     {
         if (currentCombo >= 1)
@@ -158,6 +162,10 @@ public class Toaster : MonoBehaviour
         originalCameraPosition = defaultCamera.transform.position;
         originalCameraRotation = defaultCamera.transform.rotation.eulerAngles;
         originalCameraFOV = defaultCamera.fieldOfView;
+
+        cinematicCameraPosition = cinematicCamera.transform.position;
+        cinematicCameraRotation = cinematicCamera.transform.rotation.eulerAngles;
+        cinematicCameraFOV = cinematicCamera.fieldOfView;
     }
 
     void Update()
@@ -231,6 +239,13 @@ public class Toaster : MonoBehaviour
             defaultCamera.gameObject.SetActive(true);
             if (cinematicCamera != null)
                 cinematicCamera.gameObject.SetActive(false);
+        }
+
+        if (cinematicCamera != null)
+        {
+            cinematicCamera.transform.position = cinematicCameraPosition;
+            cinematicCamera.transform.rotation = Quaternion.Euler(cinematicCameraRotation);
+            cinematicCamera.fieldOfView = cinematicCameraFOV;
         }
     }
 
