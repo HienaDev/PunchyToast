@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine.Audio; // Added for List
 
+using UnityEngine.Events;
+
 public class Client : MonoBehaviour
 {
     [Header("Settings")]
@@ -120,6 +122,8 @@ public class Client : MonoBehaviour
     private Vector3 originalEyelidRRot;
 
     private bool isFrozen = false;
+
+    [SerializeField] private UnityEvent onBossEaten;
 
     void Start()
     {
@@ -563,6 +567,7 @@ public class Client : MonoBehaviour
                     
 
                 PlayMunchAnimation(() => {
+                    onBossEaten.Invoke();
                     eyeToastL.SetActive(false);
                     eyeToastR.SetActive(false);
                     if (isSatisfied && !hasEaten)

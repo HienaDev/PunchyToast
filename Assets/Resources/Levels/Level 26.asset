@@ -10,65 +10,50 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cebe2a894356d6742864d0168a2546e7, type: 3}
-  m_Name: Level 13
+  m_Name: Level 26
   m_EditorClassIdentifier: 
-  levelNumber: 13
+  levelNumber: 26
   isBossFight: 0
   bossPrefab: {fileID: 0}
   bossToastsRequired: 10
-  hoverTime: 1.5
+  hoverTime: 3
   minPreHoverDelay: 0
   maxPreHoverDelay: 0.1
-  driftFactor: 0.2
+  driftFactor: 0.1
   fiveStarTime: 30
   fourStarTime: 45
   threeStarTime: 60
   twoStarTime: 90
   waves:
   - allowBottomRow: 1
-    allowTopRow: 0
-    clientsInWave:
-    - jamFlavor: 1
-      customLetter: J
-      simultaneousToast: 0
-      toastsNeeded: 0
-      isSlappable: 0
-      slapString: TOSTA
-    - jamFlavor: 1
-      customLetter: A
-      simultaneousToast: 0
-      toastsNeeded: 0
-      isSlappable: 0
-      slapString: TOSTA
-  - allowBottomRow: 1
     allowTopRow: 1
     clientsInWave:
-    - jamFlavor: 0
-      customLetter: T
-      simultaneousToast: 0
+    - jamFlavor: 1
+      customLetter: t
+      simultaneousToast: 1
       toastsNeeded: 0
       isSlappable: 0
       slapString: 
-    - jamFlavor: 0
-      customLetter: E
-      simultaneousToast: 0
+    - jamFlavor: 1
+      customLetter: o
+      simultaneousToast: 1
       toastsNeeded: 0
       isSlappable: 0
       slapString: 
-    - jamFlavor: 0
-      customLetter: M
-      simultaneousToast: 0
+    - jamFlavor: 1
+      customLetter: s
+      simultaneousToast: 1
       toastsNeeded: 0
       isSlappable: 0
       slapString: 
-    - jamFlavor: 0
-      customLetter: O
-      simultaneousToast: 0
+    - jamFlavor: 1
+      customLetter: f
+      simultaneousToast: 1
       toastsNeeded: 0
       isSlappable: 0
       slapString: 
-    - jamFlavor: 0
-      customLetter: S
+    - jamFlavor: 1
+      customLetter: a
       simultaneousToast: 0
       toastsNeeded: 0
       isSlappable: 0

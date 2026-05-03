@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.Audio;
 
 public enum JamFlavor { None, Butter, StrawberryJam, GrapeJam, PeanutButter, Random }
+
 public class JamDecider : MonoBehaviour
 {
     public static JamDecider Instance;
@@ -16,6 +17,9 @@ public class JamDecider : MonoBehaviour
         public JamFlavor flavor;
         public Color jamColor;
         public Transform dippingStation;
+
+        // NEW: Number sprite for each flavor
+        public GameObject numberSprite;
     }
 
     [Header("Settings")]
@@ -28,7 +32,7 @@ public class JamDecider : MonoBehaviour
     public float dipDuration = 0.15f;
     public float zOffset = 2.0f;
     [SerializeField] private float dipCooldown = 0.5f;
-    private float lastDipTime = -10f; // Initialized so first dip always works
+    private float lastDipTime = -10f;
 
     public int currentJamIndex = 0;
 
@@ -50,7 +54,6 @@ public class JamDecider : MonoBehaviour
 
     private void Start()
     {
-        // Force initialize the first jam without triggering cooldown
         currentJamIndex = -1;
         lastDipTime = -10f;
     }
@@ -65,6 +68,10 @@ public class JamDecider : MonoBehaviour
             {
                 activeJams.Add(jam);
                 jam.dippingStation.gameObject.SetActive(true);
+
+                // Ensure number sprites start visible
+                if (jam.numberSprite != null)
+                    jam.numberSprite.SetActive(true);
             }
             else
             {
@@ -72,9 +79,7 @@ public class JamDecider : MonoBehaviour
             }
         }
 
-
-
-        if(!alreadyDipped)
+        if (!alreadyDipped)
             SelectJam(0, true);
     }
 
@@ -89,22 +94,33 @@ public class JamDecider : MonoBehaviour
         }
     }
 
-    // Added 'bypassCooldown' parameter for level startup
     void SelectJam(int index, bool bypassCooldown = false)
     {
         alreadyDipped = true;
+
         if (activeJams == null || index < 0 || index >= activeJams.Count) return;
         if (index == currentJamIndex) return;
 
-        // Only check cooldown if we aren't bypassing it (startup)
         if (!bypassCooldown && Time.time < lastDipTime + dipCooldown) return;
 
         lastDipTime = Time.time;
+
+        // Reactivate ALL number sprites first
+        for (int i = 0; i < activeJams.Count; i++)
+        {
+            if (activeJams[i].numberSprite != null)
+                activeJams[i].numberSprite.SetActive(true);
+        }
+
         currentJamIndex = index;
+
+        // Disable the selected jam's number sprite
+        if (activeJams[index].numberSprite != null)
+            activeJams[index].numberSprite.SetActive(false);
 
         PerformDipAnimation(activeJams[index]);
 
-        // Visual Updates
+        // Visual Updates (fists)
         butterFist.SetActive(false);
         stawberryFist.SetActive(false);
         grapeFist.SetActive(false);
@@ -158,17 +174,14 @@ public class JamDecider : MonoBehaviour
         dipSeq.OnComplete(() => Destroy(dippingArm));
     }
 
-    // Safety checks added to these methods to prevent IndexOutOfRange
     public string GetCurrentJamName()
     {
         if (activeJams.Count == 0 || currentJamIndex < 0) return "None";
 
-        if(currentJamIndex >= activeJams.Count)
+        if (currentJamIndex >= activeJams.Count)
         {
             SelectByFlavor(activeJams[0].flavor);
         }
-
-        
 
         return activeJams[currentJamIndex].flavor.ToString();
     }
