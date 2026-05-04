@@ -248,6 +248,13 @@ public class ClientManager : MonoBehaviour
 
     public void IncreaseLetterIndex()
     {
+
+        if(levelConfig == null)
+        {
+            currentIndex++;
+            return;
+        }
+
         Debug.Log($"Increasing letter index. Current: {currentIndex}, Word Length: {currentWord.Length}");
         toastsNeededInCurrentLetter++;
 

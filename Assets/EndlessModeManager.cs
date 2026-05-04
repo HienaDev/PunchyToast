@@ -291,6 +291,14 @@ public class EndlessModeManager : MonoBehaviour
         return Mathf.Max(t, minimumHoverTime);
     }
 
+    private float GetCurrentDriftFactor()
+    {
+        // goes from 0.05 to 0.3 the same way currenthover time scales, with a max of 0.3
+        float t = 0.05f + (0.25f * (1 - (GetCurrentHoverTime() - minimumHoverTime) / (startingHoverTime - minimumHoverTime)));
+        return Mathf.Min(t, 0.3f);
+
+    }
+
     private float GetCurrentSlappableChance()
     {
         return Mathf.Lerp(slappableChanceStart, slappableChanceMax,
@@ -342,6 +350,7 @@ public class EndlessModeManager : MonoBehaviour
         }
 
         Toaster.Instance.hoverTime = GetCurrentHoverTime();
+        Toaster.Instance.driftFactor = GetCurrentDriftFactor();
         ClientManager.Instance.SpawnEndlessClient(data);
         clientsSpawned++;
         hasEverSpawned = true;

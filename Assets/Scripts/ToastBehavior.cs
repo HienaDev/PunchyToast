@@ -226,7 +226,8 @@ public class ToastBehavior : MonoBehaviour
         if (currentFlightTargetClient != null && slapsLeft <= 0)
         {
             if(!summonedFromSimul)
-            ClientManager.Instance.IncreaseLetterIndex();
+                ClientManager.Instance.IncreaseLetterIndex();
+
             currentFlightTargetClient.Satisfy();
             if (currentFlightTargetClient.isSatisfied || ClientManager.Instance.isBossFight)
                 ClientManager.Instance.RemoveIndex(myLetterIndex);
