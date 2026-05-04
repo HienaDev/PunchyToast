@@ -259,6 +259,8 @@ public class EndlessModeManager : MonoBehaviour
     public void StopEndlessMode()
     {
         isRunning = false;
+        clientCounterUI.SetActive(false);
+        comboCounterUI.SetActive(false);
     }
 
     void Update()
@@ -349,8 +351,13 @@ public class EndlessModeManager : MonoBehaviour
             data.customLetter = ((char)('A' + Random.Range(0, 26))).ToString();
         }
 
+        
+
         Toaster.Instance.hoverTime = GetCurrentHoverTime();
         Toaster.Instance.driftFactor = GetCurrentDriftFactor();
+        if (makeSlappable)
+            Toaster.Instance.driftFactor = 0f;
+
         ClientManager.Instance.SpawnEndlessClient(data);
         clientsSpawned++;
         hasEverSpawned = true;

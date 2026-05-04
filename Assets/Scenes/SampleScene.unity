@@ -5844,6 +5844,9 @@ MonoBehaviour:
   originalCameraPosition: {x: 0, y: 0, z: 0}
   originalCameraRotation: {x: 0, y: 0, z: 0}
   originalCameraFOV: 60
+  cinematicCameraPosition: {x: 0, y: 0, z: 0}
+  cinematicCameraRotation: {x: 0, y: 0, z: 0}
+  cinematicCameraFOV: 60
 --- !u!65 &430270192
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -14614,7 +14617,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 468315401}
+      - m_Target: {fileID: 1717131197}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
@@ -26812,7 +26815,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -57.4, y: 0}
+  m_AnchoredPosition: {x: -66.1, y: 0}
   m_SizeDelta: {x: 49.01559, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1406837605
@@ -30968,7 +30971,6 @@ MonoBehaviour:
   - {fileID: 1611463867}
   - {fileID: 665972114}
   - {fileID: 37156030}
-  bossPosition: {fileID: 0}
   levelCompleteUI: {fileID: 1373383082}
   clientCounterUI: {fileID: 788186755}
   comboCounterUI: {fileID: 1937235703}
