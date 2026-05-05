@@ -16,12 +16,16 @@ public class StickerUIItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     public Button xButton;
 
+    private UIScaleJuice juice;
+
     public void Setup(GameObject sticker, Sprite sprite)
     {
         associatedSticker = sticker;
         stickerPreviewImage.sprite = sprite;
         projector = associatedSticker.GetComponent<DecalProjector>();
         originalStickerSize = projector.size;
+
+        juice = GetComponent<UIScaleJuice>();
 
         // Apply your custom Resolution rules (Max H: 16, Max W: 24)
         AdjustUIImageSize(sprite);
@@ -49,6 +53,8 @@ public class StickerUIItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (associatedSticker == null) return;
+
+        juice?.ScaleUp();
 
         hoverSequence?.Kill();
         hoverSequence = DOTween.Sequence();
@@ -85,6 +91,7 @@ public class StickerUIItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        juice?.ScaleDown();
         ResetSticker();
     }
 
@@ -96,6 +103,8 @@ public class StickerUIItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         var manager = Object.FindFirstObjectByType<ToasterCustomization>();
         if (manager != null) manager.RemoveStickerFromList(associatedSticker, gameObject);
 
+        associatedSticker.transform.DOKill();
+        gameObject.transform.DOKill();
         Destroy(associatedSticker);
         Destroy(gameObject);
     }
