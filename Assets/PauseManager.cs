@@ -7,6 +7,7 @@ public class PauseManager : MonoBehaviour
 
     [SerializeField] private GameObject pauseMenuPanel;
     [SerializeField] private GameObject levelSelectionPanel; // Assign your Level Select screen here
+    [SerializeField] private ToasterCustomization toasterCustomization;
     [SerializeField] private GameObject gameplayUI;         // The UI that shows during play (combo, etc)
 
     [SerializeField] private GameObject mainMenu;
@@ -22,7 +23,7 @@ public class PauseManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && !mainMenu.activeSelf && !levelSelectionPanel.activeSelf)
+        if (Input.GetKeyDown(KeyCode.Escape) && !mainMenu.activeSelf && !levelSelectionPanel.activeSelf && !toasterCustomization.triggered)
         {
             TogglePause();
         }

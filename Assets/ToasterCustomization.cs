@@ -51,6 +51,7 @@ public class ToasterCustomization : MonoBehaviour
 
     [SerializeField] private Sprite startingSticker;
     private Sprite currentSticker;
+    public bool triggered = false;
     private bool isCustomizing = false;
     private float currentScale;
 
@@ -290,6 +291,7 @@ public class ToasterCustomization : MonoBehaviour
 
     public void StartCustomizing()
     {
+        triggered = true;
         Camera.main.transform.DOMove(positionForToasterCamera.position, 1f);
         Camera.main.transform.DORotate(positionForToasterCamera.rotation.eulerAngles, 1f).OnComplete(() =>
         {
@@ -304,6 +306,6 @@ public class ToasterCustomization : MonoBehaviour
         decalTester.SetActive(false);
         customizationUI.SetActive(false);
         Camera.main.transform.DOMove(originalCameraPosition, 1f);
-        Camera.main.transform.DORotate(originalCameraRotation, 1f);
+        Camera.main.transform.DORotate(originalCameraRotation, 1f).OnComplete(()=> triggered = false);
     }
 }

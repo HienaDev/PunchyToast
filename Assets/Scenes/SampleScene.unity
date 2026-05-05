@@ -8170,6 +8170,7 @@ MonoBehaviour:
   minScale: 0.01
   maxScale: 0.09
   startingSticker: {fileID: 21300000, guid: 01832ec37d3e78d49b04e1e8c5f6748c, type: 3}
+  triggered: 0
 --- !u!114 &494780368
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -47424,6 +47425,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pauseMenuPanel: {fileID: 1296319095}
   levelSelectionPanel: {fileID: 275137296}
+  toasterCustomization: {fileID: 494780367}
   gameplayUI: {fileID: 788186755}
   mainMenu: {fileID: 1717131197}
   menuPuppet: {fileID: 8000513501581082207}
