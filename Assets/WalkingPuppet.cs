@@ -56,6 +56,7 @@ public class WalkingPuppet : MonoBehaviour
             .OnComplete(() =>
             {
                 isWalking = false;
+                
                 Destroy(gameObject);
             });
     }
@@ -132,5 +133,18 @@ public class WalkingPuppet : MonoBehaviour
                     .SetEase(Ease.InQuad)
                     .OnComplete(StartRandomHop);
             });
+    }
+
+    private void OnDestroy()
+    {
+        // Kills every tween that is targeting this specific object or its bones
+        transform.DOKill();
+
+        if (mouthBone != null) mouthBone.DOKill();
+        if (pivot != null) pivot.DOKill();
+
+        // Kill the specific walk tween reference just in case
+        walkTween?.Kill();
+        mouthTween?.Kill();
     }
 }

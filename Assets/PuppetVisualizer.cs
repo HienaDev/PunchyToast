@@ -74,11 +74,7 @@ public class PuppetVisualizer : MonoBehaviour
     {
         if (hairs.Length == 0) return;
         int index = Random.Range(0, hairs.Length);
-        for (int i = 0; i < hairs.Length; i++)
-        {
-            
-            if (hairs[i] != null) hairs[i].SetActive(i == index);
-        }
+        hairs[index].SetActive(true);
     }
 
     private void ApplyToGroup(Renderer[] group, Material mat)

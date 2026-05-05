@@ -8,7 +8,7 @@ public class MaterialColorManager : MonoBehaviour
     [SerializeField] private string shaderColorPropertyName = "_BaseColor";
 
     // Unique key to identify this specific material's color in PlayerPrefs
-    private const string ColorSaveKey = "SavedSkinColor";
+    public string ColorSaveKey = "SavedSkinColor";
 
     private void OnEnable()
     {

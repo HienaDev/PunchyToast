@@ -239,7 +239,7 @@ public class ToasterCustomization : MonoBehaviour
         var projector = target.GetComponent<DecalProjector>();
         if (projector != null)
         {
-            projector.size = new Vector3(currentScale * aspectRatio, currentScale, 0.5f);
+            projector.size = new Vector3(currentScale * aspectRatio, currentScale, 0.06f);
         }
     }
 
