@@ -37,11 +37,155 @@ MonoBehaviour:
     - jamFlavor: 1
       customLetter: T
       simultaneousToast: 0
-      toastsNeeded: 4
+      toastsNeeded: 5
       isSlappable: 0
       slapString: TOSTA
     - jamFlavor: 1
       customLetter: T
+      simultaneousToast: 1
+      toastsNeeded: 0
+      isSlappable: 0
+      slapString: TOSTA
+    - jamFlavor: 1
+      customLetter: O
+      simultaneousToast: 1
+      toastsNeeded: 0
+      isSlappable: 0
+      slapString: TOSTA
+    - jamFlavor: 1
+      customLetter: S
+      simultaneousToast: 1
+      toastsNeeded: 0
+      isSlappable: 0
+      slapString: TOSTA
+    - jamFlavor: 1
+      customLetter: T
+      simultaneousToast: 1
+      toastsNeeded: 0
+      isSlappable: 0
+      slapString: TOSTA
+    - jamFlavor: 1
+      customLetter: A
+      simultaneousToast: 0
+      toastsNeeded: 0
+      isSlappable: 0
+      slapString: TOSTA
+    - jamFlavor: 2
+      customLetter: O
+      simultaneousToast: 0
+      toastsNeeded: 6
+      isSlappable: 0
+      slapString: TOSTA
+    - jamFlavor: 2
+      customLetter: T
+      simultaneousToast: 1
+      toastsNeeded: 0
+      isSlappable: 0
+      slapString: TOSTA
+    - jamFlavor: 2
+      customLetter: O
+      simultaneousToast: 1
+      toastsNeeded: 0
+      isSlappable: 0
+      slapString: TOSTA
+    - jamFlavor: 2
+      customLetter: S
+      simultaneousToast: 1
+      toastsNeeded: 0
+      isSlappable: 0
+      slapString: TOSTA
+    - jamFlavor: 2
+      customLetter: T
+      simultaneousToast: 1
+      toastsNeeded: 0
+      isSlappable: 0
+      slapString: TOSTA
+    - jamFlavor: 2
+      customLetter: A
+      simultaneousToast: 0
+      toastsNeeded: 0
+      isSlappable: 0
+      slapString: TOSTA
+    - jamFlavor: 3
+      customLetter: S
+      simultaneousToast: 0
+      toastsNeeded: 6
+      isSlappable: 0
+      slapString: TOSTA
+    - jamFlavor: 3
+      customLetter: T
+      simultaneousToast: 1
+      toastsNeeded: 0
+      isSlappable: 0
+      slapString: TOSTA
+    - jamFlavor: 3
+      customLetter: O
+      simultaneousToast: 1
+      toastsNeeded: 0
+      isSlappable: 0
+      slapString: TOSTA
+    - jamFlavor: 3
+      customLetter: S
+      simultaneousToast: 1
+      toastsNeeded: 0
+      isSlappable: 0
+      slapString: TOSTA
+    - jamFlavor: 3
+      customLetter: T
+      simultaneousToast: 1
+      toastsNeeded: 0
+      isSlappable: 0
+      slapString: TOSTA
+    - jamFlavor: 3
+      customLetter: A
+      simultaneousToast: 0
+      toastsNeeded: 0
+      isSlappable: 0
+      slapString: TOSTA
+    - jamFlavor: 1
+      customLetter: T
+      simultaneousToast: 0
+      toastsNeeded: 2
+      isSlappable: 0
+      slapString: TOSTA
+    - jamFlavor: 2
+      customLetter: T
+      simultaneousToast: 0
+      toastsNeeded: 2
+      isSlappable: 0
+      slapString: TOSTA
+    - jamFlavor: 3
+      customLetter: T
+      simultaneousToast: 0
+      toastsNeeded: 2
+      isSlappable: 0
+      slapString: TOSTA
+    - jamFlavor: 1
+      customLetter: T
+      simultaneousToast: 1
+      toastsNeeded: 0
+      isSlappable: 0
+      slapString: TOSTA
+    - jamFlavor: 1
+      customLetter: O
+      simultaneousToast: 1
+      toastsNeeded: 0
+      isSlappable: 0
+      slapString: TOSTA
+    - jamFlavor: 1
+      customLetter: S
+      simultaneousToast: 1
+      toastsNeeded: 0
+      isSlappable: 0
+      slapString: TOSTA
+    - jamFlavor: 1
+      customLetter: T
+      simultaneousToast: 1
+      toastsNeeded: 0
+      isSlappable: 0
+      slapString: TOSTA
+    - jamFlavor: 1
+      customLetter: A
       simultaneousToast: 0
       toastsNeeded: 0
       isSlappable: 0
@@ -77,15 +221,51 @@ MonoBehaviour:
       isSlappable: 0
       slapString: TOSTA
     - jamFlavor: 1
-      customLetter: O
-      simultaneousToast: 0
-      toastsNeeded: 6
+      customLetter: T
+      simultaneousToast: 1
+      toastsNeeded: 0
       isSlappable: 0
       slapString: TOSTA
     - jamFlavor: 1
       customLetter: O
+      simultaneousToast: 1
+      toastsNeeded: 0
+      isSlappable: 0
+      slapString: TOSTA
+    - jamFlavor: 1
+      customLetter: S
+      simultaneousToast: 1
+      toastsNeeded: 0
+      isSlappable: 0
+      slapString: TOSTA
+    - jamFlavor: 1
+      customLetter: T
+      simultaneousToast: 1
+      toastsNeeded: 0
+      isSlappable: 0
+      slapString: TOSTA
+    - jamFlavor: 1
+      customLetter: A
       simultaneousToast: 0
-      toastsNeeded: 6
+      toastsNeeded: 0
+      isSlappable: 0
+      slapString: TOSTA
+    - jamFlavor: 1
+      customLetter: T
+      simultaneousToast: 1
+      toastsNeeded: 0
+      isSlappable: 0
+      slapString: TOSTA
+    - jamFlavor: 1
+      customLetter: O
+      simultaneousToast: 1
+      toastsNeeded: 0
+      isSlappable: 0
+      slapString: TOSTA
+    - jamFlavor: 1
+      customLetter: S
+      simultaneousToast: 1
+      toastsNeeded: 0
       isSlappable: 0
       slapString: TOSTA
     - jamFlavor: 1
@@ -95,14 +275,8 @@ MonoBehaviour:
       isSlappable: 0
       slapString: TOSTA
     - jamFlavor: 1
-      customLetter: O
+      customLetter: A
       simultaneousToast: 0
-      toastsNeeded: 0
-      isSlappable: 0
-      slapString: TOSTA
-    - jamFlavor: 1
-      customLetter: S
-      simultaneousToast: 0
-      toastsNeeded: 0
+      toastsNeeded: 20
       isSlappable: 0
       slapString: TOSTA
