@@ -35,8 +35,7 @@ public class PauseManager : MonoBehaviour
         Time.timeScale = isPaused ? 0f : 1f;
         pauseMenuPanel.SetActive(isPaused);
 
-        Cursor.visible = isPaused;
-        Cursor.lockState = isPaused ? CursorLockMode.None : CursorLockMode.Locked;
+
     }
 
     public void BackToLevelSelection()
@@ -61,9 +60,6 @@ public class PauseManager : MonoBehaviour
             EndlessModeManager.Instance.HideUI();
         }
 
-            // 5. Cursor management
-            Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
     }
 
     public void ResumeGame()
