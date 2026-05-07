@@ -9,9 +9,6 @@ public class TransformScaler : MonoBehaviour
 
     [SerializeField] private Transform transformToScale;
 
-    [Header("Scale Settings")]
-    [SerializeField] private int maxSteps = 10000;
-
     [Header("Tween Settings")]
     [SerializeField] private float duration = 0.15f;
     [SerializeField] private float elasticity = 0.5f;

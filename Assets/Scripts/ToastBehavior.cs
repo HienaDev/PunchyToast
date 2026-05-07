@@ -65,8 +65,6 @@ public class ToastBehavior : MonoBehaviour
 
     private string jamOnThisToast = "";
 
-    private bool isWrongToast = false;
-
     private Vector3 originalRotation = Vector3.zero;
 
     public Vector3 originalCameraPosition = Vector3.zero;
@@ -237,8 +235,6 @@ public class ToastBehavior : MonoBehaviour
 
         if (currentFlightTargetClient == null)
         {
-            //do wrong toast sequence
-            isWrongToast = true;
             foreach (ToastBehavior tb in Toaster.Instance.activeToasts)
             {
                 if (tb != null && tb != this)
@@ -373,6 +369,7 @@ public class ToastBehavior : MonoBehaviour
             isPunchable = true;
 
             // Restart the hover behavior
+            //if (hoverRoutine != null) StopCoroutine(hoverRoutine);
             hoverRoutine = StartCoroutine(HoverRoutine());
         }
         else

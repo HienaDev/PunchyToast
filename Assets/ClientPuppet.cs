@@ -32,7 +32,6 @@ public class ClientPuppet : MonoBehaviour
     [SerializeField] private Vector2 sentenceLengthRange = new Vector2(3, 8);
     [SerializeField] private Vector2 pauseDurationRange = new Vector2(0.5f, 2.5f);
 
-    private bool isSeated = false;
     private bool isWalking = false;
     private bool isTalking = false;
     private GameObject activeProp;
@@ -123,7 +122,6 @@ public class ClientPuppet : MonoBehaviour
     private void OnReachedSeat()
     {
         isWalking = false;
-        isSeated = true;
         hopTween?.Kill();
         pivot.DOLocalMove(pivotInitialLocalPos, 0.2f).SetId("NPCPuppets");
 

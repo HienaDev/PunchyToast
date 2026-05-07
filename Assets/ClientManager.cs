@@ -595,7 +595,7 @@ public class ClientManager : MonoBehaviour
         // 2. Clear the Toaster
         Toaster.Instance.StopAllCoroutines();
         Toaster.Instance.ResetCombo();
-
+        JamDecider.Instance.ResetJams();
 
 
         Toaster.Instance.activeToasts.Clear();
@@ -705,7 +705,7 @@ public class ClientManager : MonoBehaviour
         if (activeClients.Remove(seat)
             && levelConfig != null 
             && currentWaveIndex >= levelConfig.waves.Count
-            && activeClients.Count == 0
+            && (activeClients.Count == 0 || isBossFight)
             && !levelFinished)
         {
             Debug.Log("All clients cleared after last wave! Finishing level...");

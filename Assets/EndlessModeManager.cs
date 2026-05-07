@@ -214,7 +214,6 @@ public class EndlessModeManager : MonoBehaviour
     // Tracks whether we have spawned at least one client this session,
     // so the empty cooldown only kicks in after the first client leaves,
     // not on startup (where we want to spawn immediately)
-    private bool hasEverSpawned = false;
 
     void Awake()
     {
@@ -249,7 +248,6 @@ public class EndlessModeManager : MonoBehaviour
         isRunning = true;
         timeSurvivedThisSession = 0f;
         clientsSpawned = 0;
-        hasEverSpawned = false;
 
         SetupJamsForTier();
         ClientManager.Instance.levelConfig = null;
@@ -360,7 +358,6 @@ public class EndlessModeManager : MonoBehaviour
 
         ClientManager.Instance.SpawnEndlessClient(data);
         clientsSpawned++;
-        hasEverSpawned = true;
 
         normalCooldown -= cooldownDecreasePerClient;
         normalCooldown = Mathf.Max(normalCooldown, minCooldown);

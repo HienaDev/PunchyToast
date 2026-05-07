@@ -58,6 +58,16 @@ public class JamDecider : MonoBehaviour
         lastDipTime = -10f;
     }
 
+    public void ResetJams()
+    {
+        foreach (var jam in allAvailableJams)
+        {
+
+                jam.dippingStation.gameObject.SetActive(false);
+            
+        }
+    }
+
     public void SetupLevelJams(HashSet<JamFlavor> requiredFlavors)
     {
         activeJams = new List<JamType>();

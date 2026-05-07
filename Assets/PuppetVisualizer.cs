@@ -17,8 +17,6 @@ public class PuppetVisualizer : MonoBehaviour
     [SerializeField] private float specialChance = 0.2f;
     [SerializeField] private float randomBaldChance = 0.1f;
 
-    private bool bald = false;
-
     void Awake()
     {
         gameObject.name = "Puppet_" + Random.Range(1000, 9999);
@@ -56,7 +54,6 @@ public class PuppetVisualizer : MonoBehaviour
         // Hair Logic
         if (Random.value < randomBaldChance)
         {
-            bald = true;
             foreach (GameObject hairObj in hairs)
             {
                 if (hairObj != null) hairObj.SetActive(false);
