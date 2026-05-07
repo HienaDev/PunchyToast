@@ -71,6 +71,12 @@ public class PuppetVisualizer : MonoBehaviour
     {
         if (hairs.Length == 0) return;
         int index = Random.Range(0, hairs.Length);
+
+        foreach (GameObject hairObj in hairs)
+        {
+            hairObj.SetActive(false);
+        }
+
         hairs[index].SetActive(true);
     }
 
