@@ -53,6 +53,22 @@ public class ClientPuppet : MonoBehaviour
         }
     }
 
+    // --- CLEANUP LOGIC ---
+    private void OnDestroy()
+    {
+        // Kill all tweens attached to this specific instance
+        transform.DOKill();
+        if (pivot != null) pivot.DOKill();
+        if (mouthBone != null) mouthBone.DOKill();
+
+        // Specifically kill the tweens we have references for
+        hopTween?.Kill();
+        mouthTween?.Kill();
+
+        // Safety: Stop any delayed calls or virtual tweens related to this object
+        DOTween.Kill(this);
+    }
+
     public void Initialize(Transform[] path, Transform seat, float speed, float duration, float mouthRot, float talkProb)
     {
         currentPath = path;
@@ -103,7 +119,7 @@ public class ClientPuppet : MonoBehaviour
 
     private void StartRandomHop()
     {
-        if (pivot == null || !isWalking) return;
+        if (pivot == null || !isWalking || this == null) return;
         float randomHeight = Random.Range(minHopHeight, maxHopHeight);
         float randomSpeed = Random.Range(minHopSpeed, maxHopSpeed);
 
@@ -112,6 +128,7 @@ public class ClientPuppet : MonoBehaviour
             .SetEase(Ease.OutQuad)
             .OnComplete(() =>
             {
+                if (this == null || pivot == null) return; // Safety check for destroyed object
                 pivot.DOLocalMoveY(pivotInitialLocalPos.y, randomSpeed)
                     .SetId("NPCPuppets")
                     .SetEase(Ease.InQuad)
@@ -149,30 +166,43 @@ public class ClientPuppet : MonoBehaviour
 
     private void RandomizedMouthLoop()
     {
-        if (!isTalking || mouthBone == null) return;
+        if (!isTalking || mouthBone == null || this == null) return;
         if (cyclesUntilPause <= 0)
         {
             float pauseDuration = Random.Range(pauseDurationRange.x, pauseDurationRange.y);
             ResetCycleCount();
-            DOVirtual.DelayedCall(pauseDuration, RandomizedMouthLoop).SetId("NPCPuppets");
+            // Using SetTarget(this) allows us to kill this specific delay in OnDestroy
+            DOVirtual.DelayedCall(pauseDuration, RandomizedMouthLoop).SetId("NPCPuppets").SetTarget(this);
             return;
         }
         cyclesUntilPause--;
         float randomDuration = Random.Range(talkSpeedRange.x, talkSpeedRange.y);
         Vector3 targetRot = new Vector3(-mouthMaxOpen, originalMouthRot.y, originalMouthRot.z);
-        mouthTween = mouthBone.DOLocalRotate(targetRot, randomDuration).SetId("NPCPuppets").SetEase(Ease.InOutSine).OnComplete(() => {
-            float returnDuration = Random.Range(talkSpeedRange.x, talkSpeedRange.y);
-            mouthTween = mouthBone.DOLocalRotate(originalMouthRot, returnDuration).SetId("NPCPuppets").SetEase(Ease.InOutSine).OnComplete(RandomizedMouthLoop);
-        });
+
+        mouthTween = mouthBone.DOLocalRotate(targetRot, randomDuration)
+            .SetId("NPCPuppets")
+            .SetEase(Ease.InOutSine)
+            .OnComplete(() => {
+                if (this == null || mouthBone == null) return;
+                float returnDuration = Random.Range(talkSpeedRange.x, talkSpeedRange.y);
+                mouthTween = mouthBone.DOLocalRotate(originalMouthRot, returnDuration)
+                    .SetId("NPCPuppets")
+                    .SetEase(Ease.InOutSine)
+                    .OnComplete(RandomizedMouthLoop);
+            });
     }
 
     private void LeaveSeat()
     {
+        if (this == null) return;
         isTalking = false;
         mouthTween?.Kill();
         mouthBone.DOLocalRotate(originalMouthRot, 0.2f).SetId("NPCPuppets");
         if (activeProp != null) activeProp.SetActive(false);
-        SeatedClientManager.Instance.ReleaseSeat(assignedSeat);
+
+        if (SeatedClientManager.Instance != null)
+            SeatedClientManager.Instance.ReleaseSeat(assignedSeat);
+
         isWalking = true;
         StartRandomHop();
         StartCoroutine(ExitRoutine());
@@ -193,7 +223,7 @@ public class ClientPuppet : MonoBehaviour
             yield return MoveTo(currentPath[i].position);
         }
 
-        transform.DOKill();
+        // Final cleanup happens automatically via OnDestroy
         Destroy(gameObject);
     }
 }
